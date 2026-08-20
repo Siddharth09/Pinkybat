@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#17152a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Pinky Bat</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="gameShell" aria-label="Pinky Bat game">
+  <canvas id="game" aria-label="Pinky Bat canvas"></canvas>
+  <div id="hud" aria-live="polite">
+    <div class="scoreCluster"><div class="scoreBox"><span id="meters">0</span><small> m</small></div><div class="sceneLabel" id="sceneLabel">SUNSET BEACH</div></div>
+    <div class="hudActions"><button id="soundBtn" class="iconBtn" aria-label="Toggle sound">♪</button><button id="pauseBtn" class="iconBtn" aria-label="Pause game">Ⅱ</button><div class="bestBox">BEST <span id="best">0</span> m</div></div>
+  </div>
+  <section id="menu" class="panel visible">
+    <div class="brandMark" aria-hidden="true"><span>🦇</span></div><div class="wordmark">PINKY <span>BAT</span></div><p class="tagline">Fly far. Dodge chaos. Poop happily.</p><button id="playBtn" class="primary">PLAY</button>
+    <div class="quickStats"><div><strong id="menuBest">0</strong><span>BEST METRES</span></div><div><strong id="skinCount">1</strong><span>BAT STYLE</span></div><div><strong>100%</strong><span>OFFLINE</span></div></div>
+    <p class="hint">Touch &amp; hold for repeated upward jolts<br>Release to fall</p><button id="wardrobeBtn" class="linkBtn">BAT CLOSET</button>
+  </section>
+  <section id="wardrobe" class="panel"><div class="closeRow"><button id="closeWardrobe" class="closeBtn">×</button></div><h2>BAT CLOSET</h2><p class="subtle">Unlock looks by flying farther.</p><div id="skinGrid" class="skinGrid"></div><button id="closetPlay" class="primary">FLY</button></section>
+  <section id="pause" class="panel compact"><div class="pauseIcon">Ⅱ</div><h2>PAUSED</h2><button id="resumeBtn" class="primary">RESUME</button><button id="restartBtn" class="secondary">RESTART</button></section>
+  <section id="gameOver" class="panel compact"><div class="overEmoji">💩</div><div class="tinyLabel">YOU FLEW</div><p class="result"><strong id="finalScore">0</strong> m</p><p id="newBest" class="newBest">NEW BEST!</p><div class="runStats"><div><span>BEST</span><strong id="overBest">0</strong> m</div><div><span>STYLE</span><strong id="overSkin">PINKY</strong></div></div><button id="againBtn" class="primary">TRY AGAIN</button><button id="homeBtn" class="secondary">HOME</button><button id="overClosetBtn" class="linkBtn">CHANGE BAT</button></section>
+  <div id="tapOverlay" aria-hidden="true"></div>
+</main>
+<script src="game.js"></script>
+</body>
+</html>
