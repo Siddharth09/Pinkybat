@@ -1,0 +1,42 @@
+name: Vicky the Bat web release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [vicky-the-bat-final]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build web release
+        run: node vicky-the-bat-web-release/scripts/build.mjs
+      - name: Verify generated JavaScript
+        run: node -e "const fs=require('fs'),vm=require('vm'); const h=fs.readFileSync('vicky-the-bat-web-release/dist/index.html','utf8'); const s=[...h.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)]; if(s.length!==1) throw new Error('Expected one inline script'); new vm.Script(s[0][1]); const cities=h.match(/\\{name:'[^']+'[^}]*\\}/g)||[]; if(cities.length!==115) throw new Error('Expected 115 cities, got '+cities.length); if(new Set(cities.map(x=>x.match(/\\{name:'([^']+)'/)[1])).size!==115) throw new Error('Duplicate cities'); console.log('Web release verification passed.')"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: vicky-the-bat-web-release/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
