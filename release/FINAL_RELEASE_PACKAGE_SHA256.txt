@@ -1,0 +1,12 @@
+Final release package SHA-256
+
+vicky-the-bat-final-release-package.zip
+6384cbc7125a1fcdc2be890df1c98f2a46453c48469f77933a05412f9de15fc9
+
+Web artifact
+vicky-the-bat-release.html
+6be275e35dc4ca81f3d8dd1f87d59fc41ebbc7f59870bf0594048b6aa59053a9
+
+Mobile artifact
+vicky-the-bat-mobile-release.zip
+9a2f77f2ecf4530f212d16661a2146349b92c1546b0e67c3d9c81e8bbcd15ae3
