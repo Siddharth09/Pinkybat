@@ -1,0 +1,64 @@
+You are the release/deployment AI for Vicky the Bat.
+
+Repository: Siddharth09/Pinkybat
+Release branch: vicky-the-bat-release
+
+Use the local artifact `vicky-the-bat-mobile-release.zip` or the folder `vicky-the-bat-mobile-release` as the exact mobile source. Do not create a second gameplay implementation.
+
+SOURCE OF TRUTH
+- Web: /vicky-the-bat-release.html from the delivered release artifact.
+- Mobile: /vicky-the-bat-mobile-release/source/vicky.html
+- Mobile web bundle: /vicky-the-bat-mobile-release/www/index.html
+
+GAMEPLAY CHANGES IN THIS RELEASE
+- Vicky's wings flap as a function of vertical movement and a natural wingbeat cadence.
+- The city-change handler no longer resets the plane mid-flight.
+- Paris, San Francisco, Sydney, and Agra landmark scenes were rebuilt with recognizable structural features.
+- 115 cities remain in a non-repeating tour.
+- Heart pink progression remains subtle and text-free.
+
+DO NOT CHANGE
+- Do not reintroduce the Magpie game.
+- Do not add the removed 'more hearts more pink' text.
+- Do not add whales.
+- Do not replace the game with a different canvas/game engine.
+
+LOCAL COMMANDS
+```bash
+cd vicky-the-bat-mobile-release
+npm install
+npm run build:web
+npm test
+```
+
+IOS
+```bash
+npm run cap:add:ios
+npm run cap:sync
+npm run cap:open:ios
+```
+
+XCODE CHECKS
+1. App name: Vicky the Bat
+2. Bundle ID: com.vickybat.game
+3. Choose Apple development team
+4. Run on iPhone Simulator
+5. Run on a physical iPhone
+6. Set Release signing for TestFlight/App Store
+7. Increment build number
+8. Archive -> Validate -> Upload
+
+ANDROID
+```bash
+npm run cap:add:android
+npm run cap:sync
+npm run cap:open:android
+```
+
+WEB
+Deploy `web/index.html` or the release artifact's HTML as a static site. No server process is required by the core game.
+
+RELEASE GATE
+Run npm test before packaging. Then manually verify startup, touch control, flap feel, hearts, city changes, plane fly-by, collision behavior, pause/resume if present, share score, and end-of-run screen on real iOS and Android devices.
+
+Do not claim zero possible bugs from static analysis alone. The static audit is a code-quality gate; real-device QA is the final release gate.
