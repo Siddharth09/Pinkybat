@@ -1,0 +1,16 @@
+WEB RELEASE
+
+1. Take the validated file `vicky-the-bat-release.html` from the release artifact.
+2. Rename it to `index.html` if your host requires that filename.
+3. Upload it to the static site root.
+4. No server-side runtime is required for the core game.
+
+For local verification:
+
+```bash
+python3 -m http.server 8080 -d .
+```
+
+Then open http://localhost:8080/vicky-the-bat-release.html.
+
+For a production static host, deploy the HTML exactly as provided. Do not minify or rewrite the inline JavaScript until the iOS/Android build has been validated.
