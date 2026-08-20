@@ -1,0 +1,12 @@
+Local release artifacts created and validated:
+
+vicky-the-bat-release.html
+SHA-256: 6be275e35dc4ca81f3d8dd1f87d59fc41ebbc7f59870bf0594048b6aa59053a9
+
+vicky-the-bat-mobile-release.zip
+SHA-256: e84df10a1b8d41ad324029a5b5e6762f724d2a55ad8f92c928e003e38b248021
+
+vicky-the-bat-release-and-mac-ai-deployment-guide.docx
+SHA-256: aacaba09df1a33c9bc46d7c9335a19b262d3de97bb520da8317a1718f58cd0f5
+
+The exact web/mobile source is included in the downloadable artifacts. Use the Mac AI prompt in release/MAC_AI_PROMPT.txt to place the artifact source into the repository's deployment paths without changing gameplay.
