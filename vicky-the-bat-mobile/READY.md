@@ -1,0 +1,1 @@
+Vicky the Bat mobile folder is ready for Capacitor generation.
