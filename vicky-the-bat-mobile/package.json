@@ -5,7 +5,7 @@
   "description": "Vicky the Bat mobile app built with Capacitor",
   "scripts": {
     "build:web": "node scripts/build-web.mjs",
-    "test": "node --check www/game.js",
+    "test": "node scripts/test-build.mjs",
     "cap:add:ios": "npx cap add ios",
     "cap:add:android": "npx cap add android",
     "cap:sync": "npx cap sync",
@@ -17,8 +17,9 @@
     "@capacitor/splash-screen": "^8.0.0"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.0",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/ios": "^8.5.0",
-    "@capacitor/android": "^8.5.0"
+    "typescript": "^7.0.2"
   }
 }
