@@ -1,0 +1,26 @@
+name: iOS archive
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  archive:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm test
+      - run: npm run build:web
+      - name: Generate iOS project
+        run: npx cap add ios
+      - run: npx cap sync ios
+      - run: xcodebuild -version
+      - name: Build unsigned archive
+        run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphoneos -archivePath build/PinkyBat.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pinky-bat-ios-archive
+          path: build/PinkyBat.xcarchive
