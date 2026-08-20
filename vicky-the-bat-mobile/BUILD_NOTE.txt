@@ -1,1 +1,0 @@
-This project is intentionally self-contained under vicky-the-bat-mobile. Run npm install, npm run build:web, npm test, then npx cap add ios or android and npx cap sync.

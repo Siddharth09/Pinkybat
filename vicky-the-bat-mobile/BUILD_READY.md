@@ -1,1 +1,0 @@
-Capacitor configuration is ready for iOS and Android generation.
