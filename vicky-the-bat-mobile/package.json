@@ -1,8 +1,8 @@
 {
-  "name": "vicky-the-bat-mobile",
+  "name": "becky-the-bat-mobile",
   "version": "1.0.0",
   "private": true,
-  "description": "Vicky the Bat mobile app built with Capacitor",
+  "description": "Becky the Bat mobile app built with Capacitor",
   "scripts": {
     "build:web": "node scripts/build-web.mjs",
     "test": "node scripts/test-build.mjs",

@@ -5,7 +5,7 @@ const html = await readFile('www/index.html', 'utf8');
 const required = [
   '<canvas',
   '<script>',
-  'VICKY',
+  'BECKY',
   'function drawBat',
   'function update',
   'requestAnimationFrame'
@@ -27,4 +27,4 @@ for (const [, code] of scripts) {
   new Function(code);
 }
 
-console.log('Vicky the Bat build check PASS');
+console.log('Becky the Bat build check PASS');
