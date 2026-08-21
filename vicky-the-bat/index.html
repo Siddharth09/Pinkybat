@@ -325,7 +325,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     const gap = Math.max(155, Math.min(H*0.48, 300-d*120));
     const gy = H*0.14 + Math.random()*Math.max(10, H*0.70-gap);
     const w = Math.max(52, Math.min(110, W*(0.12+0.055*d)));
-    const pool = ['eiffel','statue','bigben','burj','sleigh','giraffe','volcano','skyscraper','bridge','charles','hallgrim','indiaGate','goldengate','parliament'];
+    const pool = ['eiffel','statue','bigben','burj','sleigh','giraffe','volcano','skyscraper','bridge'];
     const type = pool[Math.floor(Math.random()*pool.length)];
     obstacles.push({x:W+50,y:0,w,h:gy,type},{x:W+50,y:gy+gap,w,h:H-gy-gap,type});
   }
@@ -457,10 +457,8 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       // the canopy/person cluster rather than an oversized invisible circle.
       const hitY = g.type==='parachute' ? gy + g.r*.35 : gy;
       const dx=bat.x*W-g.x,dy=bat.y-hitY;
-      const rr=bat.r*.54+g.r*(g.type==='balloon'?.62:.46);
-      // No airborne-object collision during the opening seconds of a run,
-      // and never before a newly spawned guest has actually entered the screen.
-      if(t>2.5 && g.age>.7 && g.x < W-g.r*.15 && dx*dx+dy*dy<rr*rr) return beginCrash();
+      // Balloons and parachutes are decorative only.
+      void dx; void dy;
       if(g.x+g.r*2<-80) skyGuests.splice(i,1);
     }
 
