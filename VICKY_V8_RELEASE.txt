@@ -1,0 +1,4 @@
+Vicky the Bat v8 release candidate
+SHA-256: 8cf6aa465634203c06f3a1b5c27b8b1d8603d79a42c8e8be3a872c27b46ac9c5
+Status: approved for final iOS simulator/device QA
+Features: 115 cities, detailed landmarks, safe balloons/parachutes, water-city-only boats, full plane flyby, hearts/pink progression.
