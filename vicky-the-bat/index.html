@@ -311,7 +311,9 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       cityTime = 0;
       if(cityIndex<cities.length-1)cityIndex++;
       weatherTime = 0;
-      plane = {x:-280, y:60 + Math.random() * 50, flag:currentCity().flag};
+      // Do not reset the advertising plane on city transitions. It continues
+      // its current fly-by until the entire plane AND trailing flag have
+      // smoothly exited the right side of the screen.
       impactFlash = 0.12;
     }
     cityEl.textContent = currentCity().name;
@@ -509,10 +511,10 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     plane.x += planeSpeed * dt;
 
     // The banner extends ~190 px to the LEFT of plane.x; the aircraft nose
-    // extends ~35 px to the RIGHT. We deliberately wait an extra 80 px so
+    // extends ~35 px to the RIGHT. We deliberately wait until the trailing banner is fully clear, with extra margin, so
     // the whole composition visibly flies out rather than popping away.
     const planeSpawnX = -230;
-    const planeResetX = W + 120;
+    const planeResetX = W + 230;
 
     // Change flags by screen progress without ever moving/resetting the aircraft.
     const visibleProgress = Math.max(0, Math.min(0.9999, (plane.x - planeSpawnX) / (planeResetX - planeSpawnX)));
