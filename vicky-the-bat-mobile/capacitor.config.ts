@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.beckythebat.game',
+  appId: 'com.beckybat.game',
   appName: 'Becky the Bat',
   webDir: 'www',
   bundledWebRuntime: false,
