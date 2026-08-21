@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Vicky the Bat</title>
+<title>Becky the Bat</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#152036;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 body{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
@@ -27,7 +27,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 <body>
 <canvas id="game"></canvas>
 <div id="hud"><div><div id="score">0<small> m</small></div><div id="heartScore" class="hearts">♥ 0</div><div id="heartProgress" class="heartProgress">0/300</div><div id="city">PARIS</div></div><div id="pill">BEST 0 m</div></div>
-<div id="intro" class="panel"><div><div class="mark">🦇</div><div class="title">VICKY <span>THE BAT</span></div></div></div>
+<div id="intro" class="panel"><div><div class="mark">🦇</div><div class="title">BECKY <span>THE BAT</span></div></div></div>
 <div id="gameover" class="panel hidden"><div><div style="font-size:11px;letter-spacing:2px;font-weight:1000">YOU FLEW</div><div id="final" class="scoreBig">0</div><div>metres</div><div id="lastCity" class="note"></div><div id="newBest" class="note"></div><button id="share">SHARE SCORE</button><button id="again">FLY AGAIN</button></div></div>
 <script>
 (() => {
@@ -53,7 +53,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   let holding = false;
   let t = 0;
   let distance = 0;
-  let best = Number(localStorage.getItem('vickyBatBestFixed') || 0);
+  let best = Number(localStorage.getItem('beckyBatBestFixed') || 0);
   let cityIndex = 0;
   let cityTime = 0;
   let spawnTime = 1;
@@ -287,7 +287,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     const isNewBest = score > best;
     if (isNewBest) {
       best = score;
-      localStorage.setItem('vickyBatBestFixed', String(best));
+      localStorage.setItem('beckyBatBestFixed', String(best));
     }
     finalEl.textContent = String(score);
     lastCityEl.textContent = 'LAST CITY: ' + currentCity().name;
@@ -355,7 +355,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     const cx=o.x+o.w*.5;
     const bodyR=bat.r*.42;
 
-    // Require Vicky to be well inside the obstacle horizontally, not merely
+    // Require Becky to be well inside the obstacle horizontally, not merely
     // grazing the artwork.
     const solidHalfW=o.w*.22;
     if(px+bodyR < cx-solidHalfW || px-bodyR > cx+solidHalfW) return false;
@@ -398,7 +398,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     bat.vy *= 0.994;
     bat.y += bat.vy * dt;
     bat.flapPhase = Math.max(0, bat.flapPhase - dt);
-    // Screen edges are not obstacles. Clamp Vicky inside the viewport so
+    // Screen edges are not obstacles. Clamp Becky inside the viewport so
     // mobile resize/touch jitter cannot look like a random crash.
     if (bat.y < bat.r) {
       bat.y = bat.r;
@@ -452,7 +452,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     if (skyGuestTimer <= 0 && skyGuests.length < 2) {
       const type = Math.random() < 0.58 ? 'balloon' : 'parachute';
       const r = type === 'balloon' ? Math.max(24,Math.min(34,W*.055)) : Math.max(19,Math.min(27,W*.043));
-      // Spawn well away from Vicky's current position and never in the low
+      // Spawn well away from Becky's current position and never in the low
       // start lane. Parachutes are especially constrained because their body
       // hangs below the canopy.
       const minY = type === 'parachute' ? H*.18 : H*.16;
@@ -480,7 +480,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       if(g.x+g.r*2<-80) skyGuests.splice(i,1);
     }
 
-    // Boats are visual ambience at the bottom only and never collide with Vicky.
+    // Boats are visual ambience at the bottom only and never collide with Becky.
     boatTimer -= dt;
     if(cityHasWater()){
       if(boatTimer<=0 && boats.length<2){
@@ -572,28 +572,38 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 
   
   function drawPrague(){
-    gradient('#5b527f','#f1c27b');
-    ctx.fillStyle='#6f625e';ctx.fillRect(0,H*.82,W,H*.18);
-    // Vltava river
-    ctx.fillStyle='#4f86a1';ctx.fillRect(0,H*.70,W,H*.10);
-    // Charles Bridge
-    ctx.fillStyle='#7b6759';ctx.fillRect(W*.04,H*.65,W*.92,H*.07);
-    ctx.strokeStyle='#9d816b';ctx.lineWidth=5;
-    ctx.beginPath();ctx.arc(W*.24,H*.73,W*.16,Math.PI,0);ctx.stroke();
-    ctx.beginPath();ctx.arc(W*.50,H*.73,W*.16,Math.PI,0);ctx.stroke();
-    ctx.beginPath();ctx.arc(W*.76,H*.73,W*.16,Math.PI,0);ctx.stroke();
-    // Old Town bridge tower
-    ctx.fillStyle='#7c5d50';ctx.fillRect(W*.10,H*.45,W*.10,H*.24);
-    ctx.fillStyle='#5a4640';ctx.beginPath();ctx.moveTo(W*.09,H*.45);ctx.lineTo(W*.15,H*.34);ctx.lineTo(W*.21,H*.45);ctx.closePath();ctx.fill();
-    // Prague Castle on hill
-    ctx.fillStyle='#8e796b';ctx.beginPath();ctx.moveTo(W*.56,H*.62);ctx.lineTo(W*.62,H*.46);ctx.lineTo(W*.69,H*.57);ctx.lineTo(W*.76,H*.45);ctx.lineTo(W*.84,H*.62);ctx.closePath();ctx.fill();
-    // St Vitus spires
-    ctx.fillStyle='#59484a';ctx.fillRect(W*.67,H*.43,W*.03,H*.20);ctx.fillRect(W*.75,H*.42,W*.03,H*.21);
-    ctx.beginPath();ctx.moveTo(W*.685,H*.43);ctx.lineTo(W*.685,H*.35);ctx.lineTo(W*.70,H*.43);ctx.closePath();ctx.fill();
-    ctx.beginPath();ctx.moveTo(W*.765,H*.42);ctx.lineTo(W*.765,H*.34);ctx.lineTo(W*.78,H*.42);ctx.closePath();ctx.fill();
-    // Warm windows
-    ctx.fillStyle='#e7c37d';ctx.fillRect(W*.61,H*.53,10,14);ctx.fillRect(W*.70,H*.53,10,14);ctx.fillRect(W*.79,H*.54,10,14);
-}
+    gradient('#70618b','#efb87b');
+    const river=H*.76;ctx.fillStyle='#537f99';ctx.fillRect(0,river,W,H-river);
+
+    // Prague Castle and St Vitus Cathedral high above the Vltava.
+    ctx.fillStyle='#c4a17e';ctx.fillRect(W*.57,H*.44,W*.35,H*.20);
+    ctx.fillStyle='#66555a';
+    for(const x of [W*.62,W*.70,W*.79]){
+      ctx.fillRect(x,H*.30,W*.025,H*.34);
+      ctx.beginPath();ctx.moveTo(x+W*.0125,H*.20);ctx.lineTo(x-W*.005,H*.30);ctx.lineTo(x+W*.03,H*.30);ctx.closePath();ctx.fill();
+    }
+    ctx.fillStyle='#b88a6a';ctx.beginPath();ctx.moveTo(W*.55,H*.44);ctx.lineTo(W*.74,H*.36);ctx.lineTo(W*.94,H*.44);ctx.closePath();ctx.fill();
+
+    // Charles Bridge: multiple stone arches, statues and Old Town bridge tower.
+    const deck=H*.69,L=W*.05,R=W*.74;
+    ctx.fillStyle='#8c7667';ctx.fillRect(L,deck,R-L,H*.035);
+    ctx.strokeStyle='#8c7667';ctx.lineWidth=9;
+    for(let i=0;i<5;i++){const x=L+(i+.5)*(R-L)/5;ctx.beginPath();ctx.arc(x,H*.735,(R-L)/10*.78,Math.PI,0);ctx.stroke();}
+    // statues lining the parapet
+    ctx.fillStyle='#403d3b';
+    for(let i=0;i<8;i++){const x=L+W*.035+i*(R-L-W*.07)/7;ctx.fillRect(x-2,H*.635,4,H*.05);ctx.beginPath();ctx.arc(x,H*.625,4,0,Math.PI*2);ctx.fill();}
+    // Gothic bridge tower.
+    ctx.fillStyle='#6e5b50';ctx.fillRect(W*.09,H*.43,W*.07,H*.26);
+    ctx.beginPath();ctx.moveTo(W*.125,H*.31);ctx.lineTo(W*.085,H*.43);ctx.lineTo(W*.165,H*.43);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#d0b68e';ctx.beginPath();ctx.arc(W*.125,H*.56,W*.018,Math.PI,0);ctx.fill();
+
+    // Old Town red roofs and warm lamps.
+    for(let i=0;i<6;i++){
+      const x=W*(.76+i*.04);ctx.fillStyle='#d0b28d';ctx.fillRect(x,H*.58,W*.035,H*.18);
+      ctx.fillStyle='#9c5647';ctx.beginPath();ctx.moveTo(x-2,H*.58);ctx.lineTo(x+W*.017,H*.53);ctx.lineTo(x+W*.037,H*.58);ctx.closePath();ctx.fill();
+    }
+    ctx.fillStyle='#f2b94f';for(let i=0;i<6;i++){const x=L+W*.07+i*W*.10;ctx.beginPath();ctx.arc(x,H*.655,2.5,0,Math.PI*2);ctx.fill();}
+  }
 
   function drawReykjavik(){
     gradient('#8cb9d8','#edf8ff');
@@ -604,66 +614,170 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawAgra(){
-    gradient('#9fd5ec','#f7e4c3');
-    ctx.fillStyle='#86a86f';ctx.fillRect(0,H*.80,W,H*.20);
-    const x=W*.52,b=H*.80;
-    // Taj Mahal central mausoleum.
-    ctx.fillStyle='#f7f1e7';ctx.fillRect(x-W*.15,b-H*.27,W*.30,H*.27);
-    ctx.beginPath();ctx.arc(x,b-H*.27,W*.145,Math.PI,0);ctx.fill();
-    // onion dome finial
-    ctx.fillStyle='#e7ded0';ctx.beginPath();ctx.moveTo(x,b-H*.46);ctx.lineTo(x-W*.025,b-H*.39);ctx.lineTo(x+W*.025,b-H*.39);ctx.closePath();ctx.fill();
-    ctx.fillRect(x-2,b-H*.51,4,H*.06);
-    // Four minarets.
-    for(let i=0;i<4;i++){
-      const px=x-W*.24+i*W*.16;
-      ctx.fillStyle='#eee5d9';ctx.fillRect(px,b-H*.39,W*.045,H*.39);
-      ctx.beginPath();ctx.arc(px+W*.0225,b-H*.39,W*.0225,Math.PI,0);ctx.fill();
-      ctx.fillStyle='#d9ccbc';ctx.fillRect(px-W*.006,b-H*.27,W*.057,4);
-    }
-    // Central arch and side arches.
-    ctx.fillStyle='#aa9b8d';ctx.beginPath();ctx.arc(x,b-H*.14,W*.035,Math.PI,0);ctx.fill();ctx.fillRect(x-W*.035,b-H*.14,W*.07,H*.14);
-    for(let i=-1;i<=1;i+=2){ctx.beginPath();ctx.arc(x+i*W*.075,b-H*.10,W*.025,Math.PI,0);ctx.fill();}
-    // Reflecting pool.
-    ctx.fillStyle='#5ea8b9';ctx.fillRect(W*.42,H*.80,W*.20,H*.035);
-    // Cows in foreground.
-    for(let i=0;i<3;i++){const cx=W*(.13+i*.25),cy=H*.76;ctx.fillStyle='#f2eadb';ctx.beginPath();ctx.ellipse(cx,cy,18,11,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(cx+16,cy-5,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#5e4a43';ctx.beginPath();ctx.arc(cx-7,cy,5,0,Math.PI*2);ctx.arc(cx+5,cy-4,4,0,Math.PI*2);ctx.fill();}
-  }function drawRio(){
-    gradient('#6fc6e8','#f6d8a4');
-    ctx.fillStyle='#48a8c1';ctx.fillRect(0,H*.76,W,H*.24);
+    gradient('#9fd5ec','#f7e5c4');
+    const ground=H*.80;
+    ctx.fillStyle='#7fa26b';ctx.fillRect(0,ground,W,H-ground);
 
-    // Sugarloaf Mountain and layered Rio hills.
-    ctx.fillStyle='#54876a';ctx.beginPath();ctx.moveTo(0,H*.76);ctx.quadraticCurveTo(W*.13,H*.48,W*.25,H*.76);ctx.fill();
-    ctx.fillStyle='#426f59';ctx.beginPath();ctx.moveTo(W*.72,H*.76);ctx.quadraticCurveTo(W*.84,H*.40,W,H*.76);ctx.fill();
+    // Formal Mughal garden axis and reflecting pool.
+    ctx.fillStyle='#d7c7a6';ctx.fillRect(W*.08,H*.745,W*.84,H*.035);
+    ctx.fillStyle='#5aa9bd';ctx.fillRect(W*.445,H*.735,W*.11,H*.18);
+    ctx.fillStyle='rgba(245,245,235,.45)';ctx.fillRect(W*.455,H*.75,W*.09,H*.006);
 
-    // Corcovado pedestal and Christ the Redeemer.
-    const cx=W*.53,base=H*.74,headY=H*.255;
-    ctx.fillStyle='#8d958e';ctx.beginPath();ctx.moveTo(cx-W*.055,base);ctx.lineTo(cx-W*.035,H*.61);ctx.lineTo(cx+W*.035,H*.61);ctx.lineTo(cx+W*.055,base);ctx.closePath();ctx.fill();
+    const cx=W*.52,base=H*.735,mainW=W*.34;
 
-    // Robe/body: tall, tapered Art Deco silhouette.
-    ctx.fillStyle='#e7e6dc';
+    // Raised marble plinth.
+    ctx.fillStyle='#e9e2d7';ctx.fillRect(cx-mainW*.64,base-H*.035,mainW*1.28,H*.04);
+    ctx.fillStyle='#d6ccbd';ctx.fillRect(cx-mainW*.68,base,mainW*1.36,H*.025);
+
+    // Main white-marble mausoleum cube.
+    ctx.fillStyle='#f6f0e6';
+    ctx.fillRect(cx-mainW*.34,H*.455,mainW*.68,base-H*.455);
+
+    // Chamfered side masses.
+    ctx.fillStyle='#eee6da';
+    ctx.beginPath();ctx.moveTo(cx-mainW*.34,H*.455);ctx.lineTo(cx-mainW*.47,H*.50);ctx.lineTo(cx-mainW*.47,base);ctx.lineTo(cx-mainW*.34,base);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(cx+mainW*.34,H*.455);ctx.lineTo(cx+mainW*.47,H*.50);ctx.lineTo(cx+mainW*.47,base);ctx.lineTo(cx+mainW*.34,base);ctx.closePath();ctx.fill();
+
+    // Great central iwan / pointed Mughal arch.
+    ctx.fillStyle='#a99c8d';
     ctx.beginPath();
-    ctx.moveTo(cx,headY+H*.055);
-    ctx.lineTo(cx-W*.038,H*.60);
-    ctx.lineTo(cx-W*.018,H*.67);
-    ctx.lineTo(cx+W*.018,H*.67);
-    ctx.lineTo(cx+W*.038,H*.60);
+    ctx.moveTo(cx-mainW*.105,base);
+    ctx.lineTo(cx-mainW*.105,H*.565);
+    ctx.quadraticCurveTo(cx-mainW*.095,H*.49,cx,H*.475);
+    ctx.quadraticCurveTo(cx+mainW*.095,H*.49,cx+mainW*.105,H*.565);
+    ctx.lineTo(cx+mainW*.105,base);
     ctx.closePath();ctx.fill();
+    // Inner doorway.
+    ctx.fillStyle='#5e554e';
+    ctx.beginPath();ctx.moveTo(cx-mainW*.035,base);ctx.lineTo(cx-mainW*.035,H*.625);
+    ctx.quadraticCurveTo(cx,H*.585,cx+mainW*.035,H*.625);ctx.lineTo(cx+mainW*.035,base);ctx.closePath();ctx.fill();
 
-    // Horizontal outstretched arms with gently lowered hands.
-    ctx.strokeStyle='#e7e6dc';ctx.lineWidth=13;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(cx-W*.32,H*.39);ctx.quadraticCurveTo(cx-W*.16,H*.36,cx,H*.385);ctx.quadraticCurveTo(cx+W*.16,H*.36,cx+W*.32,H*.39);ctx.stroke();
+    // Side iwans and decorative panels.
+    ctx.fillStyle='#b9ab9c';
+    for(const d of [-1,1]){
+      const sx=cx+d*mainW*.225;
+      ctx.beginPath();ctx.moveTo(sx-mainW*.05,base-H*.015);ctx.lineTo(sx-mainW*.05,H*.585);
+      ctx.quadraticCurveTo(sx,H*.545,sx+mainW*.05,H*.585);ctx.lineTo(sx+mainW*.05,base-H*.015);ctx.closePath();ctx.fill();
+    }
+    ctx.strokeStyle='#d0c3b2';ctx.lineWidth=1;
+    for(let r=0;r<2;r++)for(let k=-2;k<=2;k++){const x=cx+k*mainW*.11,y=H*(.52+r*.09);ctx.strokeRect(x-mainW*.025,y,mainW*.05,H*.045);}
 
-    // Neck and head.
-    ctx.fillStyle='#e7e6dc';ctx.fillRect(cx-5,headY+H*.025,10,H*.055);
-    ctx.beginPath();ctx.arc(cx,headY,12,0,Math.PI*2);ctx.fill();
+    // Main onion dome: drum, bulbous profile, neck and lotus finial.
+    ctx.fillStyle='#e7dfd3';ctx.fillRect(cx-mainW*.13,H*.395,mainW*.26,H*.065);
+    ctx.fillStyle='#f7f1e8';
+    ctx.beginPath();
+    ctx.moveTo(cx-mainW*.145,H*.405);
+    ctx.bezierCurveTo(cx-mainW*.155,H*.315,cx-mainW*.08,H*.265,cx,H*.245);
+    ctx.bezierCurveTo(cx+mainW*.08,H*.265,cx+mainW*.155,H*.315,cx+mainW*.145,H*.405);
+    ctx.closePath();ctx.fill();
+    // Dome ribs.
+    ctx.strokeStyle='#d8ccbc';ctx.lineWidth=1.2;
+    for(const d of [-.09,-.045,.045,.09]){
+      ctx.beginPath();ctx.moveTo(cx,H*.252);ctx.quadraticCurveTo(cx+mainW*d,H*.31,cx+mainW*d*1.35,H*.402);ctx.stroke();
+    }
+    // Lotus crown + finial.
+    ctx.fillStyle='#d7c6aa';ctx.beginPath();ctx.ellipse(cx,H*.245,mainW*.045,H*.014,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#9b7a4f';ctx.fillRect(cx-1.5,H*.175,3,H*.07);
+    ctx.beginPath();ctx.arc(cx,H*.17,3,0,Math.PI*2);ctx.fill();
 
-    // Subtle robe folds.
-    ctx.strokeStyle='#c8cbc4';ctx.lineWidth=1.5;
-    for(const dx of [-.018,0,.018]){ctx.beginPath();ctx.moveTo(cx+W*dx,H*.43);ctx.lineTo(cx+W*dx*.55,H*.61);ctx.stroke();}
+    // Four corner chhatri domes on the mausoleum roof.
+    for(const d of [-1,1]){
+      const sx=cx+d*mainW*.255;
+      ctx.fillStyle='#eee6da';ctx.fillRect(sx-mainW*.035,H*.405,mainW*.07,H*.06);
+      ctx.fillStyle='#f6efe5';ctx.beginPath();ctx.arc(sx,H*.405,mainW*.045,Math.PI,0);ctx.fill();
+      ctx.fillStyle='#9d815e';ctx.fillRect(sx-1,H*.36,2,H*.025);
+    }
 
-    // Copacabana curve / beachfront.
-    ctx.fillStyle='#f0ddb1';ctx.beginPath();ctx.moveTo(0,H*.84);ctx.quadraticCurveTo(W*.40,H*.73,W,H*.86);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#3c8060';for(let i=0;i<5;i++){const x=W*(.08+i*.18);ctx.fillRect(x,H*.78,3,H*.09);ctx.beginPath();ctx.arc(x,H*.77,10,Math.PI,0);ctx.fill();}
+    // Four free-standing minarets at the plinth corners, with balconies,
+    // octagonal-looking shafts, chhatris and slight outward placement.
+    const mins=[cx-mainW*.58,cx-mainW*.45,cx+mainW*.45,cx+mainW*.58];
+    mins.forEach((mx,i)=>{
+      const outer=i===0||i===3;
+      const top=outer?H*.355:H*.385;
+      ctx.fillStyle='#eee7dc';
+      ctx.beginPath();ctx.moveTo(mx-mainW*.026,base);ctx.lineTo(mx-mainW*.019,top);ctx.lineTo(mx+mainW*.019,top);ctx.lineTo(mx+mainW*.026,base);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#cfc2b1';
+      [H*.48,H*.59].forEach(y=>ctx.fillRect(mx-mainW*.032,y,mainW*.064,4));
+      // minaret balcony/chhatri
+      ctx.fillStyle='#ded3c5';ctx.fillRect(mx-mainW*.035,top,mainW*.07,5);
+      ctx.fillStyle='#f4ede2';ctx.beginPath();ctx.arc(mx,top,mainW*.035,Math.PI,0);ctx.fill();
+      ctx.fillStyle='#96784f';ctx.fillRect(mx-1,top-H*.035,2,H*.035);
+    });
+
+    // Red sandstone mosque/guest-house silhouettes at the sides.
+    ctx.fillStyle='#a65c45';
+    ctx.fillRect(W*.05,H*.61,W*.14,H*.13);ctx.fillRect(W*.81,H*.61,W*.14,H*.13);
+    for(const x of [W*.12,W*.88]){
+      ctx.beginPath();ctx.arc(x,H*.61,W*.045,Math.PI,0);ctx.fill();
+    }
+    ctx.fillStyle='#5f4338';
+    for(const x of [W*.09,W*.15,W*.85,W*.91]){
+      ctx.beginPath();ctx.arc(x,H*.68,W*.015,Math.PI,0);ctx.fill();ctx.fillRect(x-W*.015,H*.68,W*.03,H*.055);
+    }
+
+    // Cypress-lined Mughal garden.
+    for(let i=0;i<5;i++){
+      for(const side of [-1,1]){
+        const tx=cx+side*W*(.12+i*.065);
+        ctx.fillStyle='#47754e';ctx.beginPath();ctx.moveTo(tx,H*.77);ctx.lineTo(tx-7,H*.69);ctx.lineTo(tx+7,H*.69);ctx.closePath();ctx.fill();
+      }
+    }
+  }
+
+  function drawRio(){
+    gradient('#63bfe5','#f5d6a1');
+    const water=H*.77;
+    ctx.fillStyle='#42a6c0';ctx.fillRect(0,water,W,H-water);
+
+    // Layered Guanabara Bay mountains.
+    ctx.fillStyle='#5b896c';
+    ctx.beginPath();ctx.moveTo(0,water);ctx.quadraticCurveTo(W*.10,H*.54,W*.22,water);ctx.quadraticCurveTo(W*.31,H*.61,W*.39,water);ctx.fill();
+    ctx.fillStyle='#426f59';
+    ctx.beginPath();ctx.moveTo(W*.68,water);ctx.quadraticCurveTo(W*.83,H*.39,W,water);ctx.fill();
+
+    // Sugarloaf Mountain: steep rounded granite monolith.
+    ctx.fillStyle='#596e62';
+    ctx.beginPath();ctx.moveTo(W*.68,water);ctx.bezierCurveTo(W*.72,H*.60,W*.75,H*.43,W*.81,H*.39);ctx.bezierCurveTo(W*.88,H*.46,W*.90,H*.64,W*.94,water);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#3f7959';ctx.beginPath();ctx.moveTo(W*.70,water);ctx.quadraticCurveTo(W*.77,H*.57,W*.81,H*.42);ctx.quadraticCurveTo(W*.84,H*.59,W*.89,water);ctx.closePath();ctx.fill();
+
+    // Corcovado mountain.
+    ctx.fillStyle='#48765b';
+    ctx.beginPath();ctx.moveTo(W*.10,water);ctx.quadraticCurveTo(W*.28,H*.42,W*.47,water);ctx.closePath();ctx.fill();
+
+    // Christ the Redeemer: pedestal, long robe, head and unmistakable arms.
+    const cx=W*.285,ped=H*.60,head=H*.245;
+    ctx.fillStyle='#777f79';ctx.beginPath();ctx.moveTo(cx-W*.045,H*.68);ctx.lineTo(cx-W*.026,ped);ctx.lineTo(cx+W*.026,ped);ctx.lineTo(cx+W*.045,H*.68);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#e8e7df';
+    ctx.beginPath();ctx.moveTo(cx,head+H*.05);ctx.lineTo(cx-W*.032,ped);ctx.lineTo(cx-W*.018,H*.64);ctx.lineTo(cx+W*.018,H*.64);ctx.lineTo(cx+W*.032,ped);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#e8e7df';ctx.lineWidth=12;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(cx-W*.22,H*.365);ctx.quadraticCurveTo(cx-W*.10,H*.35,cx,H*.375);ctx.quadraticCurveTo(cx+W*.10,H*.35,cx+W*.22,H*.365);ctx.stroke();
+    ctx.fillStyle='#e8e7df';ctx.beginPath();ctx.arc(cx,head,11,0,Math.PI*2);ctx.fill();
+    ctx.fillRect(cx-4,head+9,8,H*.045);
+
+    // Dense Rio skyline following the bay.
+    ctx.fillStyle='rgba(225,230,218,.72)';
+    for(let i=0;i<13;i++){
+      const x=W*(.40+i*.042),bh=H*(.06+((i*11)%10)/100);
+      ctx.fillRect(x,water-bh,W*.027,bh);
+    }
+
+    // Copacabana crescent beach and promenade.
+    ctx.fillStyle='#efd8a8';
+    ctx.beginPath();ctx.moveTo(W*.36,H*.82);ctx.quadraticCurveTo(W*.66,H*.72,W,H*.83);ctx.lineTo(W,H);ctx.lineTo(W*.38,H);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#f8f4e8';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W*.38,H*.80);ctx.quadraticCurveTo(W*.68,H*.73,W,H*.81);ctx.stroke();
+
+    // Tiny sailboats on Guanabara Bay.
+    for(let i=0;i<4;i++){
+      const bx=W*(.49+i*.10),by=H*(.79+(i%2)*.025);
+      ctx.fillStyle='#f7f4e9';ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx,by-H*.045);ctx.lineTo(bx+W*.018,by);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#6a5748';ctx.fillRect(bx-W*.012,by,W*.032,2);
+    }
+
+    // Palm-lined waterfront.
+    for(let i=0;i<4;i++){
+      const px=W*(.50+i*.13);ctx.fillStyle='#76543c';ctx.fillRect(px,H*.70,3,H*.07);
+      ctx.fillStyle='#3d8552';for(let k=0;k<5;k++){const a=k*1.256;ctx.beginPath();ctx.ellipse(px+Math.cos(a)*9,H*.70+Math.sin(a)*4,12,4,a,0,Math.PI*2);ctx.fill();}
+    }
   }
 
   function drawSanFrancisco(){
@@ -772,88 +886,120 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawNorthPole(){
-    gradient('#79a9d3','#edf7fb');
-    ctx.fillStyle='#e9f5fa';ctx.fillRect(0,H*.78,W,H*.22);
+    gradient('#456d98','#d9edf5');
+    ctx.fillStyle='#e8f3f7';ctx.fillRect(0,H*.77,W,H*.23);
 
-    // Snowy toy workshop.
-    ctx.fillStyle='#9b5b43';ctx.fillRect(W*.12,H*.48,W*.58,H*.31);
-    ctx.fillStyle='#cf3f48';ctx.beginPath();ctx.moveTo(W*.08,H*.49);ctx.lineTo(W*.41,H*.30);ctx.lineTo(W*.74,H*.49);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#f5e5cc';ctx.fillRect(W*.10,H*.49,W*.62,H*.025);
+    // Aurora behind the workshop.
+    ctx.strokeStyle='rgba(91,210,165,.30)';ctx.lineWidth=18;
+    ctx.beginPath();ctx.moveTo(0,H*.19);ctx.bezierCurveTo(W*.25,H*.07,W*.48,H*.31,W*.76,H*.12);ctx.bezierCurveTo(W*.87,H*.05,W*.94,H*.17,W,H*.10);ctx.stroke();
 
-    // Windows and warm interior.
-    ctx.fillStyle='#ffd98a';
-    for(let i=0;i<5;i++)ctx.fillRect(W*(.17+i*.10),H*.59,W*.055,H*.07);
-    ctx.fillStyle='#6e483c';ctx.fillRect(W*.38,H*.63,W*.10,H*.16);
+    // Snowy pine forest.
+    for(let i=0;i<9;i++){
+      const x=W*(.03+i*.12),h=H*(.13+(i%3)*.035);
+      ctx.fillStyle='#315f58';ctx.beginPath();ctx.moveTo(x,H*.67-h);ctx.lineTo(x-W*.045,H*.67);ctx.lineTo(x+W*.045,H*.67);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#edf6f7';ctx.beginPath();ctx.moveTo(x,H*.67-h);ctx.lineTo(x-W*.022,H*.60-h*.20);ctx.lineTo(x+W*.022,H*.60-h*.20);ctx.closePath();ctx.fill();
+    }
 
-    // Workbench with wrapping gifts.
-    ctx.fillStyle='#6f4c3b';ctx.fillRect(W*.18,H*.70,W*.52,H*.045);ctx.fillRect(W*.22,H*.745,W*.04,H*.12);ctx.fillRect(W*.62,H*.745,W*.04,H*.12);
-    ctx.fillStyle='#e33e50';ctx.fillRect(W*.43,H*.64,W*.09,H*.07);ctx.fillStyle='#f3d07f';ctx.fillRect(W*.465,H*.64,W*.02,H*.07);
-    ctx.fillStyle='#3f8f65';ctx.fillRect(W*.54,H*.66,W*.08,H*.055);ctx.fillStyle='#f2d174';ctx.fillRect(W*.57,H*.66,W*.015,H*.055);
-    ctx.fillStyle='#d9a064';ctx.fillRect(W*.28,H*.65,W*.08,H*.06);ctx.fillStyle='#d4454d';ctx.fillRect(W*.314,H*.65,W*.012,H*.06);
+    // Cosy timber/log toy workshop.
+    const bx=W*.18,by=H*.45,bw=W*.56,bh=H*.32;
+    ctx.fillStyle='#744b31';ctx.fillRect(bx,by,bw,bh);
+    // horizontal log courses
+    ctx.strokeStyle='#4e3528';ctx.lineWidth=2;
+    for(let y=by+10;y<by+bh;y+=12){ctx.beginPath();ctx.moveTo(bx,y);ctx.lineTo(bx+bw,y);ctx.stroke();}
+    // roof with heavy snow cap
+    ctx.fillStyle='#543b2d';ctx.beginPath();ctx.moveTo(bx-W*.04,by);ctx.lineTo(bx+bw*.48,H*.29);ctx.lineTo(bx+bw+W*.04,by);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#f2f7f8';ctx.lineWidth=12;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(bx-W*.025,by-H*.01);ctx.lineTo(bx+bw*.48,H*.295);ctx.lineTo(bx+bw+W*.025,by-H*.01);ctx.stroke();
 
-    // Santa: red suit, white beard and hat.
-    const sx=W*.26, sy=H*.61;
-    ctx.fillStyle='#c83c42';ctx.beginPath();ctx.ellipse(sx,sy+H*.045,18,25,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#f4e9d9';ctx.beginPath();ctx.arc(sx,sy-4,12,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#d23d45';ctx.beginPath();ctx.moveTo(sx-13,sy-13);ctx.lineTo(sx+5,sy-13);ctx.lineTo(sx+14,sy-31);ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(sx+14,sy-31,4,0,Math.PI*2);ctx.fill();
-    // Elves.
-    for(let i=0;i<3;i++){const ex=W*(.44+i*.075),ey=H*.61;ctx.fillStyle=['#2f8159','#b63f49','#2f8159'][i];ctx.beginPath();ctx.ellipse(ex,ey+H*.045,12,21,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f0d8bd';ctx.beginPath();ctx.arc(ex,ey-2,8,0,Math.PI*2);ctx.fill();ctx.fillStyle='#2f8159';ctx.beginPath();ctx.moveTo(ex-9,ey-8);ctx.lineTo(ex+9,ey-8);ctx.lineTo(ex+2,ey-25);ctx.closePath();ctx.fill();}
+    // Chimney and smoke.
+    ctx.fillStyle='#6e4c3a';ctx.fillRect(bx+bw*.73,H*.31,W*.045,H*.15);
+    ctx.fillStyle='rgba(245,247,245,.65)';
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(bx+bw*.76+i*12,H*(.27-i*.045),10+i*2,0,Math.PI*2);ctx.fill();}
 
-    // Sleigh / aurora in the distance.
-    ctx.strokeStyle='#7d4a40';ctx.lineWidth=4;ctx.beginPath();ctx.arc(W*.82,H*.69,25,0,Math.PI);ctx.stroke();
-    ctx.strokeStyle='rgba(104,230,196,.55)';ctx.lineWidth=6;ctx.beginPath();ctx.arc(W*.80,H*.20,120,.15,1.30);ctx.stroke();
-    ctx.strokeStyle='rgba(170,120,240,.36)';ctx.beginPath();ctx.arc(W*.78,H*.21,150,.20,1.25);ctx.stroke();
+    // Warm glowing windows.
+    for(const wx of [bx+bw*.12,bx+bw*.68]){
+      ctx.fillStyle='#f3bd55';ctx.fillRect(wx,by+H*.08,W*.105,H*.105);
+      ctx.strokeStyle='#65452f';ctx.lineWidth=3;ctx.strokeRect(wx,by+H*.08,W*.105,H*.105);
+      ctx.beginPath();ctx.moveTo(wx+W*.0525,by+H*.08);ctx.lineTo(wx+W*.0525,by+H*.185);ctx.moveTo(wx,by+H*.132);ctx.lineTo(wx+W*.105,by+H*.132);ctx.stroke();
+    }
+    // Red front door and wreath.
+    ctx.fillStyle='#9e403b';ctx.fillRect(bx+bw*.44,by+H*.12,W*.085,H*.20);
+    ctx.fillStyle='#3d7650';ctx.beginPath();ctx.arc(bx+bw*.482,by+H*.17,10,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#d64e45';ctx.beginPath();ctx.arc(bx+bw*.482,by+H*.17,3,0,Math.PI*2);ctx.fill();
+
+    // Outdoor elf toy-making benches.
+    function elf(x,y,flip=1){
+      ctx.save();ctx.translate(x,y);ctx.scale(flip,1);
+      ctx.fillStyle='#e4b083';ctx.beginPath();ctx.arc(0,-22,7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#2f7b50';ctx.fillRect(-6,-15,12,20);
+      ctx.fillStyle='#c33f43';ctx.beginPath();ctx.moveTo(-8,-28);ctx.lineTo(0,-42);ctx.lineTo(8,-28);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#473b35';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-3,5);ctx.lineTo(-8,16);ctx.moveTo(3,5);ctx.lineTo(8,16);ctx.moveTo(-5,-8);ctx.lineTo(-13,-1);ctx.moveTo(5,-8);ctx.lineTo(13,-1);ctx.stroke();
+      ctx.restore();
+    }
+    const ey=H*.79;
+    for(let i=0;i<3;i++){
+      const ex=W*(.24+i*.18);
+      ctx.fillStyle='#8a5c3a';ctx.fillRect(ex-24,ey-5,48,6);ctx.fillRect(ex-20,ey+1,4,20);ctx.fillRect(ex+16,ey+1,4,20);
+      // toys on table: blocks / little train
+      ctx.fillStyle=['#d44e49','#e4b33f','#4d89a7'][i];ctx.fillRect(ex-10,ey-14,9,9);ctx.fillRect(ex+3,ey-12,12,7);
+      elf(ex-32,ey-8,i%2?1:-1);
+    }
+
+    // Presents piled beside workshop.
+    const gifts=[[.78,.72,'#c94d4c'],[.84,.75,'#4d8c68'],[.89,.71,'#d5a83d'],[.81,.67,'#6685b1']];
+    gifts.forEach(([gx,gy,c])=>{ctx.fillStyle=c;ctx.fillRect(W*gx,H*gy,22,18);ctx.fillStyle='#f1d48a';ctx.fillRect(W*gx+9,H*gy,4,18);ctx.fillRect(W*gx,H*gy+7,22,4);});
+
+    // North Pole sign.
+    ctx.fillStyle='#765338';ctx.fillRect(W*.06,H*.62,5,H*.18);ctx.fillStyle='#9b6c43';ctx.fillRect(W*.025,H*.60,W*.14,H*.055);
+    ctx.fillStyle='#f4eee2';ctx.font='bold 11px system-ui';ctx.fillText('NORTH POLE',W*.038,H*.635);
   }
 
   function drawLisbon(){
     gradient('#79c6df','#f6d49b');
     ctx.fillStyle='#4da8bd';ctx.fillRect(0,H*.77,W,H*.23);
 
-    // Lisbon's tiled hillside buildings.
-    const colors=['#e8c58f','#d98c72','#f0dfb2','#b9d3c5','#d8a36f'];
-    for(let i=0;i<7;i++){
-      const x=W*(.02+i*.13),base=H*(.73-(i%3)*.035),bh=H*(.16+(i%2)*.04);
-      ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x,base-bh,W*.105,bh);
-      ctx.fillStyle='#8d5b4c';ctx.beginPath();ctx.moveTo(x-W*.006,base-bh);ctx.lineTo(x+W*.052,base-bh-H*.045);ctx.lineTo(x+W*.111,base-bh);ctx.closePath();ctx.fill();
-      ctx.fillStyle='#edf0df';ctx.fillRect(x+W*.018,base-bh+H*.04,W*.018,H*.025);ctx.fillRect(x+W*.064,base-bh+H*.04,W*.018,H*.025);
+    // Lisbon's steep pastel/azulejo hillside.
+    const colors=['#e8c58f','#d98c72','#f0dfb2','#b9d3c5','#d8a36f','#e3b3a0'];
+    for(let i=0;i<8;i++){
+      const x=W*(.01+i*.12),base=H*(.72-(i%3)*.03),bh=H*(.17+(i%2)*.035);
+      ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x,base-bh,W*.095,bh);
+      ctx.fillStyle='#8d5b4c';ctx.beginPath();ctx.moveTo(x-4,base-bh);ctx.lineTo(x+W*.047,base-bh-H*.04);ctx.lineTo(x+W*.10,base-bh);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#e9eee4';ctx.fillRect(x+W*.014,base-bh+H*.04,W*.017,H*.025);ctx.fillRect(x+W*.055,base-bh+H*.04,W*.017,H*.025);
     }
 
-    // Belém Tower.
-    const tx=W*.69,base=H*.77;
-    ctx.fillStyle='#d8c6a5';ctx.fillRect(tx-W*.075,H*.48,W*.15,base-H*.48);
-    ctx.fillRect(tx-W*.10,H*.58,W*.20,H*.19);
-    ctx.fillStyle='#9b876f';
-    for(let k=-1;k<=1;k++)ctx.fillRect(tx+k*W*.055-W*.014,H*.52,W*.028,H*.05);
-    ctx.fillStyle='#d8c6a5';
-    for(let k=-1;k<=1;k++){ctx.beginPath();ctx.arc(tx+k*W*.065,H*.56,W*.018,Math.PI,0);ctx.fill();}
-
-    // 25 de Abril suspension bridge in distance.
+    // 25 de Abril bridge across the Tagus.
     ctx.strokeStyle='#bd4d3d';ctx.lineWidth=5;
-    ctx.beginPath();ctx.moveTo(0,H*.66);ctx.quadraticCurveTo(W*.22,H*.43,W*.48,H*.66);ctx.stroke();
-    ctx.fillStyle='#ad4739';ctx.fillRect(W*.08,H*.47,W*.025,H*.22);ctx.fillRect(W*.39,H*.47,W*.025,H*.22);
-    ctx.fillRect(0,H*.66,W*.49,5);
+    ctx.beginPath();ctx.moveTo(0,H*.66);ctx.quadraticCurveTo(W*.23,H*.43,W*.49,H*.66);ctx.stroke();
+    ctx.fillStyle='#ad4739';ctx.fillRect(W*.08,H*.47,W*.025,H*.22);ctx.fillRect(W*.40,H*.47,W*.025,H*.22);ctx.fillRect(0,H*.66,W*.50,5);
 
-    // Iconic Lisbon Remodelado-style yellow trams.
+    // Belém Tower on waterfront.
+    const tx=W*.77,base=H*.77;
+    ctx.fillStyle='#d8c6a5';ctx.fillRect(tx-W*.06,H*.50,W*.12,H*.27);ctx.fillRect(tx-W*.085,H*.61,W*.17,H*.16);
+    ctx.fillStyle='#9b876f';for(let k=-1;k<=1;k++)ctx.fillRect(tx+k*W*.043-W*.011,H*.54,W*.022,H*.045);
+    ctx.fillStyle='#d8c6a5';for(let k=-1;k<=1;k++){ctx.beginPath();ctx.arc(tx+k*W*.052,H*.60,W*.015,Math.PI,0);ctx.fill();}
+
+    // Longer Remodelado / Tram 28-style yellow cars.
     function lisbonTram(x,y,scale){
       ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
-      ctx.fillStyle='#e7b92f';ctx.beginPath();ctx.roundRect(-34,-28,68,34,7);ctx.fill();
-      ctx.fillStyle='#f3e3b2';ctx.fillRect(-30,-31,60,6);ctx.fillRect(-33,2,66,5);
-      ctx.fillStyle='#35505b';ctx.fillRect(-27,-23,18,15);ctx.fillRect(-5,-23,18,15);ctx.fillRect(17,-23,12,15);
-      ctx.strokeStyle='#f3e3b2';ctx.lineWidth=2;ctx.strokeRect(-27,-23,18,15);ctx.strokeRect(-5,-23,18,15);ctx.strokeRect(17,-23,12,15);
-      ctx.fillStyle='#4c4035';ctx.fillRect(-13,-29,26,5);
-      ctx.fillStyle='#f7e9a9';ctx.beginPath();ctx.arc(27,-1,3,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#35383a';ctx.beginPath();ctx.arc(-21,8,6,0,Math.PI*2);ctx.arc(21,8,6,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='#51473f';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(4,-31);ctx.lineTo(17,-47);ctx.lineTo(26,-47);ctx.stroke();
+      const tw=104,th=34;
+      ctx.fillStyle='#e7b92f';ctx.beginPath();ctx.rect(-tw*.5,-28,tw,th,7);ctx.fill();
+      ctx.fillStyle='#f2dfaa';ctx.fillRect(-tw*.46,-31,tw*.92,6);ctx.fillRect(-tw*.48,2,tw*.96,5);
+      // long row of framed windows
+      ctx.fillStyle='#354f59';
+      for(let k=0;k<6;k++){const wx=-44+k*16;ctx.fillRect(wx,-23,13,15);ctx.strokeStyle='#f2dfaa';ctx.lineWidth=1.5;ctx.strokeRect(wx,-23,13,15);}
+      ctx.fillStyle='#4b4035';ctx.fillRect(-14,-29,28,5);
+      ctx.fillStyle='#f6e7a3';ctx.beginPath();ctx.arc(46,-1,3,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#343638';for(const wx of [-35,35]){ctx.beginPath();ctx.arc(wx,8,6,0,Math.PI*2);ctx.fill();}
+      // trolley pole
+      ctx.strokeStyle='#51473f';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(8,-31);ctx.lineTo(25,-49);ctx.lineTo(38,-49);ctx.stroke();
       ctx.restore();
     }
-    // One prominent Tram 28-style car and one smaller tram climbing the hill.
-    lisbonTram(W*.23,H*.735,1.0);
-    lisbonTram(W*.47,H*.665,.68);
-    // Rails and overhead wires.
-    ctx.strokeStyle='rgba(85,75,66,.65)';ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.moveTo(W*.05,H*.77);ctx.lineTo(W*.58,H*.70);ctx.moveTo(W*.05,H*.785);ctx.lineTo(W*.58,H*.715);ctx.stroke();
-    ctx.strokeStyle='rgba(80,75,70,.45)';
-    ctx.beginPath();ctx.moveTo(0,H*.52);ctx.lineTo(W*.62,H*.56);ctx.moveTo(W*.12,H*.47);ctx.lineTo(W*.58,H*.57);ctx.stroke();
+    lisbonTram(W*.27,H*.735,.92);
+    lisbonTram(W*.57,H*.665,.60);
+
+    // Rails and overhead power lines.
+    ctx.strokeStyle='rgba(80,72,65,.65)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(W*.02,H*.78);ctx.lineTo(W*.67,H*.70);ctx.moveTo(W*.02,H*.795);ctx.lineTo(W*.67,H*.715);ctx.stroke();
+    ctx.strokeStyle='rgba(75,70,66,.45)';ctx.beginPath();ctx.moveTo(0,H*.51);ctx.lineTo(W*.68,H*.56);ctx.moveTo(W*.10,H*.46);ctx.lineTo(W*.63,H*.57);ctx.stroke();
   }
 
   function drawBudapest(){
@@ -961,40 +1107,36 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawDubai() {
-    gradient('#eab767','#ffe5b5');
-    ctx.fillStyle='#d9a15d';ctx.fillRect(0,H*.82,W,H*.18);
+    gradient('#e8b365','#ffe5b5');ctx.fillStyle='#d9a15d';ctx.fillRect(0,H*.82,W,H*.18);
 
-    // Burj Khalifa: Y-inspired stepped silhouette with asymmetric setbacks.
-    const cx=W*.54,base=H*.82,top=H*.105,total=base-top;
+    // Burj Khalifa: long spire and spiralling stepped setbacks.
+    const cx=W*.55,base=H*.82,top=H*.10,total=base-top;
     ctx.fillStyle='#8ca8b8';
-    const levels=[
-      [0,.105],[.10,.096],[.20,.087],[.30,.076],[.40,.066],[.50,.055],
-      [.60,.045],[.69,.036],[.77,.028],[.84,.020]
-    ];
-    levels.forEach(([f,hw],i)=>{
-      const next=i<levels.length-1?levels[i+1][0]:.91;
-      const y=base-total*next,h=total*(next-f);
-      // alternate setbacks to mimic the real spiralling massing
-      const shift=(i%3===1?-1:i%3===2?1:0)*W*.012;
-      ctx.fillRect(cx+shift-W*hw,y,W*hw*2,h+1);
-    });
-    // reflective central spine
+    const levels=[[0,.105],[.10,.096],[.20,.087],[.30,.076],[.40,.066],[.50,.055],[.60,.045],[.69,.036],[.77,.028],[.84,.020]];
+    levels.forEach(([f,hw],i)=>{const next=i<levels.length-1?levels[i+1][0]:.91;const y=base-total*next,h=total*(next-f),shift=(i%3===1?-1:i%3===2?1:0)*W*.012;ctx.fillRect(cx+shift-W*hw,y,W*hw*2,h+1);});
     ctx.fillStyle='#cce2eb';ctx.fillRect(cx-W*.012,top+H*.10,W*.024,total*.72);
-    // narrowing pinnacle and very long spire
-    ctx.fillStyle='#78919d';ctx.fillRect(cx-W*.010,top+H*.035,W*.020,H*.12);
-    ctx.fillRect(cx-2,top-H*.075,4,H*.115);
-    ctx.fillStyle='#657d88';ctx.fillRect(cx-1,top-H*.12,2,H*.05);
+    ctx.fillStyle='#718894';ctx.fillRect(cx-2,top-H*.12,4,H*.22);
 
-    // Dubai Fountain / pool.
-    ctx.fillStyle='#5ca7b7';ctx.beginPath();ctx.ellipse(cx,H*.84,W*.23,H*.035,0,0,Math.PI*2);ctx.fill();
+    // Burj Al Arab sail silhouette.
+    const bx=W*.80,bb=H*.70;
+    ctx.strokeStyle='#e7eee9';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(bx,bb);ctx.quadraticCurveTo(bx+W*.04,H*.43,bx+W*.01,H*.31);ctx.stroke();
+    ctx.fillStyle='#f3f1e8';ctx.beginPath();ctx.moveTo(bx,bb);ctx.lineTo(bx+W*.11,H*.59);ctx.quadraticCurveTo(bx+W*.08,H*.42,bx+W*.01,H*.31);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#5894a8';ctx.beginPath();ctx.moveTo(bx+W*.015,H*.63);ctx.lineTo(bx+W*.085,H*.57);ctx.lineTo(bx+W*.025,H*.36);ctx.closePath();ctx.fill();
 
-    // Widely spaced palms and low skyline.
-    for(const px of [W*.09,W*.27,W*.87]){
-      ctx.fillStyle='#865f3f';ctx.fillRect(px-2,H*.70,5,H*.12);
-      ctx.fillStyle='#4d965c';for(let a=0;a<5;a++){ctx.beginPath();ctx.ellipse(px+Math.cos(a*1.256)*13,H*.69+Math.sin(a*1.256)*5,17,5,a*1.256,0,Math.PI*2);ctx.fill();}
+    // Desert camel caravan, kept clear of the Burj.
+    function camel(x,y,scale){
+      ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.fillStyle='#a66e3e';
+      ctx.beginPath();ctx.ellipse(0,0,24,11,0,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(-8,-10,10,Math.PI,0);ctx.arc(8,-10,10,Math.PI,0);ctx.fill();
+      ctx.fillRect(17,-14,7,18);ctx.beginPath();ctx.arc(22,-17,6,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#70472e';ctx.lineWidth=3;for(const lx of [-14,-3,11,18]){ctx.beginPath();ctx.moveTo(lx,7);ctx.lineTo(lx-2,25);ctx.stroke();}
+      ctx.restore();
     }
-    ctx.fillStyle='rgba(108,132,145,.48)';
-    ctx.fillRect(W*.02,H*.75,W*.05,H*.07);ctx.fillRect(W*.33,H*.74,W*.07,H*.08);ctx.fillRect(W*.75,H*.76,W*.06,H*.06);ctx.fillRect(W*.92,H*.73,W*.06,H*.09);
+    camel(W*.12,H*.75,.85);camel(W*.25,H*.77,.65);
+
+    // Fountain pool and a few widely spaced palms.
+    ctx.fillStyle='#5ca7b7';ctx.beginPath();ctx.ellipse(cx,H*.84,W*.22,H*.03,0,0,Math.PI*2);ctx.fill();
+    for(const px of [W*.06,W*.35,W*.94]){ctx.fillStyle='#865f3f';ctx.fillRect(px-2,H*.70,5,H*.12);ctx.fillStyle='#4d965c';for(let a=0;a<5;a++){ctx.beginPath();ctx.ellipse(px+Math.cos(a*1.256)*12,H*.69+Math.sin(a*1.256)*4,16,5,a*1.256,0,Math.PI*2);ctx.fill();}}
   }
 
   function drawIndia() {
@@ -1110,26 +1252,88 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawLondon(){
-    gradient('#8fb3cf','#ecf3f6');
-    ctx.fillStyle='#55707f';ctx.fillRect(0,H*.82,W,H*.18);
+    gradient('#8da8bc','#edf1f1');
+    const river=H*.78;ctx.fillStyle='#718f9d';ctx.fillRect(0,river,W,H-river);
 
-    // Palace of Westminster.
-    ctx.fillStyle='#6e7d86';ctx.fillRect(W*.18,H*.53,W*.60,H*.29);
-    for(let i=0;i<10;i++){ctx.fillStyle='#81909a';ctx.fillRect(W*(.20+i*.058),H*.45,W*.038,H*.09);}
-    // Elizabeth Tower / Big Ben.
-    const bx=W*.57,top=H*.19,base=H*.82;
-    ctx.fillStyle='#5f7078';ctx.fillRect(bx,top,W*.09,base-top);
-    ctx.fillStyle='#e9dfca';ctx.beginPath();ctx.arc(bx+W*.045,H*.37,18,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle='#58666d';ctx.lineWidth=2;ctx.beginPath();ctx.arc(bx+W*.045,H*.37,18,0,Math.PI*2);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(bx+W*.045,H*.37-12);ctx.lineTo(bx+W*.045,H*.37+2);ctx.moveTo(bx+W*.045,H*.37);ctx.lineTo(bx+W*.058,H*.37-7);ctx.stroke();
-    ctx.fillStyle='#52636b';ctx.beginPath();ctx.moveTo(bx+W*.045,top-H*.10);ctx.lineTo(bx,top);ctx.lineTo(bx+W*.09,top);ctx.closePath();ctx.fill();
-    // Westminster Bridge + London Eye.
-    ctx.strokeStyle='#72868f';ctx.lineWidth=4;ctx.beginPath();ctx.arc(W*.20,H*.70,28,Math.PI,0);ctx.stroke();
-    ctx.fillStyle='#b84138';ctx.fillRect(W*.10,H*.65,W*.05,H*.16);
+    // Palace of Westminster along the Thames.
+    ctx.fillStyle='#b99c73';ctx.fillRect(W*.32,H*.55,W*.44,H*.22);
+    ctx.fillStyle='#806d58';for(let i=0;i<12;i++)ctx.fillRect(W*(.335+i*.034),H*.60,W*.012,H*.12);
+
+    // Elizabeth Tower / Big Ben with layered Gothic detail.
+    const x=W*.58,b=H*.77,w=W*.075;
+    ctx.fillStyle='#b69b70';ctx.fillRect(x-w*.5,H*.32,w,b-H*.32);
+    ctx.fillStyle='#806b55';ctx.fillRect(x-w*.62,H*.30,w*1.24,H*.035);
+    ctx.beginPath();ctx.moveTo(x,H*.17);ctx.lineTo(x-w*.42,H*.30);ctx.lineTo(x+w*.42,H*.30);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#e8dfc4';ctx.beginPath();ctx.arc(x,H*.40,w*.25,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#66594d';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,H*.40,w*.25,0,Math.PI*2);ctx.moveTo(x,H*.40);ctx.lineTo(x,H*.38);ctx.moveTo(x,H*.40);ctx.lineTo(x+w*.12,H*.40);ctx.stroke();
+
+    // Charming classic red telephone booths.
+    function booth(x,y,scale){
+      ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+      ctx.fillStyle='#b63232';ctx.beginPath();ctx.rect(-18,-48,36,50);ctx.fill();
+      ctx.fillStyle='#d9c8aa';ctx.fillRect(-14,-42,28,8);
+      ctx.fillStyle='#f0e5cf';ctx.font='bold 6px system-ui';ctx.fillText('TELEPHONE',-13,-36);
+      ctx.fillStyle='#d9e2df';for(let r=0;r<3;r++)for(let c=0;c<2;c++)ctx.fillRect(-12+c*13,-31+r*10,10,8);
+      ctx.fillStyle='#8e2828';ctx.fillRect(-20,2,40,4);ctx.restore();
+    }
+    booth(W*.14,H*.76,1.05);booth(W*.86,H*.76,.92);
+
+    // Westminster Bridge and a red double-decker bus.
+    ctx.fillStyle='#547463';ctx.fillRect(0,H*.70,W*.35,7);
+    ctx.fillStyle='#b73535';ctx.fillRect(W*.22,H*.655,W*.09,H*.04);ctx.fillRect(W*.225,H*.62,W*.08,H*.04);
+    ctx.fillStyle='#d9e1df';for(let i=0;i<3;i++)ctx.fillRect(W*(.232+i*.022),H*.628,W*.016,H*.015);
+    ctx.fillStyle='#333';ctx.beginPath();ctx.arc(W*.24,H*.70,4,0,Math.PI*2);ctx.arc(W*.295,H*.70,4,0,Math.PI*2);ctx.fill();
+
+    // London Eye in the distance.
+    ctx.strokeStyle='rgba(210,215,211,.85)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(W*.87,H*.43,W*.09,0,Math.PI*2);ctx.stroke();
+    ctx.lineWidth=1;for(let i=0;i<10;i++){const a=i*Math.PI/5;ctx.beginPath();ctx.moveTo(W*.87,H*.43);ctx.lineTo(W*.87+Math.cos(a)*W*.09,H*.43+Math.sin(a)*W*.09);ctx.stroke();}
   }
 
   function drawNewYork(){
-    gradient('#7996b8','#eef6ff');ctx.fillStyle='#273a50';ctx.fillRect(0,H*.82,W,H*.18);const xs=[.01,.14,.28,.42,.58,.74,.88];xs.forEach((p,i)=>{const bw=W*(.075+(i%3)*.025),bh=H*(.18+((i*17)%28)/100),top=H*.82-bh;ctx.fillStyle=['#30465f','#445b71','#21374d'][i%3];ctx.fillRect(W*p,top,bw,bh);ctx.fillStyle='#ffd76a';for(let y=top+12;y<top+bh-7;y+=24)for(let x=W*p+8;x<W*p+bw-6;x+=18)ctx.fillRect(x,y,7,9);});ctx.fillStyle='#4c8e82';ctx.beginPath();ctx.arc(W*.58,H*.58,13,0,Math.PI*2);ctx.fill();ctx.fillRect(W*.565,H*.58,9,H*.16);
+    gradient('#719bc0','#f4d2a5');
+    const river=H*.78;ctx.fillStyle='#4d9cb3';ctx.fillRect(0,river,W,H-river);
+
+    // Manhattan skyline with Empire State Building as the unmistakable centrepiece.
+    ctx.fillStyle='#667784';
+    const skyline=[[.04,.15,.055],[.11,.20,.045],[.18,.13,.055],[.26,.24,.06],[.34,.17,.05],[.42,.12,.045],[.50,.19,.055],[.59,.14,.05],[.67,.22,.055],[.76,.16,.05],[.84,.13,.055]];
+    skyline.forEach(([x,h,w])=>ctx.fillRect(W*x,river-H*h,W*w,H*h));
+    const ex=W*.49,eb=river;
+    ctx.fillStyle='#82786c';ctx.fillRect(ex-W*.045,H*.39,W*.09,eb-H*.39);
+    ctx.fillStyle='#9b8d7d';ctx.fillRect(ex-W*.034,H*.31,W*.068,H*.09);
+    ctx.fillRect(ex-W*.024,H*.25,W*.048,H*.07);
+    ctx.fillRect(ex-W*.014,H*.20,W*.028,H*.055);
+    ctx.fillStyle='#625d57';ctx.fillRect(ex-2,H*.115,4,H*.09);
+    ctx.fillStyle='#d8a84b';for(let r=0;r<5;r++)for(let k=-1;k<=1;k++)ctx.fillRect(ex+k*10-2,H*(.43+r*.05),4,6);
+
+    // Statue of Liberty on Liberty Island.
+    const lx=W*.16;
+    ctx.fillStyle='#6d8f7d';ctx.fillRect(lx-W*.018,H*.55,W*.036,H*.18);
+    ctx.beginPath();ctx.arc(lx,H*.52,8,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#6d8f7d';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(lx,H*.54);ctx.lineTo(lx-W*.035,H*.62);ctx.moveTo(lx+2,H*.51);ctx.lineTo(lx+W*.025,H*.40);ctx.stroke();
+    ctx.fillStyle='#c7b38e';ctx.fillRect(lx-W*.035,H*.72,W*.07,H*.06);
+
+    // Brooklyn Bridge at right: stone towers and cable web.
+    const y=H*.69;
+    ctx.fillStyle='#a58d73';ctx.fillRect(W*.78,H*.50,W*.035,H*.22);ctx.fillRect(W*.91,H*.50,W*.035,H*.22);
+    ctx.strokeStyle='#665d56';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W*.70,y);ctx.quadraticCurveTo(W*.80,H*.43,W*.86,y);ctx.quadraticCurveTo(W*.92,H*.43,W,y);ctx.stroke();
+    ctx.fillStyle='#4f5960';ctx.fillRect(W*.69,y,W*.31,5);
+    ctx.lineWidth=1;for(let i=0;i<12;i++){const x=W*(.70+i*.027);ctx.beginPath();ctx.moveTo(x,H*.55);ctx.lineTo(x,y);ctx.stroke();}
+
+    // Large unmistakable NYC yellow cabs in the foreground.
+    function yellowCab(x,y,scale){
+      ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+      ctx.fillStyle='#f2c230';
+      ctx.beginPath();ctx.rect(-30,-13,60,20);ctx.fill();
+      ctx.beginPath();ctx.moveTo(-15,-13);ctx.lineTo(-7,-25);ctx.lineTo(14,-25);ctx.lineTo(23,-13);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#4d6670';ctx.fillRect(-5,-22,16,8);ctx.fillRect(-13,-22,7,8);
+      ctx.fillStyle='#f7e6a5';ctx.fillRect(-5,-30,14,5);
+      ctx.fillStyle='#24292c';ctx.beginPath();ctx.arc(-19,8,6,0,Math.PI*2);ctx.arc(19,8,6,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#f8e28b';ctx.beginPath();ctx.arc(29,-3,3,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+    yellowCab(W*.32,H*.755,1.0);
+    yellowCab(W*.61,H*.745,.86);
+    yellowCab(W*.73,H*.765,.68);
   }
 
   function drawRome(){
@@ -1280,6 +1484,23 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     }
 
     lm.slice(0,2).forEach((type,j)=>monument(type,W*(.28+j*.44),ground,Math.min(W*.25,170),H*.40));
+    // City ambience pass: adds texture appropriate to the destination instead
+    // of leaving generic landmarks floating on a blank skyline.
+    const hasWater=lm.some(v=>['canal','harbor','bay','river','fjord','waterfront','coast','beach','lake','port','marineDrive','corniche','sava'].includes(v));
+    const hasMountain=lm.some(v=>['mountain','alps','remarkables','matterhorn','arthurseat','tablemountain','vesuvius','hill'].includes(v));
+    if(hasWater){
+      ctx.fillStyle='rgba(74,157,181,.65)';ctx.fillRect(0,H*.78,W,H*.08);
+      ctx.strokeStyle='rgba(245,245,235,.55)';ctx.lineWidth=1;
+      for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(W*(i*.18),H*(.80+(i%2)*.015));ctx.lineTo(W*(i*.18+.08),H*(.80+(i%2)*.015));ctx.stroke();}
+    }
+    if(hasMountain){
+      ctx.fillStyle='rgba(80,111,104,.30)';ctx.beginPath();ctx.moveTo(0,H*.72);ctx.lineTo(W*.18,H*.48);ctx.lineTo(W*.34,H*.72);ctx.lineTo(W*.56,H*.43);ctx.lineTo(W*.78,H*.72);ctx.lineTo(W,H*.51);ctx.lineTo(W,H*.82);ctx.lineTo(0,H*.82);ctx.closePath();ctx.fill();
+    }
+    // Warm street lamps make historic destinations feel inhabited.
+    if(lm.some(v=>['oldtown','cathedral','castle','fortress','palace','square','medina','bazaar','gates'].includes(v))){
+      for(let i=0;i<4;i++){const x=W*(.12+i*.24);ctx.strokeStyle='#5d5148';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,H*.80);ctx.lineTo(x,H*.70);ctx.stroke();ctx.fillStyle='#efbd55';ctx.beginPath();ctx.arc(x,H*.695,4,0,Math.PI*2);ctx.fill();}
+    }
+
   }
 
   function drawClouds(){
@@ -1560,9 +1781,9 @@ for(const h of hearts){ctx.save();ctx.translate(h.x,h.y+Math.sin(h.phase)*4);ctx
   document.getElementById('share').onclick = async () => {
     const score = finalEl.textContent;
     const city = currentCity().name;
-    const msg = `I flew ${score}m and burst ${heartCount} hearts in Vicky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me?`;
+    const msg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me?`;
     try {
-      if (navigator.share) await navigator.share({title:'Vicky the Bat',text:msg});
+      if (navigator.share) await navigator.share({title:'Becky the Bat',text:msg});
       else if (navigator.clipboard) {await navigator.clipboard.writeText(msg); alert('Score copied!');}
       else alert(msg);
     } catch (_) {}
