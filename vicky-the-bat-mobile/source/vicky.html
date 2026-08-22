@@ -4999,7 +4999,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     // In a browser-only preview there is no native transaction object.
     // Real builds must receive a completed native transaction before crediting.
     if (!txid || !isCompletedTransaction(tx)) return false;
-    if (productIdOf(tx) && productIdOf(tx) !== 'com.beckybat.continue') return false;
+    if (productIdOf(tx) && productIdOf(tx) !== 'com.beckybat.game.hearts100') return false;
     if (wasTransactionCredited(txid)) return true;
 
     bankedHearts += 100;
@@ -5089,7 +5089,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     purchaseBusyEl.textContent = 'OPENING APPLE PAYMENT…';
     try {
       const res = await NP.purchaseProduct({
-        productIdentifier:'com.beckybat.continue',
+        productIdentifier:'com.beckybat.game.hearts100',
         quantity:1,
         isConsumable:true,
         autoAcknowledgePurchases:true
@@ -5130,7 +5130,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
         const res = await NP.getPurchases({});
         const purchases = Array.isArray(res?.purchases) ? res.purchases : [];
         for (const tx of purchases) {
-          if (productIdOf(tx) === 'com.beckybat.continue' && isCompletedTransaction(tx)) {
+          if (productIdOf(tx) === 'com.beckybat.game.hearts100' && isCompletedTransaction(tx)) {
             await finishPaidContinue(tx);
             break;
           }
@@ -5145,7 +5145,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     try {
       await NP.addListener('transactionUpdated', async (event) => {
         const tx = event?.transaction || event;
-        if (productIdOf(tx) !== 'com.beckybat.continue') return;
+        if (productIdOf(tx) !== 'com.beckybat.game.hearts100') return;
         persistPendingTransaction(tx);
         if (isCompletedTransaction(tx)) {
           await finishPaidContinue(tx);
@@ -5159,7 +5159,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     if (!NP || typeof NP.getProducts !== 'function') return;
     continuePurchaseEl.disabled = true;
     try {
-      const res = await NP.getProducts({productIdentifiers:['com.beckybat.continue']});
+      const res = await NP.getProducts({productIdentifiers:['com.beckybat.game.hearts100']});
       const prod = res?.products?.[0];
       const price = prod?.priceString || prod?.localizedPrice;
       continuePurchaseEl.textContent = price ? ('BUY 100 HEARTS · ' + price) : 'BUY 100 HEARTS';
