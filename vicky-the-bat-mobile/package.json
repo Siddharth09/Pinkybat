@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@capacitor/core": "^8.5.0",
-    "@capacitor/splash-screen": "^8.0.0"
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capgo/native-purchases": "^8.6.6"
   },
   "devDependencies": {
     "@capacitor/android": "^8.5.0",

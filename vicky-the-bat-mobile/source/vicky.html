@@ -4922,7 +4922,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     }
     continuePurchaseEl.disabled = true;
     try {
-      await NP.purchaseProduct({productIdentifier:'com.beckybat.continue'});
+      await NP.purchaseProduct({productIdentifier:'com.beckybat.game.hearts100'});
       bankedHearts += 100;
       saveHeartBank();
       // A successful purchase is a direct continue: add 100 hearts, then spend
@@ -4946,7 +4946,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     const NP = window.Capacitor?.Plugins?.NativePurchases;
     if (!NP || typeof NP.getProducts !== 'function') return;
     try {
-      const res = await NP.getProducts({productIdentifiers:['com.beckybat.continue']});
+      const res = await NP.getProducts({productIdentifiers:['com.beckybat.game.hearts100']});
       const prod = res?.products?.[0];
       const price = prod?.priceString || prod?.localizedPrice;
       if (price) continuePurchaseEl.textContent = 'BUY 100 HEARTS · ' + price;
