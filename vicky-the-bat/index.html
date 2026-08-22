@@ -4188,7 +4188,16 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.restore();
     }
 
-    // Smoothly crossfade weather over ~1.8 seconds.
+    // Clouds/balloon are part of the destination art; precipitation is drawn
+    // live by drawBackground() so it can never become a stagnant cached image.
+    drawClouds();
+    drawBalloon();
+  }
+  const citySceneCache=new Map();
+
+  function drawLiveWeather(){
+    // Weather is deliberately drawn every frame, never baked into a cached city.
+    // This keeps rain/snow moving on iPhone while retaining cached landmark art.
     if(weatherBlend < 1){
       ctx.save();ctx.globalAlpha=1-weatherBlend;
       if(previousWeather==='rain')drawRain();
@@ -4199,34 +4208,40 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     if(weather==='rain')drawRain();
     if(weather==='snow')drawSnow();
     ctx.restore();
-    drawClouds();
-    drawBalloon();
   }
-  const citySceneCache=new Map();
-  function drawBackground() {
-    const c=currentCity().name;
-    const cached=citySceneCache.get(c);
-    if(cached){
-      ctx.drawImage(cached,0,0,W,H);
-      updateCity();
-      return;
-    }
-    // First visit uses the exact approved renderer. If legacy artwork metadata
-    // is malformed, recover without freezing the run.
+
+  function buildCitySnapshot(c){
+    // Render approved artwork with weather temporarily disabled so animated
+    // precipitation is not frozen into the cached bitmap.
+    const sw=weather,sp=previousWeather,st=weatherTarget,sb=weatherBlend;
+    weather='sun';previousWeather='sun';weatherTarget='sun';weatherBlend=1;
     try{ renderCityArtwork(); }
     catch(err){
       console.error('City artwork recovered',c,err);
       ctx.clearRect(0,0,W,H);
       drawGenericCity(currentCity());
     }
-    // Snapshot exact pixels after rendering. Future frames use the snapshot.
-    try {
+    weather=sw;previousWeather=sp;weatherTarget=st;weatherBlend=sb;
+    try{
       const snap=document.createElement('canvas');
       snap.width=canvas.width;snap.height=canvas.height;
       snap.getContext('2d').drawImage(canvas,0,0);
       citySceneCache.set(c,snap);
-    } catch(e) {
-      // Cache failure must never interrupt gameplay; exact renderer remains fallback.
+      return snap;
+    }catch(e){ return null; }
+  }
+
+  function drawBackground() {
+    const c=currentCity().name;
+    let cached=citySceneCache.get(c);
+    if(!cached) cached=buildCitySnapshot(c);
+
+    // Instant destination switch. Obstacles are separate gameplay objects,
+    // so changing the city background never clears or recreates them.
+    if(cached) ctx.drawImage(cached,0,0,W,H);
+    else {
+      ctx.clearRect(0,0,W,H);
+      drawGenericCity(currentCity());
     }
   }
 
@@ -4479,7 +4494,20 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     }
   }
 
-  function drawRain(){ctx.strokeStyle='rgba(190,220,235,.38)';ctx.lineWidth=2;for(let i=0;i<85;i++){const x=(i*79+worldScroll)%W,y=(i*47+t*420)%H;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5,y+18);ctx.stroke();}}
+  function drawRain(){
+    // Wind-driven rain: droplets travel and lean in the same direction.
+    ctx.strokeStyle='rgba(190,220,235,.40)';
+    ctx.lineWidth=1.7;
+    const fall=360, drift=-190;
+    for(let i=0;i<85;i++){
+      const x=((i*79 + t*drift + W*4)%W+W)%W;
+      const y=(i*47 + t*fall)%H;
+      ctx.beginPath();
+      ctx.moveTo(x,y);
+      ctx.lineTo(x-10,y+19);
+      ctx.stroke();
+    }
+  }
   function drawSnow(){ctx.fillStyle='rgba(255,255,255,.82)';for(let i=0;i<55;i++){const x=(i*93+worldScroll*.24)%W,y=(i*51+t*30)%H;ctx.beginPath();ctx.arc(x,y,1.5+(i%3),0,Math.PI*2);ctx.fill();}}
   function drawBalloon(){const x=W*.79+Math.sin(t*.22)*15,y=H*.18+Math.sin(t*.5)*8;ctx.fillStyle='#ef788c';ctx.beginPath();ctx.ellipse(x,y,20,28,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffd66e';ctx.beginPath();ctx.ellipse(x,y,6,28,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#6b5b50';ctx.beginPath();ctx.moveTo(x-9,y+25);ctx.lineTo(x-4,y+39);ctx.moveTo(x+9,y+25);ctx.lineTo(x+4,y+39);ctx.stroke();ctx.fillStyle='#8d6750';ctx.fillRect(x-6,y+39,12,7);}
 
@@ -4766,6 +4794,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.save();
     if (state === 'crash' && screenShake > 0) ctx.translate((Math.random()-.5)*W*screenShake,(Math.random()-.5)*H*screenShake);
     drawBackground();
+    drawLiveWeather();
     drawBoats();
     obstacles.forEach(drawObstacle);
     drawSkyGuests();
