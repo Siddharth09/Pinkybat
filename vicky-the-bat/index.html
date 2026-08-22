@@ -21,22 +21,33 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 #gameover .scoreBig{font-size:80px;font-weight:1000;color:#ff9fc8}
 button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6fa8;color:#fff;font-size:18px;font-weight:1000;box-shadow:0 7px #b13d6d}
 #share{background:#fff;color:#ff4f93;box-shadow:0 6px #d7c7cf}
-.note{font-size:12px;color:#fff9;margin:10px 0}.cityTier{font-size:10px;letter-spacing:1.4px;color:#fff9;margin-top:2px;font-weight:800}.continueBox{margin:14px auto 4px;padding:12px;border-radius:18px;background:rgba(0,0,0,.18);max-width:320px}.continueTitle{font-weight:1000;font-size:14px;letter-spacing:1.5px;margin-bottom:3px}.continueBox button{display:block;width:100%;margin:7px 0}.continueBox button:disabled{opacity:.45;filter:grayscale(.2)}
+.note{font-size:12px;color:#fff9;margin:10px 0}.cityTier{font-size:10px;letter-spacing:1.4px;color:#fff9;margin-top:2px;font-weight:800}
+  .continueBox{margin:16px auto 8px;padding:18px 16px 15px;border-radius:24px;background:rgba(18,22,38,.82);border:1px solid rgba(255,255,255,.16);box-shadow:0 14px 35px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.08);max-width:340px;backdrop-filter:blur(10px)}
+  .continueBadge{display:inline-block;padding:5px 9px;border-radius:999px;background:rgba(255,111,168,.16);color:#ff9fc8;font-size:9px;font-weight:1000;letter-spacing:1.4px;margin-bottom:8px}
+  .continueTitle{font-weight:1000;font-size:21px;letter-spacing:1.1px;margin-bottom:5px}.continueSub{font-size:12px;color:#fff9;line-height:1.35;margin:0 8px 13px}
+  .heartOffer{display:flex;align-items:center;justify-content:center;gap:10px;margin:2px 0 11px}.heartOfferIcon{font-size:26px}.heartOfferCount{font-size:26px;font-weight:1000;line-height:1}.heartOfferLabel{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#fff9;align-self:flex-end;margin-bottom:3px}
+  .continueBox button{display:block;width:100%;margin:7px 0}.continueBox button:disabled{opacity:.48;filter:grayscale(.2)}
+  #continuePurchase{background:#ff6fa8;box-shadow:0 7px #b13d6d}.purchaseMeta{font-size:10px;color:#fff8;margin-top:7px}.purchaseMeta strong{color:#fff}.purchaseBusy{font-size:11px;font-weight:900;letter-spacing:1px;color:#fff9;margin-top:6px;min-height:15px}
 .title{color:#ff79ae!important}.title span{color:#fff!important}</style>
 </head>
 <body>
 <canvas id="game"></canvas>
 <div id="hud"><div><div id="score">0<small> m</small></div><div id="heartScore" class="hearts">♥ 0</div><div id="heartProgress" class="heartProgress">0/300</div><div id="city"></div><div id="cityTier" class="cityTier"></div></div><div id="pill">BEST 0 m</div></div>
-<div id="intro" class="panel"><div><div class="mark">🦇</div><div class="title">BECKY <span>THE BAT</span></div></div></div>
+<div id="intro" class="panel"><div><div class="mark">🦇</div><div class="title"><span style="color:#ff79ae!important">BECKY</span> <span>THE</span><br><span>BAT</span></div></div></div>
 <div id="gameover" class="panel hidden"><div>
 <div style="font-size:11px;letter-spacing:2px;font-weight:1000">YOU FLEW</div>
 <div id="final" class="scoreBig">0</div><div>metres</div>
 <div id="lastCity" class="note"></div><div id="newBest" class="note"></div>
 <div id="continueBox" class="continueBox hidden">
+  <div class="continueBadge">SAVE YOUR RUN</div>
   <div class="continueTitle">KEEP FLYING?</div>
+  <div class="continueSub">Pick up from your last city instead of starting over.</div>
+  <div class="heartOffer"><div class="heartOfferIcon">❤️</div><div class="heartOfferCount">100</div><div class="heartOfferLabel">HEARTS</div></div>
   <div id="continueHeartsText" class="note">Collect 100 lifetime hearts to continue from your last city.</div>
-  <button id="continueHearts">❤️ 100 HEARTS</button>
-  <button id="continuePurchase">BUY 100 HEARTS · $1.99</button>
+  <button id="continueHearts">❤️ USE 100 HEARTS</button>
+  <button id="continuePurchase">BUY 100 HEARTS · —</button>
+  <div id="purchaseBusy" class="purchaseBusy" aria-live="polite"></div>
+  <div class="purchaseMeta">One-time purchase · <strong>Apple securely handles payment</strong></div>
 </div>
 <button id="share">SHARE SCORE</button><button id="again">FLY AGAIN</button>
 </div></div>
@@ -59,6 +70,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   const continueHeartsEl = document.getElementById('continueHearts');
   const continuePurchaseEl = document.getElementById('continuePurchase');
   const continueHeartsTextEl = document.getElementById('continueHeartsText');
+  const purchaseBusyEl = document.getElementById('purchaseBusy');
 
   let W = innerWidth;
   let H = innerHeight;
@@ -88,7 +100,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   let crashVelocity = 0;
   let crashRotation = 0;
   let impactFlash = 0;
-  let plane = { x: -230, y: 70, flag: 'us', flagIndex: 0, flagClock: 0 };
+  let plane = { x: -230, y: 70, flag: 'us', flagIndex: 0, flagClock: 0, flagSwitchTimer: 2.2 };
   let obstacles = [];
   let obstacleLaneHistory=[];
   let wind = [];
@@ -384,7 +396,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     boats = [];
     skyGuestTimer = 4.0;
     boatTimer = 5.0;
-    plane = {x:-260, y:72, flag:currentCity().flag};
+    plane = {x:-260, y:72, flag:currentCity().flag, flagSwitchTimer:2.2};
     bat.y = H * 0.5;
     bat.vy = 0;
     scoreEl.innerHTML = '0<small> m</small>'; document.getElementById('heartScore').textContent='♥ ' + bankedHearts; document.getElementById('heartProgress').textContent='100 to continue';
@@ -425,6 +437,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     lastCrashRunTime = t;
     lastCrashCityTime = cityTime;
     lastCrashRunCityCount = runCityCount;
+    snapshotCheckpoint();
     lastCityEl.textContent = 'LAST CITY: ' + currentCity().name;
     newBestEl.textContent = isNewBest ? 'NEW BEST!' : '';
     pillEl.textContent = 'BEST ' + best + ' m';
@@ -479,8 +492,8 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 
   function spawnObstacle() {
     const n=runCityCount+1;
-    let depth=.25,widthFactor=.145;
-    if(n>=14)  {depth=.30;widthFactor=.158;}
+    let depth=.32,widthFactor=.158;
+    if(n>=14)  {depth=.35;widthFactor=.166;}
     if(n>=51)  {depth=.365;widthFactor=.172;}
     if(n>=101) {depth=.405;widthFactor=.186;}
     if(n>=151) {depth=.455;widthFactor=.202;}
@@ -573,19 +586,24 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     // 1-50 approachable; 51+ clearly harder; 101+ substantially faster;
     // 151+ extremely difficult. Later endless cycles stay at the extreme tier.
     const n = runCityCount + 1;
-    let baseSpeed=220, speedCap=375, gravity=825;
-    if(n>=20)  { baseSpeed=238; speedCap=405; gravity=838; }
-    if(n>=51)  { baseSpeed=255; speedCap=440; gravity=850; }
-    if(n>=75)  { baseSpeed=275; speedCap=470; gravity=865; }
-    if(n>=101) { baseSpeed=320; speedCap=540; gravity=900; }
-    if(n>=126) { baseSpeed=350; speedCap=585; gravity=925; }
-    if(n>=151) { baseSpeed=410; speedCap=690; gravity=970; }
-    if(n>=176) { baseSpeed=445; speedCap=735; gravity=995; }
-    const timeBoost=Math.min(n>=151?105:n>=101?88:n>=51?70:58,
-                             t*(n>=151?.92:n>=101?.80:n>=51?.70:.62));
-    const distanceBoost=Math.min(n>=151?75:n>=101?64:n>=51?56:48,
-                                 distance*(n>=151?.019:n>=101?.017:n>=51?.016:.014));
-    const sp=Math.min(speedCap,baseSpeed+timeBoost+distanceBoost);
+    // Starting difficulty: 7.5/10. Distance milestones add major speed jumps.
+    // 2,000m = faster; 5,000m = much faster; 10,000m = very fast; 20,000m = extreme.
+    let baseSpeed=300, speedCap=500, gravity=900;
+    if(n>=20)  { baseSpeed=312; speedCap=520; gravity=910; }
+    if(n>=51)  { baseSpeed=330; speedCap=550; gravity=925; }
+    if(n>=101) { baseSpeed=350; speedCap=590; gravity=945; }
+    if(n>=151) { baseSpeed=390; speedCap=650; gravity=970; }
+
+    let milestoneBoost=0;
+    if(distance>=2000)  milestoneBoost += 70;
+    if(distance>=5000)  milestoneBoost += 95;
+    if(distance>=10000) milestoneBoost += 125;
+    if(distance>=20000) milestoneBoost += 190;
+
+    const timeBoost=Math.min(90,t*.72);
+    const distanceBoost=Math.min(85,distance*.016);
+    const milestoneCap = distance>=20000 ? 1100 : distance>=10000 ? 900 : distance>=5000 ? 760 : distance>=2000 ? 640 : speedCap;
+    const sp=Math.min(milestoneCap,baseSpeed+timeBoost+distanceBoost+milestoneBoost);
     worldScroll += sp * dt;
     distance += sp * dt * 0.055;
 
@@ -638,10 +656,10 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
         spawnObstacle();
         // Milestone cadence mirrors speed/gap difficulty while retaining spacing.
         const n=runCityCount+1;
-        let base=1.92,jitter=.46;
-        if(n>=14)  {base=1.78;jitter=.42;}
-        if(n>=30)  {base=1.65;jitter=.40;}
-        if(n>=51)  {base=1.48;jitter=.34;}
+        let base=1.48,jitter=.32;
+        if(n>=14)  {base=1.38;jitter=.30;}
+        if(n>=30)  {base=1.30;jitter=.28;}
+        if(n>=51)  {base=1.18;jitter=.25;}
         if(n>=101) {base=1.18;jitter=.28;}
         if(n>=151) {base=.88;jitter=.18;}
         if(n>=176) {base=.90;jitter=.22;}
@@ -791,11 +809,20 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     // all active destination flags instead of repeating the same city-linked set.
     if(!plane.flag) plane.flag=nextPlaneFlag();
 
+    // Change the banner to a different country's flag during the same fly-by.
+    // This is visual only and does not affect collisions, scoring or city progression.
+    plane.flagSwitchTimer = Number.isFinite(plane.flagSwitchTimer) ? plane.flagSwitchTimer - dt : 2.2;
+    if (plane.flagSwitchTimer <= 0) {
+      plane.flag = nextPlaneFlag();
+      plane.flagSwitchTimer = 1.8 + Math.random() * 1.6;
+    }
+
     // This is the ONLY in-game plane reset.
     if (plane.x > planeResetX) {
       plane.x -= (planeResetX-planeSpawnX);
       plane.y = 58 + Math.random()*26;
       plane.flag = nextPlaneFlag();
+      plane.flagSwitchTimer = 1.8 + Math.random()*1.6;
     }
 
     if (Math.random() < dt * 8) {
@@ -4517,7 +4544,18 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.stroke();
     }
   }
-  function drawSnow(){ctx.fillStyle='rgba(255,255,255,.82)';for(let i=0;i<55;i++){const x=(i*93+worldScroll*.24)%W,y=(i*51+t*30)%H;ctx.beginPath();ctx.arc(x,y,1.5+(i%3),0,Math.PI*2);ctx.fill();}}
+  function drawSnow(){
+    // Live snow only: fall downward with a gentle leftward drift.
+    // Positive modulo keeps flakes wrapping cleanly without jumping off-screen.
+    ctx.fillStyle='rgba(255,255,255,.82)';
+    for(let i=0;i<55;i++){
+      const x=((i*93-worldScroll*.12)%W+W)%W;
+      const y=(i*51+t*30)%H;
+      ctx.beginPath();
+      ctx.arc(x,y,1.5+(i%3),0,Math.PI*2);
+      ctx.fill();
+    }
+  }
   function drawBalloon(){const x=W*.79+Math.sin(t*.22)*15,y=H*.18+Math.sin(t*.5)*8;ctx.fillStyle='#ef788c';ctx.beginPath();ctx.ellipse(x,y,20,28,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffd66e';ctx.beginPath();ctx.ellipse(x,y,6,28,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#6b5b50';ctx.beginPath();ctx.moveTo(x-9,y+25);ctx.lineTo(x-4,y+39);ctx.moveTo(x+9,y+25);ctx.lineTo(x+4,y+39);ctx.stroke();ctx.fillStyle='#8d6750';ctx.fillRect(x-6,y+39,12,7);}
 
   function drawFlag(flag,x,y,w,h){
@@ -4599,7 +4637,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   function drawPlaneAt(px,py,flag){
     ctx.save();ctx.translate(px,py);
     ctx.strokeStyle='rgba(40,50,60,.60)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-22,3);ctx.lineTo(-72,5);ctx.stroke();
-    drawFlag(flag,-188,-11,116,24);
+    drawFlag(flag,-114,-11,42,24);
     ctx.fillStyle='#fafcff';ctx.strokeStyle='#4d5b68';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,30,9,0,0,Math.PI*2);ctx.fill();ctx.stroke();
     ctx.fillStyle='#ff79ac';ctx.beginPath();ctx.moveTo(6,-2);ctx.lineTo(-6,-20);ctx.lineTo(18,-5);ctx.closePath();ctx.fill();
     ctx.fillStyle='#dbe6ee';ctx.beginPath();ctx.moveTo(-7,2);ctx.lineTo(-20,18);ctx.lineTo(11,5);ctx.closePath();ctx.fill();
@@ -4873,19 +4911,130 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
 
-  async function resumeFromCrash(source) {
-    if (state !== 'over' || source !== 'hearts' || bankedHearts < 100) return;
+  // --- Purchase-safe checkpointing -------------------------------------------------
+  // Keep the exact run checkpoint in durable local storage so a successful payment
+  // can never accidentally fall back to a fresh New York run.
+  const CHECKPOINT_KEY = 'beckyContinueCheckpointV1';
+  const CREDITED_TX_KEY = 'beckyCreditedHeartTransactionsV1';
+  const PENDING_TX_KEY = 'beckyPendingHeartTransactionV1';
+
+  function snapshotCheckpoint() {
+    const checkpoint = {
+      cityIndex: Number.isFinite(lastCrashCityIndex) ? Math.floor(lastCrashCityIndex) : Math.floor(runCityCount),
+      distance: Number.isFinite(lastCrashDistance) ? lastCrashDistance : distance,
+      runTime: Number.isFinite(lastCrashRunTime) ? lastCrashRunTime : t,
+      cityTime: Number.isFinite(lastCrashCityTime) ? lastCrashCityTime : cityTime,
+      runCityCount: Number.isFinite(lastCrashRunCityCount) ? Math.floor(lastCrashRunCityCount) : Math.floor(runCityCount),
+      savedAt: Date.now()
+    };
+    try { localStorage.setItem(CHECKPOINT_KEY, JSON.stringify(checkpoint)); } catch (_) {}
+    return checkpoint;
+  }
+
+  function readCheckpoint() {
+    try {
+      const raw = localStorage.getItem(CHECKPOINT_KEY);
+      if (!raw) return null;
+      const p = JSON.parse(raw);
+      if (!p || !Number.isFinite(p.runTime) || !Number.isFinite(p.distance)) return null;
+      return p;
+    } catch (_) { return null; }
+  }
+
+  function rememberCreditedTransaction(txid) {
+    if (!txid) return;
+    try {
+      const arr = JSON.parse(localStorage.getItem(CREDITED_TX_KEY) || '[]');
+      const list = Array.isArray(arr) ? arr : [];
+      if (!list.includes(String(txid))) list.push(String(txid));
+      while (list.length > 50) list.shift();
+      localStorage.setItem(CREDITED_TX_KEY, JSON.stringify(list));
+    } catch (_) {}
+  }
+
+  function wasTransactionCredited(txid) {
+    if (!txid) return false;
+    try {
+      const arr = JSON.parse(localStorage.getItem(CREDITED_TX_KEY) || '[]');
+      return Array.isArray(arr) && arr.includes(String(txid));
+    } catch (_) { return false; }
+  }
+
+  function transactionIdOf(tx) {
+    if (!tx) return '';
+    return String(tx.transactionId || tx.transactionID || tx.purchaseToken || tx.orderId || tx.id || '').trim();
+  }
+
+  function productIdOf(tx) {
+    return String(tx?.productIdentifier || tx?.productId || '').trim();
+  }
+
+  function persistPendingTransaction(tx) {
+    const id = transactionIdOf(tx);
+    if (!id) return;
+    try {
+      localStorage.setItem(PENDING_TX_KEY, JSON.stringify({
+        transactionId: id,
+        productIdentifier: productIdOf(tx),
+        savedAt: Date.now()
+      }));
+    } catch (_) {}
+  }
+
+  function clearPendingTransaction() {
+    try { localStorage.removeItem(PENDING_TX_KEY); } catch (_) {}
+  }
+
+  function isCompletedTransaction(tx) {
+    if (!tx) return false;
+    if (tx.success === false || tx.completed === false) return false;
+    if (tx.isPending === true || tx.pending === true) return false;
+    const stateValue = String(tx.purchaseState || tx.state || '').toUpperCase();
+    if (stateValue && ['PENDING','FAILED','CANCELLED','CANCELED','DEFERRED'].includes(stateValue)) return false;
+    return true;
+  }
+
+  function creditPurchaseOnce(tx) {
+    const txid = transactionIdOf(tx);
+    // In a browser-only preview there is no native transaction object.
+    // Real builds must receive a completed native transaction before crediting.
+    if (!txid || !isCompletedTransaction(tx)) return false;
+    if (productIdOf(tx) && productIdOf(tx) !== 'com.beckybat.continue') return false;
+    if (wasTransactionCredited(txid)) return true;
+
+    bankedHearts += 100;
+    rememberCreditedTransaction(txid);
+    clearPendingTransaction();
+    saveHeartBank();
+    return true;
+  }
+
+  async function resumeFromCrash(source, checkpointOverride=null) {
+    if (state !== 'over' || source !== 'hearts' || bankedHearts < 100) return false;
+    const checkpoint = checkpointOverride || readCheckpoint() || snapshotCheckpoint();
+    if (!checkpoint) return false;
+
+    // Apply the checkpoint FIRST. This prevents any city/random-state reset from
+    // occurring between purchase completion and the actual continue action.
+    const resumeTime = Math.max(0, Number(checkpoint.runTime) || 0);
+    const resumeDistance = Math.max(0, Number(checkpoint.distance) || 0);
+    const resumeCityCount = Math.max(0, Math.floor(Number.isFinite(checkpoint.runCityCount) ? checkpoint.runCityCount : resumeTime / 9));
+
     bankedHearts -= 100;
     saveHeartBank();
-    cityIndex = Math.max(0, lastCrashCityIndex);
-    // Resume exactly where the run left off: same city, same city timer,
-    // same distance and same run-time based difficulty.
-    cityTime = Math.max(0, Math.min(8.75, lastCrashCityTime));
-    distance = lastCrashDistance;
-    t = Math.max(0,lastCrashRunTime);
-    runCityCount=Math.floor(t/9);
-    cityIndex=runCityCount;
-    cityTime=t-runCityCount*9;
+
+    lastCrashCityIndex = Math.max(0, Math.floor(Number(checkpoint.cityIndex) || resumeCityCount));
+    lastCrashDistance = resumeDistance;
+    lastCrashRunTime = resumeTime;
+    lastCrashCityTime = Math.max(0, Math.min(8.75, Number(checkpoint.cityTime) || (resumeTime - resumeCityCount * 9)));
+    lastCrashRunCityCount = resumeCityCount;
+
+    distance = resumeDistance;
+    t = resumeTime;
+    runCityCount = resumeCityCount;
+    cityIndex = resumeCityCount;
+    cityTime = resumeTime - resumeCityCount * 9;
+
     state = 'play';
     holding = false;
     continueGrace = 3.2;
@@ -4898,7 +5047,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     wind = [];
     spawnTime = 3.0;
     weatherTime = 8;
-    // Completely clear crash presentation/physics so continuation is clean.
     screenShake = 0;
     impactFlash = 0;
     crashTime = 0;
@@ -4909,9 +5057,21 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     bat.flapPhase = 0;
     gameover.classList.add('hidden');
     continueBoxEl.classList.add('hidden');
+    purchaseBusyEl.textContent = '';
     document.getElementById('heartScore').textContent='♥ ' + bankedHearts;
     cityEl.textContent = currentCity().name;
     cityTierEl.textContent = (runCityCount >= cities.length && replayNight) ? '' : (runCityCount < 500 ? '' : '');
+    return true;
+  }
+
+  async function finishPaidContinue(tx) {
+    const checkpoint = readCheckpoint();
+    if (!checkpoint) snapshotCheckpoint();
+    const credited = creditPurchaseOnce(tx);
+    if (!credited) return false;
+    if (state === 'over') return await resumeFromCrash('hearts', checkpoint || readCheckpoint());
+    continueHeartsEl.disabled = bankedHearts < 100;
+    return true;
   }
 
   async function buy100Hearts() {
@@ -4920,37 +5080,94 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       alert('Apple in-app purchase is available in the iPhone/TestFlight build.');
       return;
     }
+    if (state !== 'over') return;
+
+    // Take a durable snapshot immediately before opening payment.
+    const checkpoint = snapshotCheckpoint();
     continuePurchaseEl.disabled = true;
+    continueHeartsEl.disabled = true;
+    purchaseBusyEl.textContent = 'OPENING APPLE PAYMENT…';
     try {
-      await NP.purchaseProduct({productIdentifier:'com.beckybat.continue'});
-      bankedHearts += 100;
-      saveHeartBank();
-      // A successful purchase is a direct continue: add 100 hearts, then spend
-      // exactly 100 through the same tested continue path. Any previously
-      // collected lifetime hearts remain banked for future games.
-      screenShake = 0;
-      impactFlash = 0;
-      if(state==='over') {
-        await resumeFromCrash('hearts');
+      const res = await NP.purchaseProduct({
+        productIdentifier:'com.beckybat.continue',
+        quantity:1,
+        isConsumable:true,
+        autoAcknowledgePurchases:true
+      });
+      persistPendingTransaction(res);
+      const ok = await finishPaidContinue(res);
+      if (!ok) {
+        purchaseBusyEl.textContent = 'PAYMENT RECEIVED — VERIFYING…';
       } else {
-        continueHeartsEl.disabled = bankedHearts < 100;
+        purchaseBusyEl.textContent = 'PURCHASE COMPLETE — KEEP FLYING!';
       }
-    } catch (_) {
-      // Cancelled/failed purchases do not grant hearts.
+    } catch (err) {
+      console.warn('Becky purchase cancelled/failed', err);
+      purchaseBusyEl.textContent = 'PURCHASE CANCELLED';
+      continueHeartsEl.disabled = bankedHearts < 100;
     } finally {
       continuePurchaseEl.disabled = false;
+      setTimeout(() => { if (purchaseBusyEl) purchaseBusyEl.textContent = ''; }, 2200);
     }
+  }
+
+  async function recoverNativeTransactions() {
+    const NP = window.Capacitor?.Plugins?.NativePurchases;
+    if (!NP) return;
+
+    // iOS StoreKit can deliver a transaction that finished while the app was
+    // suspended/terminated. The listener below handles live updates; this check
+    // also handles a transaction returned by the plugin during launch/recovery.
+    try {
+      if (typeof NP.restorePurchases === 'function') await NP.restorePurchases();
+    } catch (_) {}
+
+    // Consumables may not remain restorable after consumption, but querying current
+    // purchases is harmless and helps recover interrupted flows where the plugin has
+    // not yet finalized the transaction locally.
+    try {
+      if (typeof NP.getPurchases === 'function') {
+        const res = await NP.getPurchases({});
+        const purchases = Array.isArray(res?.purchases) ? res.purchases : [];
+        for (const tx of purchases) {
+          if (productIdOf(tx) === 'com.beckybat.continue' && isCompletedTransaction(tx)) {
+            await finishPaidContinue(tx);
+            break;
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  async function wirePurchaseListener() {
+    const NP = window.Capacitor?.Plugins?.NativePurchases;
+    if (!NP || typeof NP.addListener !== 'function') return;
+    try {
+      await NP.addListener('transactionUpdated', async (event) => {
+        const tx = event?.transaction || event;
+        if (productIdOf(tx) !== 'com.beckybat.continue') return;
+        persistPendingTransaction(tx);
+        if (isCompletedTransaction(tx)) {
+          await finishPaidContinue(tx);
+        }
+      });
+    } catch (_) {}
   }
 
   async function loadContinuePrice() {
     const NP = window.Capacitor?.Plugins?.NativePurchases;
     if (!NP || typeof NP.getProducts !== 'function') return;
+    continuePurchaseEl.disabled = true;
     try {
       const res = await NP.getProducts({productIdentifiers:['com.beckybat.continue']});
       const prod = res?.products?.[0];
       const price = prod?.priceString || prod?.localizedPrice;
-      if (price) continuePurchaseEl.textContent = 'BUY 100 HEARTS · ' + price;
-    } catch (_) {}
+      continuePurchaseEl.textContent = price ? ('BUY 100 HEARTS · ' + price) : 'BUY 100 HEARTS';
+    } catch (_) {
+      continuePurchaseEl.textContent = 'BUY 100 HEARTS';
+    } finally {
+      continuePurchaseEl.disabled = false;
+    }
   }
 
   function pointerDown(e) {
@@ -4967,17 +5184,20 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();if(state==='menu'||state==='over')resetGame();holding=true;}});
   addEventListener('keyup',e=>{if(e.code==='Space')holding=false;});
   document.getElementById('again').onclick = resetGame;
-  continueHeartsEl.onclick = () => resumeFromCrash('hearts');
+  continueHeartsEl.onclick = async () => { await resumeFromCrash('hearts'); };
   continuePurchaseEl.onclick = buy100Hearts;
   loadContinuePrice();
+  wirePurchaseListener();
+  recoverNativeTransactions();
   document.getElementById('share').onclick = async () => {
     const score = finalEl.textContent;
     const city = currentCity().name;
+    const shareUrl = 'https://beckythebat.com';
     const msg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me?`;
     try {
-      if (navigator.share) await navigator.share({title:'Becky the Bat',text:msg});
-      else if (navigator.clipboard) {await navigator.clipboard.writeText(msg); alert('Score copied!');}
-      else alert(msg);
+      if (navigator.share) await navigator.share({title:'Becky the Bat',text:msg,url:shareUrl});
+      else if (navigator.clipboard) {await navigator.clipboard.writeText(msg + '\n' + shareUrl); alert('Score + link copied!');}
+      else alert(msg + '\n' + shareUrl);
     } catch (_) {}
   };
 
