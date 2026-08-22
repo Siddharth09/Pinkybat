@@ -16,7 +16,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 .panel{position:fixed;inset:0;z-index:10;display:grid;place-items:center;text-align:center;color:#fff;background:linear-gradient(#15203605,#152036bf)}
 .hidden{display:none!important}
 .title{font-size:clamp(52px,15vw,92px);line-height:.82;font-weight:1000;letter-spacing:-5px;text-shadow:0 9px 22px #0007}
-.title span{color:#ff79ae}
+.title{color:#ff79ae}.title span{color:#fff}
 .mark{font-size:84px;margin-bottom:16px}
 #gameover .scoreBig{font-size:80px;font-weight:1000;color:#ff9fc8}
 button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6fa8;color:#fff;font-size:18px;font-weight:1000;box-shadow:0 7px #b13d6d}
@@ -4194,6 +4194,15 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     drawBalloon();
   }
   const citySceneCache=new Map();
+  const CITY_CACHE_LIMIT=4;
+  function cacheCityScene(name,snap){
+    if(citySceneCache.has(name)) citySceneCache.delete(name);
+    citySceneCache.set(name,snap);
+    while(citySceneCache.size>CITY_CACHE_LIMIT){
+      const oldest=citySceneCache.keys().next().value;
+      citySceneCache.delete(oldest);
+    }
+  }
 
   function drawLiveWeather(){
     // Weather is deliberately drawn every frame, never baked into a cached city.
@@ -4226,7 +4235,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       const snap=document.createElement('canvas');
       snap.width=canvas.width;snap.height=canvas.height;
       snap.getContext('2d').drawImage(canvas,0,0);
-      citySceneCache.set(c,snap);
+      cacheCityScene(c,snap);
       return snap;
     }catch(e){ return null; }
   }
