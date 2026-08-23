@@ -1,3 +1,0 @@
-{
-  "name":"Pinky Bat","short_name":"Pinky Bat","start_url":"./","display":"standalone","background_color":"#17152a","theme_color":"#ff4f93","orientation":"portrait","icons":[{"src":"assets/icons/icon.svg","sizes":"any","type":"image/svg+xml"}]
-}

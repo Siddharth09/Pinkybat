@@ -1,8 +1,0 @@
-{
-  "name": "vicky-the-bat-web-release",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build": "node scripts/build.mjs"
-  }
-}

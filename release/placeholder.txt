@@ -1,1 +1,0 @@
-This file establishes the Vicky the Bat release branch.
