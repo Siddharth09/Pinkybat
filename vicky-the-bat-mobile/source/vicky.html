@@ -47,7 +47,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   <button id="continueHearts">❤️ USE 100 HEARTS</button>
   <button id="continuePurchase">BUY 100 HEARTS · —</button>
   <div id="purchaseBusy" class="purchaseBusy" aria-live="polite"></div>
-  <div class="purchaseMeta">One-time purchase · <strong>Apple securely handles payment</strong></div>
+  <div id="purchaseMeta" class="purchaseMeta">One-time purchase · <strong>Apple securely handles payment</strong></div>
 </div>
 <button id="share">SHARE SCORE</button><button id="again">FLY AGAIN</button>
 </div></div>
@@ -70,6 +70,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   const continueHeartsEl = document.getElementById('continueHearts');
   const continuePurchaseEl = document.getElementById('continuePurchase');
   const continueHeartsTextEl = document.getElementById('continueHeartsText');
+  const purchaseMetaEl = document.getElementById('purchaseMeta');
   const purchaseBusyEl = document.getElementById('purchaseBusy');
 
   let W = innerWidth;
@@ -447,6 +448,10 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ? ('❤️ ' + bankedHearts + ' banked — continue from ' + currentCity().name)
       : ('Bank ' + Math.max(0,100-bankedHearts) + ' more hearts to continue from ' + currentCity().name);
     continueHeartsEl.disabled = bankedHearts < 100;
+    // Buying hearts nets zero benefit once you already have enough to continue
+    // for free, so hide the paid option rather than let it be a pointless charge.
+    continuePurchaseEl.classList.toggle('hidden', bankedHearts >= 100);
+    purchaseMetaEl.classList.toggle('hidden', bankedHearts >= 100);
     continueBoxEl.classList.remove('hidden');
     state = 'over';
     gameover.classList.remove('hidden');
@@ -4996,7 +5001,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     // In a browser-only preview there is no native transaction object.
     // Real builds must receive a completed native transaction before crediting.
     if (!txid || !isCompletedTransaction(tx)) return false;
-    if (productIdOf(tx) && productIdOf(tx) !== 'com.beckybat.game.hearts100') return false;
+    if (productIdOf(tx) !== 'com.beckybat.game.hearts100') return false;
     if (wasTransactionCredited(txid)) return true;
 
     bankedHearts += 100;
@@ -5095,6 +5100,8 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       return;
     }
     if (state !== 'over') return;
+    // Never charge for hearts the player can already use for free.
+    if (bankedHearts >= 100) { await resumeFromCrash('hearts'); return; }
 
     // Take a durable snapshot immediately before opening payment.
     const checkpoint = snapshotCheckpoint();
@@ -5186,7 +5193,9 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 
   function pointerDown(e) {
     e.preventDefault();
-    if (e.target && e.target.closest && e.target.closest('button, a')) return;
+    // Exclude the whole continue panel and any open overlay, not just their buttons —
+    // a mis-tap a few pixels off "BUY"/"USE" should never silently restart the run.
+    if (e.target && e.target.closest && e.target.closest('button, a, .continueBox, #getAppMenu, #shareMenu')) return;
     if (state === 'menu' || state === 'over') resetGame();
     if (state === 'play') holding = true;
   }
