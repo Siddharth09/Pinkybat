@@ -317,7 +317,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     bat.r = Math.max(17, Math.min(25, Math.min(W, H) * 0.046));
     if (state !== 'play' && state !== 'crash') bat.y = H * 0.5;
-    try { citySceneCache.clear(); } catch (_) {}
   }
   addEventListener('resize', resize);
   resize();
