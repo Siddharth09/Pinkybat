@@ -32,7 +32,11 @@
 
   .free-note{font-size:13px;color:#9aa4c2;margin-top:4px}
 
-  .hero-shot{display:block;max-width:340px;width:80%;margin:44px auto 0;border-radius:28px;box-shadow:0 30px 70px rgba(0,0,0,.45);border:1px solid #ffffff14}
+  .hero-frame{position:relative;max-width:340px;width:80%;aspect-ratio:9/19.5;margin:44px auto 0;border-radius:28px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45);border:1px solid #ffffff14;cursor:pointer;background:#000}
+  .hero-frame iframe{width:100%;height:100%;border:0;pointer-events:none;display:block}
+  .hero-frame:fullscreen iframe,.hero-frame:-webkit-full-screen iframe{pointer-events:auto}
+  .hero-frame .tap-hint{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:11px;font-weight:1000;letter-spacing:1.4px;color:#fff;text-shadow:0 2px 8px #000c;pointer-events:none;transition:opacity .2s}
+  .hero-frame:fullscreen .tap-hint,.hero-frame:-webkit-full-screen .tap-hint{opacity:0}
 
   section.gallery{padding:60px 0 20px}
   .gallery h2{text-align:center;font-size:clamp(24px,4vw,34px);font-weight:1000;letter-spacing:-.5px;margin-bottom:8px}
@@ -71,8 +75,23 @@
   </div>
   <div class="free-note">No download needed to try it — play instantly, right here.</div>
 
-  <img class="hero-shot" src="/store-assets/screenshots/01_explore_the_world.png" alt="Becky the Bat gameplay screenshot over New York">
+  <div class="hero-frame" id="heroFrame">
+    <iframe id="heroGame" src="/play.html" title="Becky the Bat — playable preview" loading="lazy"></iframe>
+    <div class="tap-hint">▶ TAP TO PLAY FULLSCREEN</div>
+  </div>
 </header>
+
+<script>
+(() => {
+  const frame = document.getElementById('heroFrame');
+  frame.addEventListener('click', () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) return;
+    const req = frame.requestFullscreen || frame.webkitRequestFullscreen;
+    if (!req) { window.location.href = '/play.html'; return; }
+    req.call(frame).catch(() => { window.location.href = '/play.html'; });
+  });
+})();
+</script>
 
 <section class="gallery wrap">
   <h2>Every flight is different</h2>
