@@ -137,6 +137,14 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   const bat = { x: 0.28, y: H * 0.5, vy: 0, r: 22, flapPhase: 0 };
 
   const cities = [
+    {name:'BANFF & JASPER CANADIAN ROCKIES',country:'Canada',flag:'🇨🇦'},
+    {name:'AGRA',flag:'in',palette:['#efb36f', '#ffe0bc'],landmarks:['taj', 'cow', 'gate'],weather:['sun', 'rain']},
+    {name:'HANOI',flag:'vn',palette:['#79c8b3', '#f6dfb0'],landmarks:['lake', 'temple'],weather:['sun', 'rain']},
+    {name:'THE SWISS ALPS',country:'Switzerland',flag:'🇨🇭'},
+    {name:'TOKYO',flag:'jp',palette:['#f0a9b8', '#fff0df'],landmarks:['pagoda', 'skytree'],weather:['sun', 'rain']},
+    {name:'TAIPEI',flag:'tw',palette:['#88b9a7', '#f4e2c6'],landmarks:['tower', 'temple'],weather:["sun", "rain"] },
+    {name:'THE DOLOMITES',country:'Italy',flag:'🇮🇹'},
+    {name:'SINGAPORE',flag:'sg',palette:['#78cdd0', '#e5f5dc'],landmarks:['marinabay', 'merlion'],weather:['sun', 'rain']},
     {name:'NEW YORK',flag:'us',palette:['#728fb5', '#edf5ff'],landmarks:['statue', 'skyscraper', 'bridge'],weather:['sun', 'rain', 'snow']},
     {name:'PRAGUE',flag:'cz',palette:['#5b527f', '#f1c27b'],landmarks:['charles', 'castle', 'clock'],weather:['sun', 'rain']},
     {name:'PARIS',flag:'fr',palette:['#e8d4bd', '#f8f0e3'],landmarks:['eiffel', 'arc', 'rooftops'],weather:['sun', 'sun', 'rain']},
@@ -162,47 +170,28 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'AREA 51',country:'United States',flag:'👽'},
     {name:'THE MOON',country:'Space',flag:'🌕'},
     {name:'STONEHENGE',country:'United Kingdom',flag:'🇬🇧'},
-    {name:'VENICE CANALS',country:'Italy',flag:'🇮🇹'},
-    {name:'DHAKA',flag:'bd',palette:['#a8d4ee', '#e2ccb5'],landmarks:['mosque', 'waterfront'],weather:["sun", "rain"] },
     {name:'ZURICH',flag:'ch',palette:['#8eb8d0', '#edf5f7'],landmarks:['lake', 'alps'],weather:['snow', 'sun']},
-    {name:'DAINTREE RAINFOREST',country:'Australia',flag:'🇦🇺'},
-    {name:'GREAT BARRIER REEF',country:'Australia',flag:'🇦🇺'},
     {name:'GALAXIES OF THE SOUTHERN SKY',country:'Lake Tekapo, New Zealand',flag:'🇳🇿'},
     {name:'LOS ANGELES',flag:'us',palette:['#9f9ac9', '#d9e8d2'],landmarks:['skyscraper', 'wheel'],weather:["sun", "rain"] },
     {name:'MANHATTAN SKYLINE',country:'United States',flag:'🇺🇸'},
     {name:'MUSCAT',flag:'om',palette:['#e2b17a', '#fff0cf'],landmarks:['fort', 'mosque'],weather:['sun', 'sun']},
     {name:'AMAZON RAINFOREST',country:'South America',flag:'🌿'},
-    {name:'PLITVICE LAKES',country:'Croatia',flag:'🇭🇷'},
     {name:'KYOTO',country:'Japan',flag:'🇯🇵'},
-    {name:'WADI RUM',country:'Jordan',flag:'🇯🇴'},
     {name:'BOSTON',flag:'us',palette:['#9f9ac9', '#d9e8d2'],landmarks:['harbor', 'oldtown'],weather:["sun", "rain"] },
-    {name:'SAHARA DESERT',country:'North Africa',flag:'🏜️'},
-    {name:'TEOTIHUACAN',country:'Mexico',flag:'🇲🇽'},
     {name:'BORA BORA',country:'French Polynesia',flag:'🇵🇫'},
-    {name:'JIUZHAIGOU VALLEY',country:'China',flag:'🇨🇳'},
-    {name:'AGRA',flag:'in',palette:['#efb36f', '#ffe0bc'],landmarks:['taj', 'cow', 'gate'],weather:['sun', 'rain']},
     {name:'BAGAN',country:'Myanmar',flag:'🇲🇲'},
-    {name:'TOKYO',flag:'jp',palette:['#f0a9b8', '#fff0df'],landmarks:['pagoda', 'skytree'],weather:['sun', 'rain']},
-    {name:'AUCKLAND',flag:'nz',palette:['#74c1d4', '#eef5e8'],landmarks:['sky', 'harbor'],weather:['sun', 'rain']},
-    {name:'HANOI',flag:'vn',palette:['#79c8b3', '#f6dfb0'],landmarks:['lake', 'temple'],weather:['sun', 'rain']},
     {name:'MUNICH',flag:'de',palette:['#88b9a7', '#ead8b7'],landmarks:['palace', 'church'],weather:["sun", "rain"] },
     {name:'THE VATICAN',country:'Vatican City',flag:'🇻🇦'},
     {name:'BERMUDA TRIANGLE',country:'Atlantic Ocean',flag:'🧭'},
-    {name:'FLY GEYSER',country:'United States',flag:'🇺🇸'},
-    {name:'THE SWISS ALPS',country:'Switzerland',flag:'🇨🇭'},
-    {name:'TAIPEI',flag:'tw',palette:['#88b9a7', '#f4e2c6'],landmarks:['tower', 'temple'],weather:["sun", "rain"] },
     {name:'ELLORA & AJANTA CAVES',country:'India',flag:'🇮🇳'},
     {name:'NIAGARA FALLS',country:'Canada/USA',flag:'🌎'},
-    {name:'ANGKOR WAT',country:'Cambodia',flag:'🇰🇭'},
     {name:'MANILA',flag:'ph',palette:['#6fc2d2', '#fff1d0'],landmarks:['jeepney', 'bay'],weather:['sun', 'rain']},
-    {name:'MADRID',flag:'es',palette:['#d28d66', '#f7dfc8'],landmarks:['royalpalace', 'plaza'],weather:['sun', 'rain']},
     {name:'LENCOIS MARANHENSES',country:'Brazil',flag:'🇧🇷'},
     {name:'SALAR DE ATACAMA',country:'Chile',flag:'🇨🇱'},
     {name:'BALI',flag:'id',palette:['#76c7a0', '#f6e0a9'],landmarks:['temple', 'rice'],weather:['sun', 'rain']},
     {name:'BUNGLE BUNGLES',country:'Australia',flag:'🇦🇺'},
     {name:'NORTH POLE',flag:'xmas',palette:['#8eb6df', '#eff7ff'],landmarks:['iceberg', 'sleigh', 'aurora'],weather:['snow', 'snow']},
     {name:'JAKARTA',flag:'id',palette:['#6dc6b8', '#f3e3b8'],landmarks:['monas', 'mosque'],weather:['rain', 'sun']},
-    {name:'THE DOLOMITES',country:'Italy',flag:'🇮🇹'},
     {name:'BANGKOK',flag:'th',palette:['#efb35d', '#ffe5b8'],landmarks:['grandpalace', 'wat'],weather:['sun', 'rain']},
     {name:'MOUNT EVEREST',country:'Nepal',flag:'🏔️'},
     {name:'ZHANGJIAJIE NATIONAL FOREST',country:'China',flag:'🇨🇳'},
@@ -210,9 +199,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'ANTARCTICA',country:'Antarctica',flag:'🐧'},
     {name:'REYKJAVIK',flag:'is',palette:['#8cb9d8', '#edf8ff'],landmarks:['hallgrim', 'waterfall', 'mountain'],weather:['snow', 'snow', 'sun']},
     {name:'JAIPUR PINK CITY',country:'India',flag:'🇮🇳'},
-    {name:'KARACHI',flag:'pk',palette:['#f0b66f', '#d9e8d2'],landmarks:['waterfront', 'skyscraper'],weather:["sun", "rain"] },
     {name:'THE METEORA',country:'Greece',flag:'🇬🇷'},
-    {name:'TSINGY DE BEMARAHA',country:'Madagascar',flag:'🇲🇬'},
     {name:'MILFORD SOUND',country:'New Zealand',flag:'🇳🇿'},
     {name:'LAKE BAIKAL',country:'Siberia',flag:'🇷🇺'},
     {name:'THE MALDIVES',country:'Indian Ocean',flag:'🇲🇻'},
@@ -232,7 +219,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'ABU DHABI',flag:'ae',palette:['#e8bb70', '#ffe7c2'],landmarks:['mosque', 'skyline'],weather:['sun', 'sun']},
     {name:'BUENOS AIRES',flag:'ar',palette:['#8fc8e5', '#f4e2c6'],landmarks:['oldtown', 'tower'],weather:["sun", "rain"] },
     {name:'LAGOS',flag:'ng',palette:['#66c8a2', '#f4dfaa'],landmarks:['bridge', 'coast'],weather:['sun', 'rain']},
-    {name:'SINGAPORE',flag:'sg',palette:['#78cdd0', '#e5f5dc'],landmarks:['marinabay', 'merlion'],weather:['sun', 'rain']},
     {name:'THE BLUE LAGOON',country:'Iceland',flag:'🇮🇸'},
     {name:'MACHU PICCHU',country:'Peru',flag:'🇵🇪'},
     {name:'DOHA',flag:'qa',palette:['#e7b475', '#fff0cf'],landmarks:['skyline', 'museum'],weather:['sun', 'sun']},
@@ -261,6 +247,22 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'JOHANNESBURG',flag:'za',palette:['#8fc68e', '#f3e1b7'],landmarks:['hill', 'skyline'],weather:['sun', 'rain']},
     {name:'WAITOMO GLOWWORM CAVES',country:'New Zealand',flag:'🇳🇿'},
     {name:'BAY OF FUNDY',country:'Canada',flag:'🇨🇦'},
+    {name:'DHAKA',flag:'bd',palette:['#a8d4ee', '#e2ccb5'],landmarks:['mosque', 'waterfront'],weather:["sun", "rain"] },
+    {name:'DAINTREE RAINFOREST',country:'Australia',flag:'🇦🇺'},
+    {name:'GREAT BARRIER REEF',country:'Australia',flag:'🇦🇺'},
+    {name:'SHANGHAI',country:'China',flag:'🇨🇳'},
+    {name:'VENICE CANALS',country:'Italy',flag:'🇮🇹'},
+    {name:'PLITVICE LAKES',country:'Croatia',flag:'🇭🇷'},
+    {name:'WADI RUM',country:'Jordan',flag:'🇯🇴'},
+    {name:'TEOTIHUACAN',country:'Mexico',flag:'🇲🇽'},
+    {name:'JIUZHAIGOU VALLEY',country:'China',flag:'🇨🇳'},
+    {name:'FLY GEYSER',country:'United States',flag:'🇺🇸'},
+    {name:'KARACHI',flag:'pk',palette:['#f0b66f', '#d9e8d2'],landmarks:['waterfront', 'skyscraper'],weather:["sun", "rain"] },
+    {name:'TSINGY DE BEMARAHA',country:'Madagascar',flag:'🇲🇬'},
+    {name:'SAHARA DESERT',country:'North Africa',flag:'🏜️'},
+    {name:'AUCKLAND',flag:'nz',palette:['#74c1d4', '#eef5e8'],landmarks:['sky', 'harbor'],weather:['sun', 'rain']},
+    {name:'ANGKOR WAT',country:'Cambodia',flag:'🇰🇭'},
+    {name:'MADRID',flag:'es',palette:['#d28d66', '#f7dfc8'],landmarks:['royalpalace', 'plaza'],weather:['sun', 'rain']},
     {name:'HA LONG BAY',country:'Vietnam',flag:'🇻🇳'},
     {name:'PLAYA DEL AMOR / HIDDEN BEACH',country:'Mexico',flag:'🇲🇽'},
     {name:'THE KREMLIN',country:'Russia',flag:'🇷🇺'},
@@ -5222,9 +5224,12 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     const wrap = document.createElement('div');
     wrap.id = 'shareMenu';
     wrap.style.cssText = 'position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#0009';
+    // msg already includes the URL at the end, so Facebook/WhatsApp/X show the
+    // full line ("I flew...Can you beat me? https://...") instead of dropping
+    // the text and only surfacing a bare link/preview card.
     const fb = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl) + '&quote=' + encodeURIComponent(msg);
-    const tw = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg) + '&url=' + encodeURIComponent(shareUrl);
-    const wa = 'https://wa.me/?text=' + encodeURIComponent(msg + '\n' + shareUrl);
+    const tw = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg);
+    const wa = 'https://wa.me/?text=' + encodeURIComponent(msg);
     wrap.innerHTML = `
       <div style="background:#152036;border-radius:22px;padding:22px;width:min(320px,84vw);text-align:center;box-shadow:0 20px 50px #000a">
         <div style="font-weight:1000;font-size:16px;letter-spacing:.5px;margin-bottom:14px">SHARE YOUR SCORE</div>
@@ -5239,23 +5244,53 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     wrap.addEventListener('click', (e) => { if (e.target === wrap) closeShareMenu(); });
     document.getElementById('shareCloseBtn').onclick = closeShareMenu;
     document.getElementById('shareCopyBtn').onclick = async () => {
+      const copyBtn = document.getElementById('shareCopyBtn');
       try {
-        if (navigator.clipboard) await navigator.clipboard.writeText(msg + '\n' + shareUrl);
-        document.getElementById('shareCopyBtn').textContent = 'Copied!';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(msg);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = msg;
+          ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        copyBtn.textContent = 'Copied!';
         setTimeout(closeShareMenu, 900);
-      } catch (_) {}
+      } catch (_) {
+        copyBtn.textContent = 'Could not copy — try again';
+      }
     };
   }
 
   document.getElementById('share').onclick = async () => {
+    const shareBtn = document.getElementById('share');
+    if (shareBtn.disabled) return;
     const score = finalEl.textContent;
-    const shareUrl = 'https://beckythebat.com';
-    const msg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me?`;
+    const shareUrl = 'https://beckythebat.com/';
+    const msg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me? ${shareUrl}`;
+    shareBtn.disabled = true;
+    let shared = false;
+    let cancelled = false;
     if (navigator.share) {
-      try { await navigator.share({title:'Becky the Bat',text:msg,url:shareUrl}); return; }
-      catch (err) { if (err && err.name === 'AbortError') return; }
+      try {
+        // Some mobile browsers/WebViews report navigator.share as available but
+        // never resolve or reject the promise, leaving the button looking dead
+        // until tapped repeatedly. Race it against a short timeout so a hang
+        // always falls through to the share menu instead of stalling forever.
+        shared = await Promise.race([
+          navigator.share({title:'Becky the Bat', text:msg}).then(() => true),
+          new Promise(resolve => setTimeout(() => resolve(false), 900))
+        ]);
+      } catch (err) {
+        if (err && err.name === 'AbortError') cancelled = true;
+      }
     }
-    openShareMenu(msg, shareUrl);
+    shareBtn.disabled = false;
+    if (!shared && !cancelled) openShareMenu(msg, shareUrl);
   };
 
   pillEl.textContent = 'BEST ' + best + ' m';
