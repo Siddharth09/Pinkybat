@@ -138,14 +138,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   const bat = { x: 0.28, y: H * 0.5, vy: 0, r: 22, flapPhase: 0 };
 
   const cities = [
-    {name:'BANFF & JASPER CANADIAN ROCKIES',country:'Canada',flag:'🇨🇦'},
-    {name:'AGRA',flag:'in',palette:['#efb36f', '#ffe0bc'],landmarks:['taj', 'cow', 'gate'],weather:['sun', 'rain']},
-    {name:'HANOI',flag:'vn',palette:['#79c8b3', '#f6dfb0'],landmarks:['lake', 'temple'],weather:['sun', 'rain']},
-    {name:'THE SWISS ALPS',country:'Switzerland',flag:'🇨🇭'},
-    {name:'TOKYO',flag:'jp',palette:['#f0a9b8', '#fff0df'],landmarks:['pagoda', 'skytree'],weather:['sun', 'rain']},
-    {name:'TAIPEI',flag:'tw',palette:['#88b9a7', '#f4e2c6'],landmarks:['tower', 'temple'],weather:["sun", "rain"] },
-    {name:'THE DOLOMITES',country:'Italy',flag:'🇮🇹'},
-    {name:'SINGAPORE',flag:'sg',palette:['#78cdd0', '#e5f5dc'],landmarks:['marinabay', 'merlion'],weather:['sun', 'rain']},
     {name:'NEW YORK',flag:'us',palette:['#728fb5', '#edf5ff'],landmarks:['statue', 'skyscraper', 'bridge'],weather:['sun', 'rain', 'snow']},
     {name:'PRAGUE',flag:'cz',palette:['#5b527f', '#f1c27b'],landmarks:['charles', 'castle', 'clock'],weather:['sun', 'rain']},
     {name:'PARIS',flag:'fr',palette:['#e8d4bd', '#f8f0e3'],landmarks:['eiffel', 'arc', 'rooftops'],weather:['sun', 'sun', 'rain']},
@@ -171,28 +163,47 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'AREA 51',country:'United States',flag:'👽'},
     {name:'THE MOON',country:'Space',flag:'🌕'},
     {name:'STONEHENGE',country:'United Kingdom',flag:'🇬🇧'},
+    {name:'VENICE CANALS',country:'Italy',flag:'🇮🇹'},
+    {name:'DHAKA',flag:'bd',palette:['#a8d4ee', '#e2ccb5'],landmarks:['mosque', 'waterfront'],weather:["sun", "rain"] },
     {name:'ZURICH',flag:'ch',palette:['#8eb8d0', '#edf5f7'],landmarks:['lake', 'alps'],weather:['snow', 'sun']},
+    {name:'DAINTREE RAINFOREST',country:'Australia',flag:'🇦🇺'},
+    {name:'GREAT BARRIER REEF',country:'Australia',flag:'🇦🇺'},
     {name:'GALAXIES OF THE SOUTHERN SKY',country:'Lake Tekapo, New Zealand',flag:'🇳🇿'},
     {name:'LOS ANGELES',flag:'us',palette:['#9f9ac9', '#d9e8d2'],landmarks:['skyscraper', 'wheel'],weather:["sun", "rain"] },
     {name:'MANHATTAN SKYLINE',country:'United States',flag:'🇺🇸'},
     {name:'MUSCAT',flag:'om',palette:['#e2b17a', '#fff0cf'],landmarks:['fort', 'mosque'],weather:['sun', 'sun']},
     {name:'AMAZON RAINFOREST',country:'South America',flag:'🌿'},
+    {name:'PLITVICE LAKES',country:'Croatia',flag:'🇭🇷'},
     {name:'KYOTO',country:'Japan',flag:'🇯🇵'},
+    {name:'WADI RUM',country:'Jordan',flag:'🇯🇴'},
     {name:'BOSTON',flag:'us',palette:['#9f9ac9', '#d9e8d2'],landmarks:['harbor', 'oldtown'],weather:["sun", "rain"] },
+    {name:'SAHARA DESERT',country:'North Africa',flag:'🏜️'},
+    {name:'TEOTIHUACAN',country:'Mexico',flag:'🇲🇽'},
     {name:'BORA BORA',country:'French Polynesia',flag:'🇵🇫'},
+    {name:'JIUZHAIGOU VALLEY',country:'China',flag:'🇨🇳'},
+    {name:'AGRA',flag:'in',palette:['#efb36f', '#ffe0bc'],landmarks:['taj', 'cow', 'gate'],weather:['sun', 'rain']},
     {name:'BAGAN',country:'Myanmar',flag:'🇲🇲'},
+    {name:'TOKYO',flag:'jp',palette:['#f0a9b8', '#fff0df'],landmarks:['pagoda', 'skytree'],weather:['sun', 'rain']},
+    {name:'AUCKLAND',flag:'nz',palette:['#74c1d4', '#eef5e8'],landmarks:['sky', 'harbor'],weather:['sun', 'rain']},
+    {name:'HANOI',flag:'vn',palette:['#79c8b3', '#f6dfb0'],landmarks:['lake', 'temple'],weather:['sun', 'rain']},
     {name:'MUNICH',flag:'de',palette:['#88b9a7', '#ead8b7'],landmarks:['palace', 'church'],weather:["sun", "rain"] },
     {name:'THE VATICAN',country:'Vatican City',flag:'🇻🇦'},
     {name:'BERMUDA TRIANGLE',country:'Atlantic Ocean',flag:'🧭'},
+    {name:'FLY GEYSER',country:'United States',flag:'🇺🇸'},
+    {name:'THE SWISS ALPS',country:'Switzerland',flag:'🇨🇭'},
+    {name:'TAIPEI',flag:'tw',palette:['#88b9a7', '#f4e2c6'],landmarks:['tower', 'temple'],weather:["sun", "rain"] },
     {name:'ELLORA & AJANTA CAVES',country:'India',flag:'🇮🇳'},
     {name:'NIAGARA FALLS',country:'Canada/USA',flag:'🌎'},
+    {name:'ANGKOR WAT',country:'Cambodia',flag:'🇰🇭'},
     {name:'MANILA',flag:'ph',palette:['#6fc2d2', '#fff1d0'],landmarks:['jeepney', 'bay'],weather:['sun', 'rain']},
+    {name:'MADRID',flag:'es',palette:['#d28d66', '#f7dfc8'],landmarks:['royalpalace', 'plaza'],weather:['sun', 'rain']},
     {name:'LENCOIS MARANHENSES',country:'Brazil',flag:'🇧🇷'},
     {name:'SALAR DE ATACAMA',country:'Chile',flag:'🇨🇱'},
     {name:'BALI',flag:'id',palette:['#76c7a0', '#f6e0a9'],landmarks:['temple', 'rice'],weather:['sun', 'rain']},
     {name:'BUNGLE BUNGLES',country:'Australia',flag:'🇦🇺'},
     {name:'NORTH POLE',flag:'xmas',palette:['#8eb6df', '#eff7ff'],landmarks:['iceberg', 'sleigh', 'aurora'],weather:['snow', 'snow']},
     {name:'JAKARTA',flag:'id',palette:['#6dc6b8', '#f3e3b8'],landmarks:['monas', 'mosque'],weather:['rain', 'sun']},
+    {name:'THE DOLOMITES',country:'Italy',flag:'🇮🇹'},
     {name:'BANGKOK',flag:'th',palette:['#efb35d', '#ffe5b8'],landmarks:['grandpalace', 'wat'],weather:['sun', 'rain']},
     {name:'MOUNT EVEREST',country:'Nepal',flag:'🏔️'},
     {name:'ZHANGJIAJIE NATIONAL FOREST',country:'China',flag:'🇨🇳'},
@@ -200,7 +211,9 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'ANTARCTICA',country:'Antarctica',flag:'🐧'},
     {name:'REYKJAVIK',flag:'is',palette:['#8cb9d8', '#edf8ff'],landmarks:['hallgrim', 'waterfall', 'mountain'],weather:['snow', 'snow', 'sun']},
     {name:'JAIPUR PINK CITY',country:'India',flag:'🇮🇳'},
+    {name:'KARACHI',flag:'pk',palette:['#f0b66f', '#d9e8d2'],landmarks:['waterfront', 'skyscraper'],weather:["sun", "rain"] },
     {name:'THE METEORA',country:'Greece',flag:'🇬🇷'},
+    {name:'TSINGY DE BEMARAHA',country:'Madagascar',flag:'🇲🇬'},
     {name:'MILFORD SOUND',country:'New Zealand',flag:'🇳🇿'},
     {name:'LAKE BAIKAL',country:'Siberia',flag:'🇷🇺'},
     {name:'THE MALDIVES',country:'Indian Ocean',flag:'🇲🇻'},
@@ -220,6 +233,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'ABU DHABI',flag:'ae',palette:['#e8bb70', '#ffe7c2'],landmarks:['mosque', 'skyline'],weather:['sun', 'sun']},
     {name:'BUENOS AIRES',flag:'ar',palette:['#8fc8e5', '#f4e2c6'],landmarks:['oldtown', 'tower'],weather:["sun", "rain"] },
     {name:'LAGOS',flag:'ng',palette:['#66c8a2', '#f4dfaa'],landmarks:['bridge', 'coast'],weather:['sun', 'rain']},
+    {name:'SINGAPORE',flag:'sg',palette:['#78cdd0', '#e5f5dc'],landmarks:['marinabay', 'merlion'],weather:['sun', 'rain']},
     {name:'THE BLUE LAGOON',country:'Iceland',flag:'🇮🇸'},
     {name:'MACHU PICCHU',country:'Peru',flag:'🇵🇪'},
     {name:'DOHA',flag:'qa',palette:['#e7b475', '#fff0cf'],landmarks:['skyline', 'museum'],weather:['sun', 'sun']},
@@ -248,22 +262,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'JOHANNESBURG',flag:'za',palette:['#8fc68e', '#f3e1b7'],landmarks:['hill', 'skyline'],weather:['sun', 'rain']},
     {name:'WAITOMO GLOWWORM CAVES',country:'New Zealand',flag:'🇳🇿'},
     {name:'BAY OF FUNDY',country:'Canada',flag:'🇨🇦'},
-    {name:'DHAKA',flag:'bd',palette:['#a8d4ee', '#e2ccb5'],landmarks:['mosque', 'waterfront'],weather:["sun", "rain"] },
-    {name:'DAINTREE RAINFOREST',country:'Australia',flag:'🇦🇺'},
-    {name:'GREAT BARRIER REEF',country:'Australia',flag:'🇦🇺'},
-    {name:'SHANGHAI',country:'China',flag:'🇨🇳'},
-    {name:'VENICE CANALS',country:'Italy',flag:'🇮🇹'},
-    {name:'PLITVICE LAKES',country:'Croatia',flag:'🇭🇷'},
-    {name:'WADI RUM',country:'Jordan',flag:'🇯🇴'},
-    {name:'TEOTIHUACAN',country:'Mexico',flag:'🇲🇽'},
-    {name:'JIUZHAIGOU VALLEY',country:'China',flag:'🇨🇳'},
-    {name:'FLY GEYSER',country:'United States',flag:'🇺🇸'},
-    {name:'KARACHI',flag:'pk',palette:['#f0b66f', '#d9e8d2'],landmarks:['waterfront', 'skyscraper'],weather:["sun", "rain"] },
-    {name:'TSINGY DE BEMARAHA',country:'Madagascar',flag:'🇲🇬'},
-    {name:'SAHARA DESERT',country:'North Africa',flag:'🏜️'},
-    {name:'AUCKLAND',flag:'nz',palette:['#74c1d4', '#eef5e8'],landmarks:['sky', 'harbor'],weather:['sun', 'rain']},
-    {name:'ANGKOR WAT',country:'Cambodia',flag:'🇰🇭'},
-    {name:'MADRID',flag:'es',palette:['#d28d66', '#f7dfc8'],landmarks:['royalpalace', 'plaza'],weather:['sun', 'rain']},
     {name:'HA LONG BAY',country:'Vietnam',flag:'🇻🇳'},
     {name:'PLAYA DEL AMOR / HIDDEN BEACH',country:'Mexico',flag:'🇲🇽'},
     {name:'THE KREMLIN',country:'Russia',flag:'🇷🇺'},
@@ -302,8 +300,15 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'MOUNT KILIMANJARO',country:'Tanzania',flag:'🇹🇿'},
     {name:'KATHMANDU',flag:'np',palette:['#7db2c7', '#efe0c5'],landmarks:['temple', 'mountain'],weather:['sun', 'rain']},
     {name:'BUDAPEST',flag:'hu',palette:['#a6cbe4', '#fff0dd'],landmarks:['parliament', 'chain', 'buda'],weather:['sun', 'rain']},
-    {name:'ROME',flag:'it',palette:['#efad75', '#ffe6c5'],landmarks:['colosseum', 'columns'],weather:['sun', 'sun', 'rain']}
-  
+    {name:'ROME',flag:'it',palette:['#efad75', '#ffe6c5'],landmarks:['colosseum', 'columns'],weather:['sun', 'sun', 'rain']},
+    {name:'BANFF & JASPER CANADIAN ROCKIES',country:'Canada',flag:'🇨🇦'},
+    {name:'SHANGHAI',country:'China',flag:'🇨🇳'},
+    {name:'MARIANA TRENCH',country:'Pacific Ocean',flag:'🌊'},
+    {name:'VREDEFORT IMPACT STRUCTURE',country:'South Africa',flag:'🇿🇦'},
+    {name:'LAKE COMO',country:'Italy',flag:'🇮🇹'},
+    {name:'THE AMALFI COAST',country:'Italy',flag:'🇮🇹'},
+    {name:'ROUTE 66',country:'United States',flag:'🇺🇸'},
+    {name:'PALAWAN',country:'Philippines',flag:'🇵🇭'}
   ];
   const planeFlagPool=['us','fr','gb','au','jp','it','br','ca','de','es','in','kr','cn','mx','ch','gr','za','pt','tr','nz','sg','be','nl','se','ma','ae','eg','th','vn','id','ph','ar','cl','co','pe','at','cz','hu','ie','is'];
   let planeFlagCursor=1;
@@ -2608,6 +2613,66 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.strokeStyle='rgba(245,205,112,.45)';ctx.lineWidth=2;for(let i=0;i<10;i++){ctx.beginPath();ctx.moveTo(W*(.04+i*.095),H*.72);ctx.lineTo(W*(.04+i*.095),H*.96);ctx.stroke();}
   }
 
+  function drawMarianaTrench(){
+    gradient('#0a1a33','#020a12');
+    // trench walls narrowing toward the bottom, like an underwater canyon.
+    ctx.fillStyle='#0d2438';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(W*.30,0);ctx.lineTo(W*.12,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(W*.70,0);ctx.lineTo(W*.88,H);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#0a1c2c';ctx.beginPath();ctx.moveTo(W*.30,0);ctx.lineTo(W*.42,0);ctx.lineTo(W*.30,H*.6);ctx.lineTo(W*.12,H);ctx.lineTo(0,H*.7);ctx.closePath();ctx.fill();
+    // drifting bioluminescent particles.
+    ctx.fillStyle='rgba(120,220,255,.75)';for(let i=0;i<20;i++){const x=W*((i*37)%100)/100,y=H*((i*53)%100)/100;ctx.beginPath();ctx.arc(x,y,1.6,0,Math.PI*2);ctx.fill();}
+    // anglerfish with a glowing lure.
+    const fx=W*.60,fy=H*.52;
+    ctx.fillStyle='#0a1420';ctx.beginPath();ctx.ellipse(fx,fy,26,12,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.moveTo(fx+24,fy);ctx.lineTo(fx+40,fy-10);ctx.lineTo(fx+40,fy+10);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#0a1420';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(fx-14,fy-10);ctx.quadraticCurveTo(fx-24,fy-26,fx-30,fy-32);ctx.stroke();
+    ctx.fillStyle='#eafcff';ctx.beginPath();ctx.arc(fx-30,fy-32,4,0,Math.PI*2);ctx.fill();
+    // faint jellyfish drifting past.
+    ctx.fillStyle='rgba(200,150,255,.5)';for(let i=0;i<3;i++){const x=W*(.15+i*.28),y=H*(.22+i*.14);ctx.beginPath();ctx.arc(x,y,14,Math.PI,0);ctx.fill();ctx.strokeStyle='rgba(200,150,255,.4)';ctx.lineWidth=1.5;for(let t=0;t<4;t++){ctx.beginPath();ctx.moveTo(x-10+t*7,y);ctx.lineTo(x-10+t*7,y+18);ctx.stroke();}}
+  }
+
+  function drawVredefort(){
+    gradient('#7fb6dc','#cfe0e8');ctx.fillStyle='#e2c583';ctx.fillRect(0,H*.66,W,H*.34);
+    // distant hazy ridge line — cooler and less saturated than the foreground,
+    // the way far-away landscape reads in real atmospheric perspective.
+    ctx.fillStyle='#a89c8f';for(let i=0;i<4;i++){const x=W*(.02+i*.27);ctx.beginPath();ctx.moveTo(x,H*.66);ctx.lineTo(x+W*.11,H*(.58+(i%2)*.02));ctx.lineTo(x+W*.28,H*.66);ctx.closePath();ctx.fill();}
+    // meteor streak, a nod to the impact that formed this structure.
+    ctx.strokeStyle='rgba(255,250,220,.85)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W*.85,H*.05);ctx.lineTo(W*.68,H*.17);ctx.stroke();
+    ctx.fillStyle='#fff6dc';ctx.beginPath();ctx.arc(W*.68,H*.17,4,0,Math.PI*2);ctx.fill();
+    // the impact ring itself, seen from above as a huge pale circle traced
+    // across the savanna floor — the clearest way to read "crater structure".
+    ctx.strokeStyle='rgba(120,96,58,.55)';ctx.lineWidth=W*.014;ctx.beginPath();ctx.ellipse(W*.52,H*.87,W*.40,H*.11,0,0,Math.PI*2);ctx.stroke();
+    // dry savanna grass tufts.
+    ctx.strokeStyle='#8a6f3f';ctx.lineWidth=2;for(let i=0;i<12;i++){const x=W*((i*23)%100)/100,y=H*(.74+((i*13)%22)/100);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-4,y-13);ctx.moveTo(x,y);ctx.lineTo(x+4,y-13);ctx.stroke();}
+    // acacia tree: thin trunk, wide flat-topped canopy, strong contrast against the gold ground.
+    ctx.strokeStyle='#3d2c1e';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(W*.20,H*.94);ctx.lineTo(W*.205,H*.76);ctx.stroke();
+    ctx.fillStyle='#3f5c30';ctx.beginPath();ctx.ellipse(W*.21,H*.715,W*.14,H*.032,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#4f7038';ctx.beginPath();ctx.ellipse(W*.21,H*.695,W*.10,H*.022,0,0,Math.PI*2);ctx.fill();
+  }
+
+  function drawPalawanKayaks(){
+    gradient('#5fc4e0','#eaf6e0');ctx.fillStyle='#2fb8c9';ctx.fillRect(0,H*.58,W,H*.42);
+    // limestone karst towers — bulbous silhouettes, wider up top than at the base.
+    ctx.fillStyle='#4f7a5c';for(let i=0;i<3;i++){const x=W*(.08+i*.34);
+      ctx.beginPath();ctx.moveTo(x,H*.60);
+      ctx.bezierCurveTo(x-W*.01,H*.42,x+W*.005,H*.26,x+W*.07,H*.20);
+      ctx.bezierCurveTo(x+W*.135,H*.26,x+W*.15,H*.42,x+W*.15,H*.60);
+      ctx.closePath();ctx.fill();
+      ctx.fillStyle='#3f6a4c';ctx.beginPath();ctx.ellipse(x+W*.07,H*.24,W*.05,H*.02,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#4f7a5c';
+    }
+    // turquoise lagoon shallows.
+    ctx.fillStyle='rgba(150,230,220,.55)';ctx.beginPath();ctx.ellipse(W*.5,H*.80,W*.44,H*.18,0,0,Math.PI*2);ctx.fill();
+    // yellow kayaks with paddlers, sized to actually be noticed.
+    for(const x of [W*.30,W*.52,W*.72]){const y=H*.71;
+      ctx.fillStyle='#f0c53a';ctx.beginPath();ctx.ellipse(x,y,30,11,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#d9a820';ctx.beginPath();ctx.ellipse(x,y,22,6,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#2c2c2c';ctx.beginPath();ctx.arc(x,y-11,5.5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#c8433a';ctx.fillRect(x-6,y-8,12,10);
+      ctx.strokeStyle='#6b4a30';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-20,y-15);ctx.lineTo(x+20,y-6);ctx.stroke();
+    }
+  }
+
   function drawMilanCity(){
     gradient('#82b1ca','#efc28b');ctx.fillStyle='#827d6e';ctx.fillRect(0,H*.77,W,H*.23);
     // Italian street with gelato and pizza shops.
@@ -3360,13 +3425,18 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.fillStyle='#4b8050';for(let i=0;i<6;i++){ctx.beginPath();ctx.arc(W*(.06+i*.17),H*.82,15,0,Math.PI*2);ctx.fill();ctx.fillStyle='#e2bf36';ctx.beginPath();ctx.arc(W*(.06+i*.17),H*.82,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#4b8050';}
   }
   function drawLakeComoV70(){
-    gradient('#80b9d0','#e4d1a5');ctx.fillStyle='#4c98ad';ctx.fillRect(0,H*.54,W,H*.46);
-    // alpine lake basin
-    ctx.fillStyle='#60745e';ctx.beginPath();ctx.moveTo(0,H*.66);ctx.lineTo(W*.18,H*.31);ctx.lineTo(W*.38,H*.55);ctx.lineTo(W*.65,H*.25);ctx.lineTo(W,H*.58);ctx.lineTo(W,H*.68);ctx.closePath();ctx.fill();
-    // villas and cliffside restaurants
-    for(let i=0;i<6;i++){const x=W*(.05+i*.16),y=H*(.66+(i%2)*.07);ctx.fillStyle=['#d8b482','#d37a5c','#e2c28d'][i%3];ctx.fillRect(x,y,W*.12,H*.07);ctx.fillStyle='#9d4e3e';ctx.beginPath();ctx.moveTo(x-W*.005,y);ctx.lineTo(x+W*.06,y-H*.04);ctx.lineTo(x+W*.125,y);ctx.closePath();ctx.fill();}
-    // restaurant terrace tables
-    ctx.fillStyle='#ead8b0';for(let i=0;i<4;i++){const x=W*(.18+i*.19),y=H*.86;ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#705b48';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+15);ctx.stroke();}
+    gradient('#7fb6d6','#eee0c0');ctx.fillStyle='#3f8aa3';ctx.fillRect(0,H*.62,W,H*.38);
+    // distant alpine peaks along the horizon — kept modest so the lake and
+    // villas stay the focus instead of the mountains overwhelming the scene.
+    ctx.fillStyle='#5f7864';for(let i=0;i<4;i++){const x=W*(.02+i*.27);ctx.beginPath();ctx.moveTo(x,H*.62);ctx.lineTo(x+W*.13,H*(.40+(i%2)*.05));ctx.lineTo(x+W*.28,H*.62);ctx.closePath();ctx.fill();}
+    // pastel lakeside villas along the shore.
+    const comoCols=['#d8b482','#d37a5c','#e2c28d','#c98a6a','#e6d0a0'];
+    for(let i=0;i<5;i++){const x=W*(.06+i*.19),y=H*.62;ctx.fillStyle=comoCols[i];ctx.fillRect(x,y,W*.11,H*.06);ctx.fillStyle='#9d4e3e';ctx.beginPath();ctx.moveTo(x-W*.006,y);ctx.lineTo(x+W*.055,y-H*.035);ctx.lineTo(x+W*.116,y);ctx.closePath();ctx.fill();}
+    // cypress trees between the villas.
+    ctx.fillStyle='#2f5138';for(let i=0;i<4;i++){const x=W*(.20+i*.19),y=H*.62;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5,y-H*.055);ctx.lineTo(x+5,y-H*.055);ctx.closePath();ctx.fill();}
+    // water reflections and a small ferry crossing the lake.
+    ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=2;for(let i=0;i<8;i++){ctx.beginPath();ctx.moveTo(W*(.05+i*.12),H*.70);ctx.lineTo(W*(.05+i*.12),H*.94);ctx.stroke();}
+    ctx.fillStyle='#efefe9';ctx.beginPath();ctx.moveTo(W*.60,H*.80);ctx.lineTo(W*.74,H*.80);ctx.lineTo(W*.70,H*.85);ctx.lineTo(W*.64,H*.85);ctx.closePath();ctx.fill();
   }
   function drawJejuV70(){
     gradient('#79bed4','#e6d5aa');ctx.fillStyle='#3396aa';ctx.fillRect(0,H*.58,W,H*.42);
@@ -4170,6 +4240,9 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     else if(c==='NORTH POLE')drawNorthPole();
     else if(c==='LISBON')drawLisbon();
     else if(c==='BUDAPEST')drawBudapest();
+    else if(c==='MARIANA TRENCH')drawMarianaTrench();
+    else if(c==='VREDEFORT IMPACT STRUCTURE')drawVredefort();
+    else if(c==='PALAWAN')drawPalawanKayaks();
     else drawGenericCity(currentCity());
     // Post-5,000 replay treatment: revisit familiar cities after dark so they
     // feel like a new destination rather than an identical repeat.
