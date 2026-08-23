@@ -5252,7 +5252,8 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     const shareUrl = 'https://beckythebat.com';
     const msg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me?`;
     if (navigator.share) {
-      try { await navigator.share({title:'Becky the Bat',text:msg,url:shareUrl}); return; } catch (_) { return; }
+      try { await navigator.share({title:'Becky the Bat',text:msg,url:shareUrl}); return; }
+      catch (err) { if (err && err.name === 'AbortError') return; }
     }
     openShareMenu(msg, shareUrl);
   };
