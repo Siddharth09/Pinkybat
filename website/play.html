@@ -34,7 +34,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 <canvas id="game"></canvas>
 <button id="fsBtn" onclick="(document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()).catch(()=>{})" style="position:fixed;top:calc(env(safe-area-inset-top) + 10px);right:12px;z-index:20;width:34px;height:34px;border-radius:10px;border:0;background:#152036ad;color:#fff;font-size:15px;line-height:1;cursor:pointer;backdrop-filter:blur(4px)" aria-label="Toggle fullscreen">⤢</button>
 <div id="hud"><div><div id="score">0<small> m</small></div><div id="heartScore" class="hearts">♥ 0</div><div id="heartProgress" class="heartProgress">0/300</div><div id="city"></div><div id="cityTier" class="cityTier"></div></div><div id="pill">BEST 0 m</div></div>
-<div id="intro" class="panel"><div><div class="mark">🦇</div><div class="title"><span style="color:#ff79ae!important">BECKY</span> <span>THE</span><br><span>BAT</span></div><a id="introPrivacy" href="https://beckythebat.com/privacy.html" target="_blank" rel="noopener" style="display:block;margin-top:22px;font-size:11px;font-weight:800;letter-spacing:1px;color:#fff9;text-decoration:underline">PRIVACY POLICY</a></div></div>
+<div id="intro" class="panel"><div><div class="mark">🦇</div><div class="title"><span style="color:#ff79ae!important">BECKY</span> <span>THE</span><br><span>BAT</span></div></div><a id="introPrivacy" href="https://beckythebat.com/privacy.html" target="_blank" rel="noopener" style="position:absolute;right:16px;bottom:calc(env(safe-area-inset-bottom) + 14px);font-size:9px;font-weight:500;letter-spacing:.4px;color:#ffffff50;text-decoration:none">Privacy Policy</a></div>
 <div id="gameover" class="panel hidden"><div>
 <div style="font-size:11px;letter-spacing:2px;font-weight:1000">YOU FLEW</div>
 <div id="final" class="scoreBig">0</div><div>metres</div>
@@ -318,6 +318,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     bat.r = Math.max(17, Math.min(25, Math.min(W, H) * 0.046));
     if (state !== 'play' && state !== 'crash') bat.y = H * 0.5;
+    try { citySceneCache.clear(); } catch (_) {}
   }
   addEventListener('resize', resize);
   resize();
@@ -5071,10 +5072,27 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     return true;
   }
 
+  function openGetAppPrompt() {
+    const wrap = document.createElement('div');
+    wrap.id = 'getAppMenu';
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#0009';
+    wrap.innerHTML = `
+      <div style="background:#152036;border-radius:22px;padding:26px 22px;width:min(320px,84vw);text-align:center;box-shadow:0 20px 50px #000a">
+        <div style="font-size:34px;margin-bottom:6px">❤️</div>
+        <div style="font-weight:1000;font-size:17px;letter-spacing:.3px;margin-bottom:8px">GET THE APP TO BUY HEARTS</div>
+        <div style="font-size:13px;color:#fff9;line-height:1.5;margin-bottom:18px">Apple In-App Purchase only works in the real Becky the Bat app. Download it free to buy hearts and keep flying.</div>
+        <a href="https://apps.apple.com/app/id6803877783" target="_blank" rel="noopener" style="display:block;background:#ff6fa8;color:#fff;border-radius:999px;padding:13px;font-weight:1000;margin-bottom:8px">Download on the App Store</a>
+        <button id="getAppCloseBtn" style="display:block;width:100%;background:transparent;color:#fff9;border-radius:999px;padding:10px;font-weight:800;border:0;font-size:13px">Close</button>
+      </div>`;
+    document.body.appendChild(wrap);
+    wrap.addEventListener('click', (e) => { if (e.target === wrap) wrap.remove(); });
+    document.getElementById('getAppCloseBtn').onclick = () => wrap.remove();
+  }
+
   async function buy100Hearts() {
     const NP = window.Capacitor?.Plugins?.NativePurchases;
     if (!NP || typeof NP.purchaseProduct !== 'function') {
-      alert('Apple in-app purchase is available in the iPhone/TestFlight build.');
+      openGetAppPrompt();
       return;
     }
     if (state !== 'over') return;
@@ -5186,16 +5204,49 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   loadContinuePrice();
   wirePurchaseListener();
   recoverNativeTransactions();
+  function closeShareMenu() {
+    const el = document.getElementById('shareMenu');
+    if (el) el.remove();
+  }
+
+  function openShareMenu(msg, shareUrl) {
+    closeShareMenu();
+    const wrap = document.createElement('div');
+    wrap.id = 'shareMenu';
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#0009';
+    const fb = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl) + '&quote=' + encodeURIComponent(msg);
+    const tw = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg) + '&url=' + encodeURIComponent(shareUrl);
+    const wa = 'https://wa.me/?text=' + encodeURIComponent(msg + '\n' + shareUrl);
+    wrap.innerHTML = `
+      <div style="background:#152036;border-radius:22px;padding:22px;width:min(320px,84vw);text-align:center;box-shadow:0 20px 50px #000a">
+        <div style="font-weight:1000;font-size:16px;letter-spacing:.5px;margin-bottom:14px">SHARE YOUR SCORE</div>
+        <a href="${fb}" target="_blank" rel="noopener" style="display:block;background:#3b5998;color:#fff;border-radius:999px;padding:12px;margin:8px 0;font-weight:900">Facebook</a>
+        <a href="${tw}" target="_blank" rel="noopener" style="display:block;background:#000;color:#fff;border-radius:999px;padding:12px;margin:8px 0;font-weight:900">X (Twitter)</a>
+        <a href="${wa}" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#fff;border-radius:999px;padding:12px;margin:8px 0;font-weight:900">WhatsApp</a>
+        <button id="shareCopyBtn" style="display:block;width:100%;background:#ff6fa8;color:#fff;border-radius:999px;padding:12px;margin:8px 0;font-weight:900;border:0">Copy Link</button>
+        <button id="shareCloseBtn" style="display:block;width:100%;background:transparent;color:#fff9;border-radius:999px;padding:10px;margin-top:4px;font-weight:800;border:0;font-size:13px">Close</button>
+        <div style="font-size:10px;color:#fff6;margin-top:10px;line-height:1.4">Instagram and TikTok don't accept shared posts from websites — screenshot your score to share there instead.</div>
+      </div>`;
+    document.body.appendChild(wrap);
+    wrap.addEventListener('click', (e) => { if (e.target === wrap) closeShareMenu(); });
+    document.getElementById('shareCloseBtn').onclick = closeShareMenu;
+    document.getElementById('shareCopyBtn').onclick = async () => {
+      try {
+        if (navigator.clipboard) await navigator.clipboard.writeText(msg + '\n' + shareUrl);
+        document.getElementById('shareCopyBtn').textContent = 'Copied!';
+        setTimeout(closeShareMenu, 900);
+      } catch (_) {}
+    };
+  }
+
   document.getElementById('share').onclick = async () => {
     const score = finalEl.textContent;
-    const city = currentCity().name;
-    const shareUrl = 'https://beckythebat.com/play.html';
+    const shareUrl = 'https://beckythebat.com';
     const msg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me?`;
-    try {
-      if (navigator.share) await navigator.share({title:'Becky the Bat',text:msg,url:shareUrl});
-      else if (navigator.clipboard) {await navigator.clipboard.writeText(msg + '\n' + shareUrl); alert('Score + link copied!');}
-      else alert(msg + '\n' + shareUrl);
-    } catch (_) {}
+    if (navigator.share) {
+      try { await navigator.share({title:'Becky the Bat',text:msg,url:shareUrl}); return; } catch (_) { return; }
+    }
+    openShareMenu(msg, shareUrl);
   };
 
   pillEl.textContent = 'BEST ' + best + ' m';
