@@ -2775,6 +2775,15 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     // red lanterns strung along the riverside promenade.
     ctx.strokeStyle='rgba(255,255,255,.3)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,H*.70);ctx.lineTo(W,H*.66);ctx.stroke();
     for(let i=0;i<7;i++){const x=W*(.04+i*.14),y=H*(.70-i*.0057);ctx.fillStyle='#c8433a';ctx.beginPath();ctx.ellipse(x,y+H*.011,6,8,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#e6c750';ctx.fillRect(x-1,y+H*.021,2,H*.004);}
+    // the Shanghai Maglev, elevated on its viaduct, streaking past at speed.
+    const my=H*.615;
+    ctx.fillStyle='#6b7078';for(let i=0;i<8;i++)ctx.fillRect(W*(.03+i*.135),my+H*.022,W*.012,H*.04);
+    ctx.fillStyle='#9aa0a8';ctx.fillRect(0,my+H*.014,W,H*.012);
+    ctx.fillStyle='#e6e9ec';ctx.beginPath();ctx.ellipse(W*.5,my,W*.36,H*.016,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#3a4650';ctx.fillRect(W*.18,my-H*.006,W*.64,H*.010);
+    ctx.fillStyle='#c8433a';ctx.fillRect(W*.16,my+H*.006,W*.68,H*.004);
+    ctx.strokeStyle='rgba(255,255,255,.65)';ctx.lineWidth=2;
+    for(let i=0;i<5;i++){const yy=my-H*.010+i*H*.005;ctx.beginPath();ctx.moveTo(W*.02,yy);ctx.lineTo(W*.13,yy);ctx.stroke();}
     // river reflections.
     ctx.strokeStyle='rgba(245,205,112,.45)';ctx.lineWidth=2;for(let i=0;i<10;i++){ctx.beginPath();ctx.moveTo(W*(.04+i*.095),H*.72);ctx.lineTo(W*(.04+i*.095),H*.96);ctx.stroke();}
   }
