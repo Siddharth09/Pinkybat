@@ -254,16 +254,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'JEJU ISLAND',country:'South Korea',flag:'🇰🇷'},
     {name:'BEIJING',flag:'cn',palette:['#e3aa67', '#ffe9c0'],landmarks:['wall', 'forbidden'],weather:['sun', 'rain']},
     {name:'CAPE TOWN',flag:'za',palette:['#71bdd0', '#f1deb8'],landmarks:['tablemountain', 'waterfront'],weather:['sun', 'rain']},
-    {name:'STOCKHOLM',flag:'se',palette:['#87b8d2', '#eaf4f7'],landmarks:['oldtown', 'cityhall'],weather:['snow', 'sun']},
     {name:'KUALA LUMPUR',flag:'my',palette:['#78b9cf', '#edf2de'],landmarks:['petronas', 'mosque'],weather:['rain', 'sun']},
+    {name:'STOCKHOLM',flag:'se',palette:['#87b8d2', '#eaf4f7'],landmarks:['oldtown', 'cityhall'],weather:['snow', 'sun']},
     {name:'SINGAPORE MARINA BAY',country:'Singapore',flag:'🇸🇬'},
     {name:'ANGEL FALLS',country:'Venezuela',flag:'🇻🇪'},
-    {name:'SHENZHEN',flag:'cn',palette:['#f0b66f', '#c9d4c4'],landmarks:['skyscraper', 'tower'],weather:["sun", "rain"] },
-    {name:'VENICE CANALS',country:'Italy',flag:'🇮🇹'},
-    {name:'DHAKA',flag:'bd',palette:['#a8d4ee', '#e2ccb5'],landmarks:['mosque', 'waterfront'],weather:["sun", "rain"] },
-    {name:'DAINTREE RAINFOREST',country:'Australia',flag:'🇦🇺'},
     {name:'GREAT BARRIER REEF',country:'Australia',flag:'🇦🇺'},
-    {name:'GALAXIES OF THE SOUTHERN SKY',country:'Lake Tekapo, New Zealand',flag:'🇳🇿'},
     {name:'LOS ANGELES',flag:'us',palette:['#9f9ac9', '#d9e8d2'],landmarks:['skyscraper', 'wheel'],weather:["sun", "rain"] },
     {name:'MUMBAI',flag:'in',palette:['#75bfd0', '#f5d8ae'],landmarks:['gateway', 'marineDrive'],weather:['rain', 'sun']},
     {name:'CASABLANCA',flag:'ma',palette:['#8dc4cb', '#f4d6a9'],landmarks:['mosque', 'corniche'],weather:['sun', 'sun']},
@@ -2295,14 +2290,44 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawDublinCity(){
-    gradient('#819eb5','#d5c2a6');ctx.fillStyle='#77796d';ctx.fillRect(0,H*.78,W,H*.22);
-    // Cobbled Temple Bar-style street in perspective.
-    ctx.fillStyle='#6d655c';ctx.beginPath();ctx.moveTo(W*.35,H);ctx.lineTo(W*.48,H*.57);ctx.lineTo(W*.65,H);ctx.closePath();ctx.fill();
-    ctx.strokeStyle='#8f877b';ctx.lineWidth=1;for(let r=0;r<8;r++){const y=H*(.65+r*.045);ctx.beginPath();ctx.moveTo(W*(.42-r*.018),y);ctx.lineTo(W*(.57+r*.018),y);ctx.stroke();}
-    const cols=['#b43d3b','#42764f','#c99b3e','#9b4e55','#356b70'];
-    for(let side=0;side<2;side++)for(let i=0;i<5;i++){const x=side?W*(.66+i*.065):W*(.02+i*.065),y=H*(.54+i*.015);ctx.fillStyle=cols[(i+side)%cols.length];ctx.fillRect(x,y,W*.06,H*.24);ctx.fillStyle='#e8d6b2';ctx.fillRect(x+W*.012,y+H*.055,W*.036,H*.045);ctx.fillStyle='#f0c862';ctx.beginPath();ctx.arc(x+W*.03,y+H*.13,3,0,Math.PI*2);ctx.fill();}
-    // pub signs and lamps
-    ctx.fillStyle='#f2c75b';for(let i=0;i<7;i++){const x=W*(.10+i*.13);ctx.beginPath();ctx.arc(x,H*.58+(i%2)*H*.04,4,0,Math.PI*2);ctx.fill();}
+    // Dublin, rebuilt for its Georgian charm: colourful fanlight doors,
+    // a little bistro with outdoor cafe tables on the cobbles, and a
+    // hanging pub sign, alongside the existing Temple Bar street.
+    gradient('#8fa8bd','#e2d3b0');ctx.fillStyle='#6d655c';ctx.fillRect(0,H*.78,W,H*.22);
+    // cobbled street in perspective.
+    ctx.fillStyle='#5f574e';ctx.beginPath();ctx.moveTo(W*.35,H);ctx.lineTo(W*.48,H*.57);ctx.lineTo(W*.65,H);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#7d756a';ctx.lineWidth=1;for(let r=0;r<8;r++){const y=H*(.65+r*.045);ctx.beginPath();ctx.moveTo(W*(.42-r*.018),y);ctx.lineTo(W*(.57+r*.018),y);ctx.stroke();}
+
+    // colourful Georgian terrace houses with fanlight doors, each
+    // anchored to the ground line regardless of its roof height.
+    const doorCols=['#b43d3b','#2e6b46','#c99b3e','#2d4f8a','#7a3d6b'];
+    for(let side=0;side<2;side++)for(let i=0;i<4;i++){
+      const x=side?W*(.64+i*.085):W*(.02+i*.085),w=W*.08,h=H*.24-i*H*.015,y=H*.78-h;
+      ctx.fillStyle='#cdbfa0';ctx.fillRect(x,y,w,h);
+      ctx.fillStyle='#e8d6b2';ctx.fillRect(x+w*.15,y+h*.14,w*.30,h*.18);ctx.fillRect(x+w*.55,y+h*.14,w*.30,h*.18);
+      const dcol=doorCols[(i+side*4)%doorCols.length];
+      ctx.fillStyle=dcol;ctx.fillRect(x+w*.32,y+h*.68,w*.36,h*.30);
+      ctx.fillStyle='#1c1c1c';ctx.beginPath();ctx.arc(x+w*.5,y+h*.68,w*.18,Math.PI,0);ctx.fill();
+    }
+
+    // a little bistro with a striped awning and outdoor cafe tables.
+    const bx=W*.50,by=H*.86;
+    ctx.fillStyle='#3a5b45';ctx.fillRect(bx-W*.10,by-H*.03,W*.20,H*.03);
+    for(let i=0;i<5;i++){ctx.fillStyle=i%2?'#3a5b45':'#f0e6cf';ctx.beginPath();ctx.moveTo(bx-W*.10+i*W*.04,by);ctx.lineTo(bx-W*.10+(i+1)*W*.04,by);ctx.lineTo(bx-W*.10+(i+.5)*W*.04,by+H*.025);ctx.closePath();ctx.fill();}
+    for(const tx of [bx-W*.06,bx+W*.06]){
+      ctx.strokeStyle='#4a3a2c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(tx,by+H*.03);ctx.lineTo(tx,by+H*.07);ctx.stroke();
+      ctx.fillStyle='#4a3a2c';ctx.beginPath();ctx.ellipse(tx,by+H*.03,7,3,0,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#2e2e2e';ctx.beginPath();ctx.arc(tx-9,by+H*.06,3,0,Math.PI*2);ctx.arc(tx+9,by+H*.06,3,0,Math.PI*2);ctx.stroke();
+    }
+
+    // a hanging pub sign on a wrought-iron bracket.
+    ctx.strokeStyle='#1c1c1c';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W*.14,H*.60);ctx.lineTo(W*.14,H*.50);ctx.lineTo(W*.20,H*.50);ctx.stroke();
+    ctx.fillStyle='#0d3b28';ctx.fillRect(W*.16,H*.505,W*.06,H*.05);
+    ctx.fillStyle='#f0c862';ctx.beginPath();ctx.arc(W*.19,H*.53,5,0,Math.PI*2);ctx.fill();
+
+    // string lights and lamps over the street.
+    ctx.strokeStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.moveTo(0,H*.46);ctx.quadraticCurveTo(W*.5,H*.52,W,H*.46);ctx.stroke();
+    ctx.fillStyle='#f2c75b';for(let i=0;i<9;i++){const tt=i/8,x=W*tt,y=H*(.46+(4*tt*(1-tt))*.06);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();}
   }
 
 
@@ -3278,26 +3303,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.fillStyle='#f0c94e';for(let i=0;i<8;i++){const tt=i/7,x=W*tt,y=H*(.66+(4*tt*(1-tt))*.06);ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();}
   }
 
-  function drawShenzhenNew(){
-    gradient('#e9aa68','#f0d3a0');ctx.fillStyle='#75825f';ctx.fillRect(0,H*.77,W,H*.23);
-    // Hilltop fortress above a modern Shenzhen skyline.
-    ctx.fillStyle='#587459';ctx.beginPath();ctx.moveTo(0,H*.72);ctx.lineTo(W*.50,H*.34);ctx.lineTo(W,H*.72);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#9b7254';ctx.fillRect(W*.31,H*.38,W*.38,H*.21);for(let i=0;i<6;i++)ctx.fillRect(W*(.32+i*.065),H*.33,W*.045,H*.065);
-    ctx.fillStyle='#57493f';ctx.beginPath();ctx.arc(W*.50,H*.49,W*.055,Math.PI,0);ctx.fill();ctx.fillRect(W*.445,H*.49,W*.11,H*.10);
-    for(let i=0;i<7;i++){const x=W*(.04+i*.13),hh=H*(.08+(i%4)*.04);ctx.fillStyle='#6b8490';ctx.fillRect(x,H*.74-hh,W*.055,hh);}
-    for(let i=0;i<7;i++){const x=W*(.08+i*.13),y=H*.83;ctx.fillStyle=['#b64e49','#4c7c88','#d09e40'][i%3];ctx.beginPath();ctx.arc(x,y-H*.045,4,0,Math.PI*2);ctx.fill();ctx.fillRect(x-3,y-H*.04,6,H*.035);}
-  }
-
-  function drawDhakaNew(){
-    gradient('#526f83','#9caeb3');ctx.fillStyle='#5f6c6e';ctx.fillRect(0,H*.75,W,H*.25);
-    // Lalbagh-like hill/fort complex after rain.
-    ctx.fillStyle='#9d6550';ctx.fillRect(W*.17,H*.47,W*.66,H*.25);for(let i=0;i<9;i++)ctx.fillRect(W*(.18+i*.075),H*.42,W*.05,H*.07);
-    ctx.fillStyle='#4d433c';ctx.beginPath();ctx.arc(W*.50,H*.61,W*.07,Math.PI,0);ctx.fill();ctx.fillRect(W*.43,H*.61,W*.14,H*.11);
-    // bright shops and wet reflections.
-    for(let i=0;i<6;i++){const x=W*(.04+i*.16);ctx.fillStyle=['#c24f4b','#d5a63f','#4b7e76','#765c88','#d67a54','#57849a'][i];ctx.fillRect(x,H*.77,W*.13,H*.07);ctx.fillStyle='rgba(220,230,226,.35)';ctx.fillRect(x,H*.86,W*.13,H*.07);}
-    ctx.strokeStyle='rgba(210,230,235,.4)';ctx.lineWidth=2;for(let i=0;i<10;i++){ctx.beginPath();ctx.moveTo(W*(.03+i*.10),H*.82);ctx.lineTo(W*(.03+i*.10),H*.98);ctx.stroke();}
-  }
-
   function drawLagosNew(){
     gradient('#172841','#4c5770');ctx.fillStyle='#756a5c';ctx.fillRect(0,H*.77,W,H*.23);
     // Historic central market with clock tower.
@@ -3364,15 +3369,36 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawLosAngelesNew(){
-    gradient('#a8cad8','#f0d7ac');ctx.fillStyle='#b8aa8f';ctx.fillRect(0,H*.76,W,H*.24);
-    // Monumental civic palace / City Hall-inspired focal point.
-    const cx=W*.50;ctx.fillStyle='#d1c3a8';ctx.fillRect(cx-W*.22,H*.49,W*.44,H*.25);ctx.fillRect(cx-W*.11,H*.32,W*.22,H*.42);ctx.fillRect(cx-W*.065,H*.22,W*.13,H*.52);
-    ctx.fillStyle='#8c8170';for(let i=0;i<7;i++)ctx.fillRect(cx-W*.18+i*W*.06,H*.55,W*.015,H*.19);
-    // broad morning plaza leading inward
-    ctx.fillStyle='#c9b99d';ctx.beginPath();ctx.moveTo(W*.12,H);ctx.lineTo(W*.40,H*.72);ctx.lineTo(W*.60,H*.72);ctx.lineTo(W*.88,H);ctx.closePath();ctx.fill();
-    // palms and small figures
-    for(const x of [W*.12,W*.22,W*.78,W*.88]){ctx.strokeStyle='#725945';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x,H*.77);ctx.lineTo(x,H*.52);ctx.stroke();ctx.fillStyle='#4e8758';for(let q=0;q<5;q++){ctx.beginPath();ctx.ellipse(x+(q-2)*10,H*.51,22,5,(q-2)*.3,0,Math.PI*2);ctx.fill();}}
-    for(let i=0;i<7;i++){const x=W*(.25+i*.08),y=H*(.83+(i%2)*.04);ctx.fillStyle=['#b84d49','#4e7c87','#d19d3f'][i%3];ctx.beginPath();ctx.arc(x,y-H*.04,4,0,Math.PI*2);ctx.fill();ctx.fillRect(x-3,y-H*.035,6,H*.03);}
+    // Los Angeles, rebuilt around its two most famous exports: Hollywood
+    // and the beach — the Hollywood sign on the hills, a palm-lined
+    // road, the Pacific, and a lifeguard tower on the sand.
+    gradient('#f6c08a','#fbe6ac');
+    ctx.fillStyle='#8a7a5c';ctx.beginPath();ctx.moveTo(0,H*.42);ctx.lineTo(W*.22,H*.22);ctx.lineTo(W*.46,H*.40);ctx.lineTo(W*.68,H*.20);ctx.lineTo(W,H*.40);ctx.lineTo(W,H*.46);ctx.lineTo(0,H*.46);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#f4f1e6';for(let i=0;i<9;i++){ctx.fillRect(W*(.24+i*.035),H*.33,W*.026,H*.032);}
+
+    // palm-lined road along the base of the hills.
+    ctx.fillStyle='#c7b78f';ctx.fillRect(0,H*.46,W,H*.10);
+    for(const x of [W*.10,W*.30,W*.62,W*.86]){
+      ctx.strokeStyle='#6b5138';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x,H*.46);ctx.lineTo(x,H*.30);ctx.stroke();
+      ctx.fillStyle='#4e8758';for(let q=0;q<5;q++){ctx.beginPath();ctx.ellipse(x+(q-2)*9,H*.29,20,5,(q-2)*.3,0,Math.PI*2);ctx.fill();}
+    }
+
+    // the Pacific.
+    ctx.fillStyle='#2f8fae';ctx.fillRect(0,H*.56,W,H*.18);
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=2;for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(0,H*(.60+i*.04));ctx.quadraticCurveTo(W*.5,H*(.58+i*.04),W,H*(.60+i*.04));ctx.stroke();}
+
+    // the beach: a lifeguard tower, a striped umbrella and a surfboard.
+    ctx.fillStyle='#e8c98a';ctx.fillRect(0,H*.74,W,H*.26);
+    const lx=W*.62;
+    ctx.fillStyle='#e0533f';ctx.fillRect(lx-W*.05,H*.76,W*.10,H*.06);
+    ctx.strokeStyle='#c94f2f';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(lx-W*.05,H*.82);ctx.lineTo(lx-W*.06,H*.94);ctx.moveTo(lx+W*.05,H*.82);ctx.lineTo(lx+W*.06,H*.94);ctx.stroke();
+    ctx.fillStyle='#f4e6c8';ctx.fillRect(lx-W*.06,H*.755,W*.12,H*.012);
+
+    ctx.strokeStyle='#6b5138';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(W*.28,H*.97);ctx.lineTo(W*.28,H*.84);ctx.stroke();
+    ctx.fillStyle='#c94f4f';ctx.beginPath();ctx.moveTo(W*.28,H*.84);ctx.arc(W*.28,H*.84,15,Math.PI,Math.PI*1.5);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#f0c94e';ctx.beginPath();ctx.moveTo(W*.28,H*.84);ctx.arc(W*.28,H*.84,15,Math.PI*1.5,Math.PI*2);ctx.closePath();ctx.fill();
+
+    ctx.fillStyle='#4f9cc9';ctx.beginPath();ctx.ellipse(W*.45,H*.88,6,17,0,0,Math.PI*2);ctx.fill();
   }
 
 
@@ -4023,13 +4049,24 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawGreatBarrierReefV70(){
+    // The Great Barrier Reef, rebuilt to show more of its marvel: sunlight
+    // shafts through the water, and a wider variety of coral forms
+    // (staghorn, brain and fan coral) in many different colours.
     gradient('#43bddd','#a9e9e3');ctx.fillStyle='#178fae';ctx.fillRect(0,H*.38,W,H*.62);
-    // coral garden
-    const cc=['#ef6c67','#e6b547','#b8669a','#6fc07d','#ef8b55'];
-    for(let i=0;i<18;i++){const x=W*((i*17)%100)/100,y=H*(.58+(i%5)*.07);ctx.strokeStyle=cc[i%5];ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x,y+25);ctx.lineTo(x,y);ctx.lineTo(x-10,y-15);ctx.moveTo(x,y);ctx.lineTo(x+12,y-18);ctx.stroke();}
-    // tropical fish + turtle
+    ctx.fillStyle='rgba(255,255,255,.12)';for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(W*(.15+i*.22),H*.38);ctx.lineTo(W*(.22+i*.22),H*.38);ctx.lineTo(W*(.30+i*.22),H);ctx.lineTo(W*(.10+i*.22),H);ctx.closePath();ctx.fill();}
+
+    // staghorn coral.
+    const cc=['#ef6c67','#e6b547','#b8669a','#6fc07d','#ef8b55','#5fb9d8'];
+    for(let i=0;i<14;i++){const x=W*((i*17)%100)/100,y=H*(.60+(i%5)*.07);ctx.strokeStyle=cc[i%cc.length];ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x,y+25);ctx.lineTo(x,y);ctx.lineTo(x-10,y-15);ctx.moveTo(x,y);ctx.lineTo(x+12,y-18);ctx.stroke();}
+    // brain coral: domed and grooved.
+    for(let i=0;i<5;i++){const x=W*(.08+i*.20),y=H*(.85+(i%2)*.05);ctx.fillStyle=cc[(i+2)%cc.length];ctx.beginPath();ctx.arc(x,y,16,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(0,0,0,.18)';ctx.lineWidth=1.5;for(let g=0;g<4;g++){ctx.beginPath();ctx.arc(x,y,4+g*3,0,Math.PI*2);ctx.stroke();}}
+    // fan coral: flat pleated wedges.
+    for(let i=0;i<4;i++){const x=W*(.20+i*.22),y=H*.55;ctx.fillStyle=cc[(i+4)%cc.length];ctx.beginPath();ctx.moveTo(x,y+22);ctx.quadraticCurveTo(x-18,y-4,x-8,y-20);ctx.quadraticCurveTo(x+2,y-6,x,y+22);ctx.fill();}
+
+    // tropical fish, a turtle, and a manta ray gliding in the distance.
     for(let i=0;i<9;i++){const x=W*(.08+(i%5)*.18),y=H*(.48+Math.floor(i/5)*.16);ctx.fillStyle=['#f2c74e','#e85c58','#5dc0d0'][i%3];ctx.beginPath();ctx.ellipse(x,y,12,6,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(x-12,y);ctx.lineTo(x-21,y-7);ctx.lineTo(x-21,y+7);ctx.closePath();ctx.fill();}
     ctx.fillStyle='#4f956d';ctx.beginPath();ctx.ellipse(W*.72,H*.48,24,15,-.2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(W*.76,H*.46,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(40,60,70,.55)';ctx.beginPath();ctx.moveTo(W*.30,H*.43);ctx.quadraticCurveTo(W*.40,H*.38,W*.50,H*.43);ctx.quadraticCurveTo(W*.40,H*.47,W*.30,H*.43);ctx.fill();
   }
   function drawIguazuV70(){
     gradient('#8bc8d2','#dce7d1');ctx.fillStyle='#34794d';ctx.fillRect(0,H*.35,W,H*.65);
@@ -4123,12 +4160,25 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.fillStyle='#c48662';ctx.beginPath();ctx.ellipse(W*.50,H*.76,22,6,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(W*.43,H*.75,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#eee3c7';ctx.fillRect(W*.48,H*.70,W*.08,H*.06);
   }
   function drawAngelFallsV70(){
-    gradient('#82becf','#d9e6d4');ctx.fillStyle='#2e7048';ctx.fillRect(0,H*.40,W,H*.60);
-    // towering tepui
-    ctx.fillStyle='#536452';ctx.beginPath();ctx.moveTo(W*.12,H*.74);ctx.lineTo(W*.25,H*.25);ctx.lineTo(W*.72,H*.25);ctx.lineTo(W*.85,H*.74);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#46784f';ctx.fillRect(W*.25,H*.23,W*.47,H*.06);
-    // extremely long waterfall
-    ctx.fillStyle='#dcefed';ctx.fillRect(W*.53,H*.26,W*.035,H*.48);ctx.fillStyle='rgba(238,247,242,.65)';for(let i=0;i<7;i++){ctx.beginPath();ctx.arc(W*(.50+i*.02),H*.76,18,0,Math.PI*2);ctx.fill();}
+    // Angel Falls, rebuilt to show the beauty of the world's highest
+    // waterfall: a soft cloud-wreathed tepui, a longer single-drop fall,
+    // billowing mist with a rainbow, and jungle canopy at its foot.
+    gradient('#7fc2d6','#dcecd8');ctx.fillStyle='#2e7048';ctx.fillRect(0,H*.30,W,H*.70);
+    ctx.fillStyle='#536452';ctx.beginPath();ctx.moveTo(W*.10,H*.70);ctx.lineTo(W*.24,H*.16);ctx.lineTo(W*.74,H*.16);ctx.lineTo(W*.88,H*.70);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#46784f';ctx.fillRect(W*.24,H*.14,W*.50,H*.05);
+    ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.ellipse(W*.30,H*.15,W*.09,H*.025,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(W*.62,H*.13,W*.11,H*.03,0,0,Math.PI*2);ctx.fill();
+
+    // the immense single-drop waterfall.
+    ctx.fillStyle='#eaf6f2';ctx.fillRect(W*.485,H*.19,W*.045,H*.58);
+    ctx.fillStyle='rgba(240,250,246,.5)';ctx.beginPath();ctx.moveTo(W*.47,H*.19);ctx.lineTo(W*.55,H*.19);ctx.lineTo(W*.60,H*.77);ctx.lineTo(W*.42,H*.77);ctx.closePath();ctx.fill();
+
+    // billowing mist at the base, with a rainbow arcing through it.
+    ctx.fillStyle='rgba(240,250,246,.75)';for(let i=0;i<9;i++){ctx.beginPath();ctx.arc(W*(.38+i*.03),H*.79,20,0,Math.PI*2);ctx.fill();}
+    ctx.strokeStyle='rgba(230,105,90,.6)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(W*.50,H*.80,W*.20,Math.PI,0);ctx.stroke();
+    ctx.strokeStyle='rgba(230,190,90,.5)';ctx.beginPath();ctx.arc(W*.50,H*.80,W*.22,Math.PI,0);ctx.stroke();
+
+    // jungle canopy at the base.
+    ctx.fillStyle='#255c39';for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(W*((i*13)%100)/100,H*.90,26,0,Math.PI*2);ctx.fill();}
   }
   function drawAmalfiV70(){
     gradient('#5fb6d8','#f4d38a');ctx.fillStyle='#2b9ab2';ctx.fillRect(0,H*.55,W,H*.45);
@@ -4207,12 +4257,26 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.fillStyle='#f5f3ea';for(const sx of [W*.14,W*.20]){ctx.beginPath();ctx.ellipse(sx,H*.90,7,4,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#f5f3ea';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx+5,H*.885);ctx.quadraticCurveTo(sx+9,H*.87,sx+7,H*.865);ctx.stroke();}
   }
   function drawJejuV70(){
+    // Jeju, rebuilt to show more grandeur in Hallasan (taller, with
+    // layered ridge lines and its summit crater lake) and a lava tube
+    // cave mouth in the foreground, alongside the dol hareubang statues.
     gradient('#79bed4','#e6d5aa');ctx.fillStyle='#3396aa';ctx.fillRect(0,H*.58,W,H*.42);
-    // Hallasan volcanic cone
-    ctx.fillStyle='#52745a';ctx.beginPath();ctx.moveTo(W*.08,H*.67);ctx.lineTo(W*.50,H*.28);ctx.lineTo(W*.90,H*.67);ctx.closePath();ctx.fill();
-    // black volcanic coast + waterfalls
+    ctx.fillStyle='#46664e';ctx.beginPath();ctx.moveTo(W*.02,H*.67);ctx.lineTo(W*.50,H*.16);ctx.lineTo(W*.98,H*.67);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#5f8467';ctx.lineWidth=2;for(let r=1;r<=3;r++){const f=r/4;ctx.beginPath();ctx.moveTo(W*(.02+f*.20),H*(.67-f*.02));ctx.lineTo(W*.50,H*(.16+f*.30));ctx.lineTo(W*(.98-f*.20),H*(.67-f*.02));ctx.stroke();}
+    ctx.fillStyle='#bfe6e0';ctx.beginPath();ctx.ellipse(W*.50,H*.20,W*.045,H*.018,0,0,Math.PI*2);ctx.fill();
+
+    // black volcanic coast + waterfalls.
     ctx.fillStyle='#353f3d';ctx.fillRect(0,H*.76,W,H*.24);ctx.fillStyle='#e1eee9';ctx.fillRect(W*.72,H*.60,W*.025,H*.18);
-    // Jeju dol hareubang stone statues
+
+    // a lava tube cave mouth, with basalt-column texture and a tiny
+    // visitor for scale.
+    const lx=W*.62,ly=H*.87;
+    ctx.fillStyle='#1c1f1e';ctx.beginPath();ctx.ellipse(lx,ly,W*.14,H*.075,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#3a423f';ctx.lineWidth=2;for(let i=0;i<7;i++){const a=Math.PI+(i/6)*Math.PI;ctx.beginPath();ctx.moveTo(lx+Math.cos(a)*W*.14,ly+Math.sin(a)*H*.075);ctx.lineTo(lx+Math.cos(a)*W*.08,ly+Math.sin(a)*H*.04);ctx.stroke();}
+    ctx.fillStyle='#0a0c0b';ctx.beginPath();ctx.ellipse(lx,ly,W*.09,H*.045,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#e8d7b0';ctx.beginPath();ctx.arc(lx-W*.03,ly+H*.045,3,0,Math.PI*2);ctx.fill();ctx.fillRect(lx-W*.033,ly+H*.05,W*.012,H*.03);
+
+    // Jeju dol hareubang stone statues.
     for(const x of [W*.18,W*.30]){ctx.fillStyle='#5a5e58';ctx.beginPath();ctx.ellipse(x,H*.78,13,20,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(x,H*.74,11,10,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#333';ctx.beginPath();ctx.arc(x-4,H*.74,2,0,Math.PI*2);ctx.arc(x+4,H*.74,2,0,Math.PI*2);ctx.fill();}
   }
   function drawTwelveApostlesV70(){
@@ -4305,16 +4369,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.strokeStyle='#4e4943';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(W*.30,H*.76);ctx.lineTo(W*.50,H*.16);ctx.lineTo(W*.70,H*.76);ctx.moveTo(W*.37,H*.57);ctx.lineTo(W*.63,H*.57);ctx.moveTo(W*.41,H*.43);ctx.lineTo(W*.59,H*.43);ctx.moveTo(W*.46,H*.28);ctx.lineTo(W*.54,H*.28);ctx.stroke();
     ctx.lineWidth=3;for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(W*(.34+i*.05),H*.67);ctx.lineTo(W*(.46+i*.015),H*.30);ctx.stroke();}
     ctx.fillStyle='#4f8052';for(const x of [W*.10,W*.18,W*.82,W*.90]){ctx.beginPath();ctx.arc(x,H*.73,22,0,Math.PI*2);ctx.fill();}
-  }
-  function drawVeniceCanalsV71(){
-    gradient('#77b9d4','#edc481');ctx.fillStyle='#3d9bad';ctx.fillRect(0,H*.62,W,H*.38);
-    // low colourful palazzi, no high rises
-    const cs=['#d77b5c','#e0ad70','#c95e52','#e6c58b','#b97663','#d99a61'];
-    for(let side=0;side<2;side++)for(let i=0;i<5;i++){const x=side?W*(.60+i*.09):W*(.01+i*.09),y=H*(.45+(i%2)*.03);ctx.fillStyle=cs[(i+side*2)%cs.length];ctx.fillRect(x,y,W*.09,H*(.25-(i%2)*.03));ctx.fillStyle='#8d4b3c';ctx.beginPath();ctx.moveTo(x-W*.005,y);ctx.lineTo(x+W*.045,y-H*.04);ctx.lineTo(x+W*.095,y);ctx.closePath();ctx.fill();}
-    // Rialto-like bridge
-    ctx.strokeStyle='#d7c5a2';ctx.lineWidth=12;ctx.beginPath();ctx.arc(W*.50,H*.66,W*.18,Math.PI,0);ctx.stroke();
-    // gondolas
-    for(let i=0;i<5;i++){const x=W*(.15+i*.16),y=H*(.77+(i%2)*.08);ctx.fillStyle='#2e3333';ctx.beginPath();ctx.ellipse(x,y,28,5,-.1,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#6b5038';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+18,y-H*.10);ctx.stroke();}
   }
   function drawTokyoShibuyaV71(){
     gradient('#17213c','#4a3567');ctx.fillStyle='#333943';ctx.fillRect(0,H*.73,W,H*.27);
@@ -4615,15 +4669,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     // geyser jets
     ctx.strokeStyle='#d9f1ed';ctx.lineWidth=6;for(const x of [W*.43,W*.53,W*.60]){ctx.beginPath();ctx.moveTo(x,H*.48);ctx.quadraticCurveTo(x-W*.04,H*.24,x-W*.08,H*.20);ctx.stroke();}
   }
-  function drawDaintreeV72(){
-    gradient('#8cc7d0','#d5e5c8');ctx.fillStyle='#236d45';ctx.fillRect(0,H*.30,W,H*.70);
-    // ancient rainforest canopy and giant ferns
-    const gs=['#1e603d','#2c7545','#3d824a','#255f3c'];for(let row=0;row<6;row++)for(let i=0;i<9;i++){ctx.fillStyle=gs[(row+i)%4];ctx.beginPath();ctx.arc(W*(.01+i*.12+(row%2)*.04),H*(.35+row*.08),28+(i%3)*7,0,Math.PI*2);ctx.fill();}
-    // river
-    ctx.fillStyle='#3a929c';ctx.beginPath();ctx.moveTo(W*.43,H*.42);ctx.bezierCurveTo(W*.30,H*.60,W*.63,H*.72,W*.38,H);ctx.lineTo(W*.72,H);ctx.bezierCurveTo(W*.55,H*.74,W*.72,H*.62,W*.53,H*.42);ctx.closePath();ctx.fill();
-    // cassowary
-    ctx.fillStyle='#252f34';ctx.beginPath();ctx.ellipse(W*.78,H*.77,12,24,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#397ca0';ctx.beginPath();ctx.arc(W*.78,H*.70,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d54f48';ctx.fillRect(W*.775,H*.70,W*.012,H*.05);
-  }
   function drawSocotraV72(){
     gradient('#76b9d2','#edcb94');ctx.fillStyle='#9b8359';ctx.fillRect(0,H*.67,W,H*.33);
     // surreal dragon blood trees
@@ -4636,19 +4681,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     // dozens of near-perfect conical hills
     for(let row=0;row<4;row++)for(let i=0;i<7;i++){const x=W*(.02+i*.16+(row%2)*.07),y=H*(.62+row*.10),w=W*(.11-row*.008),h=H*(.13-row*.01);ctx.fillStyle=['#8a6a45','#9b7549','#7f6544'][i%3];ctx.beginPath();ctx.moveTo(x-w/2,y);ctx.quadraticCurveTo(x,y-h,x+w/2,y);ctx.closePath();ctx.fill();}
     ctx.fillStyle='#4c7b4e';ctx.fillRect(0,H*.88,W,H*.12);
-  }
-  function drawSouthernSkyV72(){
-    gradient('#030817','#0d1831');
-    // dense southern stars
-    ctx.fillStyle='#eef1ed';for(let i=0;i<130;i++){const x=((i*71)%100)/100*W,y=((i*43)%72)/100*H;ctx.beginPath();ctx.arc(x,y,1+(i%5)*.35,0,Math.PI*2);ctx.fill();}
-    // Milky Way band over Lake Tekapo
-    ctx.save();ctx.translate(W*.48,H*.34);ctx.rotate(-.35);for(let i=5;i>=1;i--){ctx.fillStyle=`rgba(150,175,220,${.035+i*.035})`;ctx.beginPath();ctx.ellipse(0,0,W*(.50+i*.025),H*(.055+i*.015),0,0,Math.PI*2);ctx.fill();}ctx.restore();
-    // Southern Cross
-    ctx.fillStyle='#f5df8a';for(const [x,y] of [[.75,.20],[.80,.29],[.70,.31],[.82,.39],[.63,.25]]){ctx.beginPath();ctx.arc(W*x,H*y,3.5,0,Math.PI*2);ctx.fill();}
-    // lake + Church of Good Shepherd silhouette
-    ctx.fillStyle='#143b54';ctx.fillRect(0,H*.67,W,H*.33);ctx.fillStyle='#252c2c';ctx.fillRect(W*.14,H*.65,W*.18,H*.12);ctx.beginPath();ctx.moveTo(W*.12,H*.65);ctx.lineTo(W*.23,H*.56);ctx.lineTo(W*.34,H*.65);ctx.closePath();ctx.fill();
-    // star reflections
-    ctx.fillStyle='rgba(220,230,235,.45)';for(let i=0;i<25;i++){ctx.beginPath();ctx.arc(W*((i*37)%100)/100,H*(.72+(i%5)*.05),1.5,0,Math.PI*2);ctx.fill();}
   }
   function drawSingapore(){
     // Marina Bay: glass skyline, Marina Bay Sands, Gardens by the Bay and Sentosa feel.
@@ -4895,12 +4927,9 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     else if(c==='PLAYA DEL AMOR / HIDDEN BEACH')drawHiddenBeachV72();
     else if(c==='DARVAZA GAS CRATER'||c==='THE DOOR TO HELL')drawDoorHellV72();
     else if(c==='FLY GEYSER')drawFlyGeyserV72();
-    else if(c==='DAINTREE RAINFOREST')drawDaintreeV72();
     else if(c==='SOCOTRA ISLAND')drawSocotraV72();
     else if(c==='CHOCOLATE HILLS')drawChocolateHillsV72();
-    else if(c==='GALAXIES OF THE SOUTHERN SKY')drawSouthernSkyV72();
     else if(c==='PARIS & THE EIFFEL TOWER')drawParisEiffelV71();
-    else if(c==='VENICE CANALS')drawVeniceCanalsV71();
     else if(c==='TOKYO'||c==='TOKYO SHINJUKU & SHIBUYA')drawTokyoShibuyaV71();
     else if(c==='BURJ KHALIFA & DUBAI SKYLINE')drawDubaiSkylineV71();
     else if(c==='SYDNEY HARBOUR')drawSydneyHarbourV71();
@@ -4987,8 +5016,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     else if(c==='GHANA')drawGhanaV60Add();
     else if(c==='MOSCOW')drawMoscowNew();
     else if(c==='BUENOS AIRES')drawBuenosAiresNew();
-    else if(c==='SHENZHEN')drawShenzhenNew();
-    else if(c==='DHAKA')drawDhakaNew();
     else if(c==='LAGOS')drawLagosNew();
     else if(c==='ŌSAKA'||c==='OSAKA')drawOsakaNew();
     else if(c==='KARACHI')drawKarachiNew();
