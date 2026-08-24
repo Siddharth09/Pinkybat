@@ -5909,6 +5909,27 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     try { localStorage.removeItem(PENDING_TX_KEY); } catch (_) {}
   }
 
+  // If the app was killed or backgrounded between a purchase resolving and
+  // finishPaidContinue() crediting it, StoreKit will already have finished a
+  // consumable transaction — so restorePurchases()/getPurchases() at next
+  // launch won't surface it again, and the hearts would otherwise be lost
+  // even though the player paid for them. persistPendingTransaction() saves
+  // just enough (transaction id + product id) to credit it here on the next
+  // launch; creditPurchaseOnce() dedups, so this is a safe no-op if the
+  // purchase was actually credited before the app closed.
+  function recoverPendingTransaction() {
+    try {
+      const raw = localStorage.getItem(PENDING_TX_KEY);
+      if (raw) {
+        const pending = JSON.parse(raw);
+        if (pending && pending.transactionId) {
+          creditPurchaseOnce({transactionId: pending.transactionId, productIdentifier: pending.productIdentifier});
+        }
+      }
+    } catch (_) {}
+    clearPendingTransaction();
+  }
+
   function isCompletedTransaction(tx) {
     if (!tx) return false;
     if (tx.success === false || tx.completed === false) return false;
@@ -6133,6 +6154,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   continuePurchaseEl.onclick = buy100Hearts;
   loadContinuePrice();
   wirePurchaseListener();
+  recoverPendingTransaction();
   recoverNativeTransactions();
   function closeShareMenu() {
     const el = document.getElementById('shareMenu');
