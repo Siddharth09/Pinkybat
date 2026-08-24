@@ -2554,16 +2554,14 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.fillStyle=i%2?'#263d50':'#344f61';ctx.fillRect(x,H*.77-hh,W*.075,hh);
       for(let r=0;r<7;r++)for(let q=0;q<2;q++){
         const wx=x+W*(.010+q*.040),wy=H*.73-hh+r*(hh/7);
-        ctx.fillStyle='rgba(255,220,120,.35)';ctx.beginPath();ctx.arc(wx+W*.011,wy+4,W*.014,0,Math.PI*2);ctx.fill();
-        ctx.fillStyle='#ffe58a';ctx.fillRect(wx,wy,W*.022,8);
+        ctx.fillStyle='#ffe58a';ctx.fillRect(wx,wy,W*.018,W*.018);
       }
     }
     // the Willis-style giant tower, unmistakably the tallest in the skyline.
     ctx.fillStyle='#202c35';ctx.fillRect(W*.62,H*.18,W*.13,H*.59);ctx.fillRect(W*.65,H*.10,W*.07,H*.67);ctx.fillRect(W*.675,H*.04,W*.02,H*.73);
     for(let r=0;r<14;r++)for(let q=0;q<2;q++){
       const wx=W*(.665+q*.032),wy=H*(.15+r*.035);
-      ctx.fillStyle='rgba(255,220,120,.30)';ctx.beginPath();ctx.arc(wx+W*.006,wy+3,W*.009,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#f2d36c';ctx.fillRect(wx,wy,W*.014,H*.015);
+      ctx.fillStyle='#f2d36c';ctx.fillRect(wx,wy,W*.012,W*.012);
     }
     // Chicago River and lit bridges
     ctx.strokeStyle='#8d8273';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(0,H*.72);ctx.lineTo(W,H*.72);ctx.stroke();
@@ -5799,7 +5797,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.restore();
     }
     ctx.globalAlpha=1;
-    drawBat();
+    // On the intro screen the live bat still animates behind the translucent
+    // overlay, bleeding through as a second, unpositioned "Becky" alongside
+    // the #introMark canvas bat that's actually placed above the title.
+    // Hide the live one there so only the intentional one shows.
+    if (state !== 'menu') drawBat();
     ctx.restore();
     if (impactFlash > 0) {
       ctx.fillStyle = (Math.floor(crashTime*18)%2===0) ? 'rgba(255,110,150,.35)' : 'rgba(255,255,255,.16)';
@@ -5821,7 +5823,18 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       while(simAccumulator>=SIM_STEP && steps<12){
         if(state==='play') update(SIM_STEP);
         else if(state==='crash') updateCrash(SIM_STEP);
-        else updateSkyGuests(SIM_STEP, 70);
+        else {
+          // t and worldScroll drive every ambient parallax layer (clouds,
+          // snow, distant skyline buildings) but normally only advance
+          // during update(), i.e. only while actually playing. Outside
+          // play they'd otherwise sit frozen at whatever value they last
+          // had — since a fresh page load never played, that's t=0, so
+          // every idle screen (and every city preview) showed the exact
+          // same "stuck" cloud in the exact same spot. Keep them ticking
+          // gently here too so the sky never looks like a pasted-on image.
+          t += SIM_STEP; worldScroll += 70*SIM_STEP;
+          updateSkyGuests(SIM_STEP, 70);
+        }
         simAccumulator-=SIM_STEP;
         steps++;
       }
