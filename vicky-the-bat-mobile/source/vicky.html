@@ -169,6 +169,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'AREA 51',country:'United States',flag:'👽'},
     {name:'THE MOON',country:'Space',flag:'🌕'},
     {name:'STONEHENGE',country:'United Kingdom',flag:'🇬🇧'},
+    {name:'PANAMA CANAL',country:'Panama',flag:'🇵🇦'},
+    {name:'NASA DEEP SPACE STATION 43',country:'Australia',flag:'🇦🇺'},
+    {name:'INTERNATIONAL SPACE STATION',country:'Earth Orbit',flag:'🛰️'},
+    {name:'SATURN V ROCKET',country:'United States',flag:'🇺🇸'},
+    {name:'THE LARGE HADRON COLLIDER',country:'Switzerland',flag:'🇨🇭'},
     {name:'ZURICH',flag:'ch',palette:['#8eb8d0', '#edf5f7'],landmarks:['lake', 'alps'],weather:['snow', 'sun']},
     {name:'MUSCAT',flag:'om',palette:['#e2b17a', '#fff0cf'],landmarks:['fort', 'mosque'],weather:['sun', 'sun']},
     {name:'AMAZON RAINFOREST',country:'South America',flag:'🌿'},
@@ -2751,6 +2756,134 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     for(const x of [W*.02,W*.055]){ctx.strokeStyle='#6b4f38';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,H*.94);ctx.quadraticCurveTo(x+8,H*.84,x,H*.76);ctx.stroke();ctx.fillStyle='#4d8050';for(let q=0;q<5;q++){ctx.beginPath();ctx.ellipse(x+(q-2)*7,H*.76,16,4,(q-2)*.3,0,Math.PI*2);ctx.fill();}}
   }
 
+  function drawPanamaCanal(){
+    gradient('#6fb8d6','#eaf3c8');
+    // jungle-covered hills either side of the channel.
+    ctx.fillStyle='#3f7a4a';ctx.beginPath();ctx.moveTo(0,H*.62);ctx.lineTo(W*.30,H*.30);ctx.lineTo(W*.40,H*.62);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(W,H*.62);ctx.lineTo(W*.70,H*.28);ctx.lineTo(W*.60,H*.62);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#4a8c55';for(let i=0;i<10;i++){const x=W*((i*37)%100)/100;if(x<W*.42||x>W*.58){ctx.beginPath();ctx.arc(x,H*(.50+(i%3)*.05),18,0,Math.PI*2);ctx.fill();}}
+    // the canal channel, converging toward the horizon.
+    ctx.fillStyle='#3f8fae';ctx.beginPath();ctx.moveTo(W*.40,H*.30);ctx.lineTo(W*.60,H*.30);ctx.lineTo(W*.82,H);ctx.lineTo(W*.18,H);ctx.closePath();ctx.fill();
+    // Miraflores-style lock gates spanning the channel.
+    ctx.fillStyle='#9aa0a0';ctx.fillRect(W*.20,H*.70,W*.60,H*.05);
+    ctx.fillStyle='#7c8282';ctx.fillRect(W*.20,H*.90,W*.60,H*.05);
+    // a container ship, mid-transit through the lock.
+    const scx=W*.5,scy=H*.80;
+    ctx.fillStyle='#e6e6e0';ctx.beginPath();ctx.moveTo(scx-W*.18,scy);ctx.lineTo(scx+W*.18,scy);ctx.lineTo(scx+W*.15,scy+H*.035);ctx.lineTo(scx-W*.15,scy+H*.035);ctx.closePath();ctx.fill();
+    const containerCols=['#c0433a','#3d7ab0','#d5a83c','#4a8c5a','#7a5c96'];
+    for(let row=0;row<2;row++)for(let i=0;i<6;i++){ctx.fillStyle=containerCols[(i+row)%5];ctx.fillRect(scx-W*.16+i*W*.055,scy-H*.02-row*H*.028,W*.05,H*.025);}
+    ctx.fillStyle='#c9cdd0';ctx.fillRect(scx+W*.12,scy-H*.09,W*.03,H*.09);
+    // a small tug boat and gulls overhead.
+    ctx.fillStyle='#a5493f';ctx.beginPath();ctx.moveTo(W*.16,H*.93);ctx.lineTo(W*.24,H*.93);ctx.lineTo(W*.22,H*.955);ctx.lineTo(W*.18,H*.955);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=1.5;
+    for(const [gx,gy] of [[.15,.20],[.20,.24],[.75,.18]]){ctx.beginPath();ctx.moveTo(W*gx-6,H*gy);ctx.quadraticCurveTo(W*gx,H*gy-4,W*gx+6,H*gy);ctx.stroke();}
+  }
+
+  function drawDeepSpaceStation(){
+    gradient('#e8935a','#8fb0d0');
+    // a few stars appearing as evening falls over the outback.
+    ctx.fillStyle='rgba(255,255,255,.8)';for(let i=0;i<16;i++){const x=W*((i*53)%100)/100,y=H*((i*31)%50)/100;ctx.beginPath();ctx.arc(x,y,1.2,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle='#c99a5c';ctx.fillRect(0,H*.72,W,H*.28);
+    ctx.fillStyle='#8a9a5c';for(let i=0;i<8;i++){const x=W*(.02+i*.13);ctx.beginPath();ctx.ellipse(x,H*.74,20,6,0,0,Math.PI*2);ctx.fill();}
+    // support pedestal and lattice tower.
+    const bx=W*.48,by=H*.72;
+    ctx.fillStyle='#9aa0a0';ctx.fillRect(bx-W*.05,by-H*.10,W*.10,H*.10);
+    ctx.strokeStyle='#7c8282';ctx.lineWidth=3;
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(bx-W*.05,by-H*.02-i*H*.03);ctx.lineTo(bx+W*.05,by-H*.08+i*H*.03);ctx.stroke();}
+    // the enormous 70m dish, tilted skyward.
+    ctx.save();ctx.translate(bx,by-H*.14);ctx.rotate(-0.35);
+    ctx.fillStyle='#eef0ec';ctx.beginPath();ctx.ellipse(0,0,W*.22,H*.08,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#cfd3cc';ctx.beginPath();ctx.ellipse(0,0,W*.15,H*.05,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#a9aea6';ctx.lineWidth=1.5;
+    for(let r=1;r<=3;r++){ctx.beginPath();ctx.ellipse(0,0,W*.22*r/3.4,H*.08*r/3.4,0,0,Math.PI*2);ctx.stroke();}
+    ctx.fillStyle='#8a8f88';ctx.fillRect(-3,0,6,H*.06);
+    ctx.restore();
+    // radio signal arcs reaching up toward a tiny distant spacecraft.
+    ctx.strokeStyle='rgba(150,220,255,.55)';ctx.lineWidth=2;
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(bx,by-H*.14,W*(.10+i*.07),Math.PI*1.15,Math.PI*1.45);ctx.stroke();}
+    ctx.save();ctx.translate(W*.80,H*.18);ctx.rotate(0.5);
+    ctx.fillStyle='#dcdfe0';ctx.fillRect(-10,-3,20,6);ctx.fillStyle='#f0c65d';ctx.fillRect(-14,-8,6,16);ctx.fillRect(8,-8,6,16);
+    ctx.restore();
+  }
+
+  function drawISS(){
+    gradient('#050b1c','#0d1f3d');
+    // stars.
+    ctx.fillStyle='rgba(255,255,255,.85)';for(let i=0;i<50;i++){const x=W*((i*61)%100)/100,y=H*((i*83)%70)/100;ctx.beginPath();ctx.arc(x,y,1+(i%3)*.4,0,Math.PI*2);ctx.fill();}
+    // the curve of the Earth below, with a glowing atmosphere.
+    ctx.fillStyle='#1c4f8a';ctx.beginPath();ctx.moveTo(0,H);ctx.lineTo(0,H*.82);ctx.quadraticCurveTo(W*.5,H*.62,W,H*.82);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(120,190,255,.5)';ctx.beginPath();ctx.moveTo(0,H*.82);ctx.quadraticCurveTo(W*.5,H*.62,W,H*.82);ctx.lineTo(W,H*.80);ctx.quadraticCurveTo(W*.5,H*.60,0,H*.80);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#3f8f57';ctx.beginPath();ctx.ellipse(W*.30,H*.87,W*.10,H*.02,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#eef4f6';ctx.beginPath();ctx.ellipse(W*.65,H*.86,W*.07,H*.015,0,0,Math.PI*2);ctx.fill();
+    // sun glint.
+    ctx.fillStyle='rgba(255,244,210,.6)';ctx.beginPath();ctx.arc(W*.85,H*.14,W*.05,0,Math.PI*2);ctx.fill();
+    // the ISS: a central truss with modules and huge solar arrays.
+    const issY=H*.42;
+    ctx.strokeStyle='#c7ccd2';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W*.10,issY);ctx.lineTo(W*.90,issY);ctx.stroke();
+    const panelCols=['#2a4f86','#3a63a3'];
+    for(const px of [W*.16,W*.30,W*.62,W*.76]){
+      for(let i=0;i<4;i++){ctx.fillStyle=panelCols[i%2];ctx.fillRect(px+i*W*.03,issY-H*.09,W*.028,H*.18);}
+    }
+    // pressurised modules along the truss.
+    ctx.fillStyle='#dfe3e6';ctx.fillRect(W*.42,issY-H*.025,W*.16,H*.05);
+    ctx.beginPath();ctx.ellipse(W*.42,issY,W*.012,H*.025,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(W*.58,issY,W*.012,H*.025,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#c7ccd2';ctx.fillRect(W*.47,issY-H*.05,W*.03,H*.025);
+    // a tiny astronaut on a tethered spacewalk.
+    ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(W*.50,issY+H*.025);ctx.quadraticCurveTo(W*.55,H*.55,W*.60,H*.58);ctx.stroke();
+    ctx.fillStyle='#eef1f2';ctx.beginPath();ctx.arc(W*.60,H*.58,4,0,Math.PI*2);ctx.fill();ctx.fillRect(W*.597,H*.582,W*.008,H*.02);
+  }
+
+  function drawSaturnV(){
+    gradient('#3f8fdc','#bfe0f0');
+    // wisps of cloud.
+    ctx.fillStyle='rgba(255,255,255,.55)';for(const [cx,cy] of [[.15,.20],[.80,.14]]){ctx.beginPath();ctx.arc(W*cx,H*cy,20,0,Math.PI*2);ctx.arc(W*cx+18,H*cy+4,15,0,Math.PI*2);ctx.fill();}
+    // launch tower, off to one side.
+    ctx.strokeStyle='#8a8f92';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W*.14,H);ctx.lineTo(W*.14,H*.14);ctx.stroke();
+    for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(W*.14,H*(.20+i*.12));ctx.lineTo(W*.22,H*(.16+i*.12));ctx.stroke();}
+    // the rocket itself, with the classic black-and-white paint scheme.
+    const rx=W*.52;
+    ctx.fillStyle='#eceeec';ctx.fillRect(rx-W*.05,H*.14,W*.10,H*.62);
+    ctx.fillStyle='#232427';ctx.fillRect(rx-W*.05,H*.30,W*.10,H*.06);ctx.fillRect(rx-W*.05,H*.46,W*.10,H*.05);
+    for(let i=0;i<4;i++)ctx.fillRect(rx-W*.05+i*W*.025,H*.56,W*.010,H*.10);
+    ctx.fillStyle='#c53a3a';ctx.beginPath();ctx.moveTo(rx-W*.05,H*.14);ctx.lineTo(rx,H*.06);ctx.lineTo(rx+W*.05,H*.14);ctx.closePath();ctx.fill();
+    ctx.save();ctx.translate(rx,H*.40);ctx.rotate(-Math.PI/2);ctx.fillStyle='#232427';ctx.font=`bold ${Math.max(9,W*.02)}px system-ui`;ctx.textAlign='center';ctx.fillText('USA',0,4);ctx.restore();
+    // fins at the base.
+    ctx.fillStyle='#c53a3a';
+    ctx.beginPath();ctx.moveTo(rx-W*.05,H*.76);ctx.lineTo(rx-W*.09,H*.80);ctx.lineTo(rx-W*.05,H*.80);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(rx+W*.05,H*.76);ctx.lineTo(rx+W*.09,H*.80);ctx.lineTo(rx+W*.05,H*.80);ctx.closePath();ctx.fill();
+    // liftoff — flame and billowing smoke at the base.
+    ctx.fillStyle='#f2b23d';ctx.beginPath();ctx.moveTo(rx-W*.035,H*.80);ctx.lineTo(rx,H*.90);ctx.lineTo(rx+W*.035,H*.80);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#e8672f';ctx.beginPath();ctx.moveTo(rx-W*.02,H*.80);ctx.lineTo(rx,H*.87);ctx.lineTo(rx+W*.02,H*.80);ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(220,220,220,.75)';for(let i=0;i<6;i++){const x=rx+(i-2.5)*W*.05;ctx.beginPath();ctx.ellipse(x,H*.93+((i%2)*H*.02),W*.06,H*.03,0,0,Math.PI*2);ctx.fill();}
+    // tiny spectators for scale.
+    ctx.fillStyle='#3a3a3a';for(let i=0;i<5;i++){const x=W*(.72+i*.045);ctx.beginPath();ctx.arc(x,H*.94,2,0,Math.PI*2);ctx.fill();ctx.fillRect(x-1,H*.942,2,H*.02);}
+  }
+
+  function drawLHC(){
+    gradient('#8fc7e0','#dcefc0');
+    // green countryside on the surface.
+    ctx.fillStyle='#5c9a5f';ctx.fillRect(0,H*.30,W,H*.30);
+    // the ring's path traced across the landscape, since it's invisible
+    // underground — the clearest way to show its real scale from above.
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.setLineDash([6,6]);ctx.lineWidth=3;
+    ctx.beginPath();ctx.ellipse(W*.5,H*.42,W*.46,H*.10,0,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);
+    // the CERN dome / globe building on the surface.
+    ctx.fillStyle='#c9cdd0';ctx.beginPath();ctx.arc(W*.22,H*.36,W*.055,Math.PI,0);ctx.fill();ctx.fillRect(W*.165,H*.36,W*.11,H*.02);
+    // small trees for scale on the surface.
+    ctx.fillStyle='#3f7a4a';for(const x of [W*.65,W*.72,W*.80]){ctx.beginPath();ctx.arc(x,H*.35,8,0,Math.PI*2);ctx.fill();}
+    // cutaway underground revealing the collider tunnel and magnet ring.
+    ctx.fillStyle='#6b543c';ctx.fillRect(0,H*.60,W,H*.40);
+    ctx.strokeStyle='rgba(0,0,0,.15)';ctx.lineWidth=1;for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(0,H*(.62+i*.06));ctx.lineTo(W,H*(.62+i*.06));ctx.stroke();}
+    ctx.fillStyle='#2b2f36';ctx.beginPath();ctx.ellipse(W*.5,H*.82,W*.44,H*.13,0,0,Math.PI*2);ctx.fill();
+    // the superconducting magnet ring and glowing particle beam inside.
+    ctx.strokeStyle='#4d7ea8';ctx.lineWidth=W*.03;ctx.beginPath();ctx.ellipse(W*.5,H*.82,W*.40,H*.115,0,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='rgba(130,220,255,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(W*.5,H*.82,W*.40,H*.115,0,0,Math.PI*2);ctx.stroke();
+    // tiny scientists at a control point beside the ring.
+    ctx.fillStyle='#eee';for(const x of [W*.30,W*.34]){ctx.beginPath();ctx.arc(x,H*.94,3,0,Math.PI*2);ctx.fill();ctx.fillRect(x-1.5,H*.943,3,H*.025);}
+  }
+
   function drawMilanCity(){
     gradient('#82b1ca','#efc28b');ctx.fillStyle='#827d6e';ctx.fillRect(0,H*.77,W,H*.23);
     // Italian street with gelato and pizza shops.
@@ -4376,6 +4509,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     else if(c==='VREDEFORT IMPACT STRUCTURE')drawVredefort();
     else if(c==='PALAWAN')drawPalawanKayaks();
     else if(c==='THE PYRAMIDS OF GIZA')drawPyramidsGiza();
+    else if(c==='PANAMA CANAL')drawPanamaCanal();
+    else if(c==='NASA DEEP SPACE STATION 43')drawDeepSpaceStation();
+    else if(c==='INTERNATIONAL SPACE STATION')drawISS();
+    else if(c==='SATURN V ROCKET')drawSaturnV();
+    else if(c==='THE LARGE HADRON COLLIDER')drawLHC();
     else drawGenericCity(currentCity());
     // Post-5,000 replay treatment: revisit familiar cities after dark so they
     // feel like a new destination rather than an identical repeat.
