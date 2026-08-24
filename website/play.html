@@ -17,7 +17,8 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 .hidden{display:none!important}
 .title{font-size:clamp(52px,15vw,92px);line-height:.82;font-weight:1000;letter-spacing:-5px;text-shadow:0 9px 22px #0007}
 .start-card .title{color:#ff79ae!important}.start-card .title span{color:#fff!important}
-.mark{font-size:84px;margin-bottom:16px}
+.mark{margin-bottom:16px}
+#introMark{width:120px;height:100px;display:block;margin:0 auto}
 #gameover .scoreBig{font-size:80px;font-weight:1000;color:#ff9fc8}
 button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6fa8;color:#fff;font-size:18px;font-weight:1000;box-shadow:0 7px #b13d6d}
 #share{background:#fff;color:#ff4f93;box-shadow:0 6px #d7c7cf}
@@ -34,7 +35,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 <button id="fsBtn" onclick="(document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()).catch(()=>{})" style="position:fixed;top:calc(env(safe-area-inset-top) + 58px);right:14px;z-index:20;width:34px;height:34px;border-radius:10px;border:0;background:#152036ad;color:#fff;font-size:15px;line-height:1;cursor:pointer;backdrop-filter:blur(4px)" aria-label="Toggle fullscreen">⤢</button>
 <canvas id="game"></canvas>
 <div id="hud"><div><div id="score">0<small> m</small></div><div id="heartScore" class="hearts">♥ 0</div><div id="heartProgress" class="heartProgress">0/300</div><div id="city"></div><div id="cityTier" class="cityTier"></div></div><div id="pill">BEST 0 m</div></div>
-<div id="intro" class="panel"><div><div class="mark">🦇</div><div class="title"><span style="color:#ff79ae!important">BECKY</span> <span>THE</span><br><span>BAT</span></div></div><a id="introPrivacy" href="https://beckythebat.com/privacy.html" target="_blank" rel="noopener" style="position:absolute;right:16px;bottom:calc(env(safe-area-inset-bottom) + 14px);font-size:9px;font-weight:500;letter-spacing:.4px;color:#ffffff50;text-decoration:none">Privacy Policy</a></div>
+<div id="intro" class="panel"><div><div class="mark"><canvas id="introMark" width="240" height="200"></canvas></div><div class="title"><span style="color:#ff79ae!important">BECKY</span> <span>THE</span><br><span>BAT</span></div></div><a id="introPrivacy" href="https://beckythebat.com/privacy.html" target="_blank" rel="noopener" style="position:absolute;right:16px;bottom:calc(env(safe-area-inset-bottom) + 14px);font-size:9px;font-weight:500;letter-spacing:.4px;color:#ffffff50;text-decoration:none">Privacy Policy</a></div>
 <div id="gameover" class="panel hidden"><div>
 <div style="font-size:11px;letter-spacing:2px;font-weight:1000">YOU FLEW</div>
 <div id="final" class="scoreBig">0</div><div>metres</div>
@@ -59,6 +60,25 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
   const intro = document.getElementById('intro');
+  (function drawIntroMark(){
+    const c = document.getElementById('introMark');
+    if(!c) return;
+    const ictx = c.getContext('2d');
+    const scale = c.width/120;
+    ictx.save();
+    ictx.scale(scale,scale);
+    ictx.translate(60,58);
+    const bodyR=28,bodyG=38,bodyB=48,wingR=23,wingG=31,wingB=42;
+    const wingBeat=.85,wingLift=10,wingSweep=3;
+    ictx.fillStyle=`rgb(${bodyR},${bodyG},${bodyB})`;ictx.beginPath();ictx.ellipse(0,5,18,24,0,0,Math.PI*2);ictx.fill();
+    ictx.fillStyle='#0c1218';ictx.beginPath();ictx.arc(0,-10,16,0,Math.PI*2);ictx.fill();
+    ictx.fillStyle='#f4f5f6';ictx.beginPath();ictx.moveTo(-12,-9);ictx.lineTo(-5,-26);ictx.lineTo(2,-19);ictx.lineTo(9,-26);ictx.lineTo(14,-8);ictx.lineTo(6,-2);ictx.lineTo(-1,-9);ictx.lineTo(-8,-2);ictx.closePath();ictx.fill();
+    ictx.fillStyle='#fff';ictx.beginPath();ictx.arc(-6,-11,4,0,Math.PI*2);ictx.arc(6,-10,4,0,Math.PI*2);ictx.fill();ictx.fillStyle='#1e252d';ictx.beginPath();ictx.arc(-5,-10,2,0,Math.PI*2);ictx.arc(7,-9,2,0,Math.PI*2);ictx.fill();ictx.fillStyle='#ffb5d0';ictx.beginPath();ictx.arc(-5,-11,2,0,Math.PI*2);ictx.arc(6,-10,2,0,Math.PI*2);ictx.fill();
+    ictx.fillStyle='#ff8eb8';ictx.beginPath();ictx.moveTo(14,-3);ictx.lineTo(27,2);ictx.lineTo(14,6);ictx.closePath();ictx.fill();
+    ictx.fillStyle=`rgb(${wingR},${wingG},${wingB})`;ictx.beginPath();ictx.moveTo(-10,4);ictx.quadraticCurveTo(-34,-20-9*wingBeat,-48,-8+wingSweep);ictx.quadraticCurveTo(-34,10+wingLift,-10,13);ictx.closePath();ictx.fill();ictx.beginPath();ictx.moveTo(10,4);ictx.quadraticCurveTo(34,-20-9*wingBeat,48,-8+wingSweep);ictx.quadraticCurveTo(34,10+wingLift,10,13);ictx.closePath();ictx.fill();
+    ictx.strokeStyle='#ff8eb9';ictx.lineWidth=2.5;ictx.beginPath();ictx.moveTo(-12,7);ictx.lineTo(-39,-5-wingLift*.35);ictx.moveTo(12,7);ictx.lineTo(39,-5-wingLift*.35);ictx.stroke();
+    ictx.restore();
+  })();
   const gameover = document.getElementById('gameover');
   const scoreEl = document.getElementById('score');
   const cityEl = document.getElementById('city');
