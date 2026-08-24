@@ -241,6 +241,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'BUENOS AIRES',flag:'ar',palette:['#8fc8e5', '#f4e2c6'],landmarks:['oldtown', 'tower'],weather:["sun", "rain"] },
     {name:'LAGOS',flag:'ng',palette:['#66c8a2', '#f4dfaa'],landmarks:['bridge', 'coast'],weather:['sun', 'rain']},
     {name:'FLORENCE',flag:'it',palette:['#d6a276', '#f0e0c9'],landmarks:['duomo', 'pontevecchio'],weather:['sun', 'sun']},
+    {name:'PETRONIUS PLATFORM',country:'United States',flag:'🇺🇸'},
     {name:'EDINBURGH',flag:'gb',palette:['#6e879d', '#e7edf0'],landmarks:['castle', 'arthurseat'],weather:['rain', 'snow']},
     {name:'MOUNT FUJI',country:'Japan',flag:'🇯🇵'},
     {name:'JOHANNESBURG',flag:'za',palette:['#8fc68e', '#f3e1b7'],landmarks:['hill', 'skyline'],weather:['sun', 'rain']},
@@ -3103,6 +3104,62 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.fillStyle='#5a4b38';for(const x of [W*.14,W*.18]){ctx.beginPath();ctx.arc(x,H*.50,3,0,Math.PI*2);ctx.fill();ctx.fillRect(x-1.5,H*.503,3,H*.02);}
   }
 
+  function drawPetroniusPlatform(){
+    // The Petronius platform: one of the tallest free-standing structures
+    // on Earth, a slender lattice tower reaching from the Gulf seabed to a
+    // small topside deck — paired with a cutaway of the hydraulic
+    // fracturing process that lets it draw oil and gas up from the shale.
+    gradient('#7fc0dc','#dcefe0');
+    ctx.fillStyle='#2c85a0';ctx.fillRect(0,H*.42,W,H*.28);
+    // rock strata cutaway below the seabed.
+    const strata=['#c9a373','#b98f5f','#a67c52','#8a6642','#6f5236'];
+    for(let i=0;i<strata.length;i++){ctx.fillStyle=strata[i];ctx.fillRect(0,H*(.70+i*.06),W,H*.06);}
+
+    const tx=W*.55;
+    // the slender lattice tower rising from the seabed to the surface.
+    ctx.strokeStyle='#8a94a0';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(tx-W*.05,H*.70);ctx.lineTo(tx-W*.012,H*.30);ctx.moveTo(tx+W*.05,H*.70);ctx.lineTo(tx+W*.012,H*.30);ctx.stroke();
+    ctx.lineWidth=1.5;
+    for(let i=0;i<8;i++){const y1=H*(.70-i*.05),y2=H*(.65-i*.05),hw=W*(.05-i*.0048);ctx.beginPath();ctx.moveTo(tx-hw,y1);ctx.lineTo(tx+hw,y2);ctx.moveTo(tx+hw,y1);ctx.lineTo(tx-hw,y2);ctx.stroke();}
+
+    // the topside deck, derrick, flare boom and helipad above the water.
+    ctx.fillStyle='#5a6470';ctx.fillRect(tx-W*.09,H*.28,W*.18,H*.025);
+    ctx.strokeStyle='#c94f2f';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(tx-W*.02,H*.28);ctx.lineTo(tx-W*.03,H*.14);ctx.stroke();
+    ctx.fillStyle='#e0672f';ctx.beginPath();ctx.arc(tx-W*.03,H*.135,4,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#8a94a0';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(tx+W*.03,H*.28);ctx.lineTo(tx+W*.03,H*.16);ctx.moveTo(tx+W*.01,H*.28);ctx.lineTo(tx+W*.05,H*.19);ctx.stroke();
+    ctx.fillStyle='#eee';ctx.beginPath();ctx.arc(tx-W*.14,H*.275,W*.03,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#c94f2f';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(tx-W*.155,H*.275);ctx.lineTo(tx-W*.125,H*.275);ctx.moveTo(tx-W*.14,H*.26);ctx.lineTo(tx-W*.14,H*.29);ctx.stroke();
+
+    // waterline crests near the surface only, so they don't wash out the
+    // submerged tower below.
+    ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(0,H*.44);ctx.quadraticCurveTo(W*.5,H*.42,W,H*.44);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,H*.475);ctx.quadraticCurveTo(W*.5,H*.455,W,H*.475);ctx.stroke();
+
+    // the fracking wellbore: a wellhead at the seabed, drilling straight
+    // down then turning horizontal through the shale layer.
+    const wx=tx-W*.02,wellheadY=H*.70;
+    ctx.fillStyle='#d9a13c';ctx.fillRect(wx-6,wellheadY-14,12,14);
+    ctx.strokeStyle='#3a3f46';ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(wx,wellheadY);ctx.lineTo(wx,H*.85);ctx.quadraticCurveTo(wx,H*.90,wx+W*.10,H*.90);ctx.lineTo(W*.92,H*.90);ctx.stroke();
+
+    // fractures radiating from the horizontal well under high-pressure
+    // fluid, with gas/oil bubbles escaping up into the pipe.
+    ctx.strokeStyle='rgba(120,200,230,.85)';ctx.lineWidth=2;
+    for(let i=0;i<5;i++){
+      const fx=wx+W*.10+i*W*.065,fy=H*.90;
+      for(const a of [-0.9,-0.3,0.3,0.9]){
+        ctx.beginPath();ctx.moveTo(fx,fy);ctx.lineTo(fx+Math.cos(a)*W*.04,fy+Math.sin(a)*H*.03);ctx.stroke();
+      }
+    }
+    ctx.fillStyle='rgba(230,240,120,.85)';
+    for(let i=0;i<14;i++){
+      const bx=wx+W*.10+(i%7)*W*.05;
+      const by=H*.88-Math.floor(i/7)*H*.02-(i%3)*H*.008;
+      ctx.beginPath();ctx.arc(bx,by,2.5,0,Math.PI*2);ctx.fill();
+    }
+  }
+
   function drawThreeGorgesDam(){
     gradient('#7fb6dc','#eef3e0');
     // steep gorge walls either side of the river.
@@ -5026,6 +5083,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     else if(c==='HADRON COLLIDER')drawLHC();
     else if(c==='ITER NUCLEAR FUSION REACTOR')drawITER();
     else if(c==='FAST RADIO TELESCOPE')drawFAST();
+    else if(c==='PETRONIUS PLATFORM')drawPetroniusPlatform();
     else if(c==='THREE GORGES DAM')drawThreeGorgesDam();
     else if(c==='HOOVER DAM')drawHooverDam();
     else if(c==='THE ENGLISH CHANNEL TUNNEL')drawChannelTunnel();
