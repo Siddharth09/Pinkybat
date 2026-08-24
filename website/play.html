@@ -4651,61 +4651,64 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawRomeDetailed(){
-    // Rome, rebuilt from scratch as one clean composition: a single grand
-    // Colosseum as the unmistakable focal point, with the Arch of
-    // Constantine, umbrella pines and Forum columns supporting it rather
-    // than competing with it. The previous version stacked two entire
-    // overlapping Colosseums and two triumphal arches on top of each
-    // other, which is why it read as jumbled.
-    gradient('#e8a45f','#f6d9a3');
-    ctx.fillStyle='rgba(255,220,150,.22)';ctx.fillRect(0,H*.30,W,H*.30);
-    ctx.fillStyle='#9b7657';ctx.fillRect(0,H*.86,W,H*.14);
-
-    // distant Roman hills.
-    ctx.fillStyle='#8d9468';ctx.beginPath();ctx.moveTo(0,H*.62);ctx.quadraticCurveTo(W*.5,H*.48,W,H*.62);ctx.lineTo(W,H*.70);ctx.lineTo(0,H*.70);ctx.closePath();ctx.fill();
-
-    // umbrella pines framing the scene.
-    for(const x of [W*.05,W*.94]){
-      ctx.strokeStyle='#514c3d';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x,H*.86);ctx.lineTo(x,H*.52);ctx.stroke();
-      ctx.fillStyle='#536a48';ctx.beginPath();ctx.ellipse(x,H*.49,W*.06,H*.028,0,0,Math.PI*2);ctx.fill();
+    // Rome, redrawn again to match the real Colosseum's famous asymmetric
+    // profile: a tall, complete facade — with its surviving fourth-storey
+    // attic wall — on one side, curving down into a much lower, ruined
+    // section on the other where the outer ring has collapsed entirely,
+    // exposing the inner arcade behind it. The previous version was a
+    // single symmetric dome, which is why it didn't read as the real
+    // building despite having the right arches.
+    gradient('#f2b6c6','#2f5f9e');
+    // a dramatic dusk sky with drifting clouds, like golden hour in Rome.
+    ctx.fillStyle='rgba(255,255,255,.40)';
+    for(const [cxr,cyr,s] of [[.15,.10,1],[.42,.05,.8],[.72,.09,1.1],[.92,.16,.85]]){
+      for(let q=0;q<4;q++){ctx.beginPath();ctx.arc(W*cxr+q*16*s,H*cyr+(q%2)*7*s,15*s,0,Math.PI*2);ctx.fill();}
     }
+    ctx.fillStyle='#8a7660';ctx.fillRect(0,H*.90,W,H*.10);
+    // trees off to the side, framing the ruin as in real photos of it.
+    ctx.fillStyle='#2b4630';for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(W*(.90+i*.03),H*(.62-i*.05),W*.05,H*.14,0,0,Math.PI*2);ctx.fill();}
 
-    // the Arch of Constantine, a single clean instance beside the Colosseum.
-    const ax=W*.16,aw=W*.15;
-    ctx.fillStyle='#d3b48c';ctx.fillRect(ax-aw*.5,H*.55,aw,H*.31);
-    ctx.fillStyle='#8a6a48';ctx.beginPath();ctx.arc(ax,H*.70,aw*.20,Math.PI,0);ctx.fill();ctx.fillRect(ax-aw*.20,H*.70,aw*.40,H*.16);
-    ctx.fillStyle='#b8956e';ctx.fillRect(ax-aw*.58,H*.53,aw*1.16,H*.035);
-
-    // the Colosseum — one dominant, grand elliptical facade with three
-    // monumental tiers of arches and its famously broken upper edge.
-    const cx=W*.58,base=H*.86,w=W*.68,h=H*.34;
-    ctx.fillStyle='#d9b98c';
-    ctx.beginPath();ctx.ellipse(cx,base-h*.5,w*.5,h*.5,0,Math.PI,0);ctx.lineTo(cx+w*.5,base);ctx.lineTo(cx-w*.5,base);ctx.closePath();ctx.fill();
-    // shaded curve on the right for real volume.
-    ctx.fillStyle='rgba(0,0,0,.10)';
-    ctx.beginPath();ctx.ellipse(cx+w*.02,base-h*.5,w*.40,h*.40,0,Math.PI*1.5,0);ctx.lineTo(cx+w*.5,base);ctx.lineTo(cx+w*.10,base);ctx.closePath();ctx.fill();
-    // three tiers of monumental arcade arches.
-    for(let row=0;row<3;row++){
-      const yy=base-h*(.70-row*.19),cols=12-row;
-      for(let col=0;col<cols;col++){
-        const x=cx-w*.45+col*(w*.90/(cols-1));
-        ctx.fillStyle='#ead5b4';ctx.beginPath();ctx.arc(x,yy,w*.020,Math.PI,0);ctx.fill();ctx.fillRect(x-w*.020,yy,w*.040,h*.10);
-        ctx.fillStyle='#7a5c46';ctx.beginPath();ctx.arc(x,yy,w*.012,Math.PI,0);ctx.fill();ctx.fillRect(x-w*.012,yy,w*.024,h*.075);
+    const base=H*.90;
+    // the lower, ruined right wing: the inner arcade ring is visible
+    // through the gap where the outer wall has fallen away.
+    const rx=W*.55,rw=W*.34;
+    ctx.fillStyle='#7a5c46';
+    for(let row=0;row<3;row++){const yy=base-H*.10-row*H*.085;for(let col=0;col<6;col++){const x=rx+col*(rw/5);ctx.beginPath();ctx.arc(x,yy,W*.013,Math.PI,0);ctx.fill();ctx.fillRect(x-W*.013,yy,W*.026,H*.05);}}
+    ctx.fillStyle='#c9a877';ctx.fillRect(rx-W*.03,base-H*.34,rw+W*.06,H*.34);
+    for(let row=0;row<2;row++){
+      const yy=base-H*.10-row*H*.11;
+      for(let col=0;col<6;col++){
+        const x=rx+col*(rw/5);
+        ctx.fillStyle='#ecd8ae';ctx.beginPath();ctx.arc(x,yy,W*.020,Math.PI,0);ctx.fill();ctx.fillRect(x-W*.020,yy,W*.040,H*.08);
+        ctx.fillStyle='rgba(255,190,90,.6)';ctx.beginPath();ctx.arc(x,yy+3,W*.012,Math.PI,0);ctx.fill();ctx.fillRect(x-W*.012,yy+3,W*.024,H*.055);
       }
     }
-    // the famously ruined, broken section of the outer wall.
-    ctx.fillStyle='#e8a45f';
-    ctx.beginPath();ctx.moveTo(cx+w*.30,base-h*.62);ctx.lineTo(cx+w*.5,base-h*.30);ctx.lineTo(cx+w*.5,base);ctx.lineTo(cx+w*.32,base);ctx.closePath();ctx.fill();
 
-    // Forum columns anchoring the foreground, well clear of the Colosseum.
-    ctx.fillStyle='#d0b083';for(let i=0;i<3;i++){const x=W*(.02+i*.045);ctx.fillRect(x,H*.68,W*.020,H*.18);ctx.fillRect(x-W*.010,H*.665,W*.040,H*.020);ctx.fillRect(x-W*.008,H*.855,W*.036,H*.020);}
+    // the tall, complete facade — the iconic surviving wall.
+    const lx=W*.24,lw=W*.40;
+    ctx.fillStyle='#d9b98c';ctx.fillRect(lx-lw*.5,H*.18,lw,base-H*.18);
+    for(let row=0;row<4;row++){
+      const yy=base-H*.10-row*H*.135,cols=6;
+      for(let col=0;col<cols;col++){
+        const x=lx-lw*.42+col*(lw*.84/(cols-1));
+        ctx.fillStyle='#c7a276';ctx.beginPath();ctx.arc(x,yy,lw*.06,Math.PI,0);ctx.fill();ctx.fillRect(x-lw*.06,yy,lw*.12,H*.11);
+        ctx.fillStyle='rgba(255,180,80,.65)';ctx.beginPath();ctx.arc(x,yy+3,lw*.038,Math.PI,0);ctx.fill();ctx.fillRect(x-lw*.038,yy+3,lw*.076,H*.08);
+      }
+    }
+    // the surviving attic storey on top, with its small rectangular vents.
+    ctx.fillStyle='#c9ac82';ctx.fillRect(lx-lw*.48,H*.13,lw*.96,H*.06);
+    ctx.fillStyle='#8a6b4f';for(let i=0;i<6;i++){ctx.fillRect(lx-lw*.38+i*lw*.145,H*.145,lw*.05,H*.03);}
+    ctx.fillStyle='#d9b98c';ctx.beginPath();ctx.moveTo(lx-lw*.48,H*.13);ctx.lineTo(lx-lw*.10,H*.02);ctx.lineTo(lx+lw*.48,H*.13);ctx.closePath();ctx.fill();
 
-    // a cobblestone road leading the eye toward the arena.
-    ctx.fillStyle='#a9926e';ctx.beginPath();ctx.moveTo(W*.38,H);ctx.lineTo(W*.47,H*.87);ctx.lineTo(W*.62,H*.87);ctx.lineTo(W*.72,H);ctx.closePath();ctx.fill();
-    ctx.strokeStyle='#8f7a5c';ctx.lineWidth=1;for(let r=0;r<5;r++){const y=H*(.90+r*.02);ctx.beginPath();ctx.moveTo(W*(.40+r*.01),y);ctx.lineTo(W*(.70-r*.01),y);ctx.stroke();}
+    // a short saddle connecting the tall wall to the ruined wing.
+    ctx.fillStyle='#c9a877';ctx.fillRect(lx+lw*.5,H*.56,rx-W*.03-(lx+lw*.5),H*.05);
 
-    // warm evening lamps along the piazza.
-    ctx.fillStyle='#f0c76d';for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(W*(.06+i*.115),H*.83,2.5,0,Math.PI*2);ctx.fill();}
+    // Forum columns anchoring the foreground.
+    ctx.fillStyle='#d0b083';for(let i=0;i<3;i++){const x=W*(.02+i*.04);ctx.fillRect(x,H*.76,W*.018,H*.14);ctx.fillRect(x-W*.009,H*.745,W*.036,H*.018);ctx.fillRect(x-W*.007,H*.895,W*.032,H*.018);}
+    // a plaza railing in the foreground, as visitors would see it.
+    ctx.strokeStyle='rgba(40,35,30,.6)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(W*.08,H*.95);ctx.lineTo(W*.92,H*.95);ctx.stroke();
+    for(let i=0;i<12;i++){const x=W*(.10+i*.07);ctx.beginPath();ctx.moveTo(x,H*.95);ctx.lineTo(x,H*.925);ctx.stroke();}
   }
 
   function drawBarcelonaDetailed(){
