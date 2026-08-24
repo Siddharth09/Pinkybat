@@ -5799,7 +5799,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.restore();
     }
     ctx.globalAlpha=1;
-    drawBat();
+    // On the intro screen the live bat still animates behind the translucent
+    // overlay, bleeding through as a second, unpositioned "Becky" alongside
+    // the #introMark canvas bat that's actually placed above the title.
+    // Hide the live one there so only the intentional one shows.
+    if (state !== 'menu') drawBat();
     ctx.restore();
     if (impactFlash > 0) {
       ctx.fillStyle = (Math.floor(crashTime*18)%2===0) ? 'rgba(255,110,150,.35)' : 'rgba(255,255,255,.16)';
@@ -5821,7 +5825,18 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       while(simAccumulator>=SIM_STEP && steps<12){
         if(state==='play') update(SIM_STEP);
         else if(state==='crash') updateCrash(SIM_STEP);
-        else updateSkyGuests(SIM_STEP, 70);
+        else {
+          // t and worldScroll drive every ambient parallax layer (clouds,
+          // snow, distant skyline buildings) but normally only advance
+          // during update(), i.e. only while actually playing. Outside
+          // play they'd otherwise sit frozen at whatever value they last
+          // had — since a fresh page load never played, that's t=0, so
+          // every idle screen (and every city preview) showed the exact
+          // same "stuck" cloud in the exact same spot. Keep them ticking
+          // gently here too so the sky never looks like a pasted-on image.
+          t += SIM_STEP; worldScroll += 70*SIM_STEP;
+          updateSkyGuests(SIM_STEP, 70);
+        }
         simAccumulator-=SIM_STEP;
         steps++;
       }
