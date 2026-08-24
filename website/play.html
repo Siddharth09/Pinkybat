@@ -235,7 +235,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'HONG KONG',flag:'hk',palette:['#f0b66f', '#c9d4c4'],landmarks:['skyscraper', 'harbor'],weather:["sun", "rain"] },
     {name:'ELLORA & AJANTA CAVES',country:'India',flag:'🇮🇳'},
     {name:'THE MALDIVES',country:'Indian Ocean',flag:'🇲🇻'},
-    {name:'THE LARGE HADRON COLLIDER',country:'Switzerland',flag:'🇨🇭'},
+    {name:'HADRON COLLIDER',country:'Switzerland',flag:'🇨🇭'},
     {name:'ANGKOR WAT',country:'Cambodia',flag:'🇰🇭'},
     {name:'PETRA',country:'Jordan',flag:'🇯🇴'},
     {name:'ABU DHABI',flag:'ae',palette:['#e8bb70', '#ffe7c2'],landmarks:['mosque', 'skyline'],weather:['sun', 'sun']},
@@ -2073,12 +2073,46 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 
 
   function drawBangkokCity(){
+    // Bangkok, enhanced with more Thai temple detail (gold chofah roof
+    // finials) and the life of its streets: tuk-tuks, a food cart, strung
+    // lanterns and the city's famously tangled overhead wires.
     gradient('#73b7cf','#f1bd79');ctx.fillStyle='#4a99aa';ctx.fillRect(0,H*.75,W,H*.25);
-    const temple=(x,y,w,roof)=>{ctx.fillStyle='#b8493f';ctx.fillRect(x-w*.35,y,w*.70,H*.13);ctx.fillStyle=roof;ctx.beginPath();ctx.moveTo(x-w*.55,y);ctx.lineTo(x,y-H*.075);ctx.lineTo(x+w*.55,y);ctx.lineTo(x+w*.35,y+H*.012);ctx.lineTo(x,y-H*.032);ctx.lineTo(x-w*.35,y+H*.012);ctx.closePath();ctx.fill();ctx.strokeStyle='#d9ae37';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-w*.53,y);ctx.lineTo(x-w*.61,y-H*.04);ctx.moveTo(x+w*.53,y);ctx.lineTo(x+w*.61,y-H*.04);ctx.stroke();};
+    const temple=(x,y,w,roof)=>{
+      ctx.fillStyle='#b8493f';ctx.fillRect(x-w*.35,y,w*.70,H*.13);
+      ctx.fillStyle=roof;ctx.beginPath();ctx.moveTo(x-w*.55,y);ctx.lineTo(x,y-H*.075);ctx.lineTo(x+w*.55,y);ctx.lineTo(x+w*.35,y+H*.012);ctx.lineTo(x,y-H*.032);ctx.lineTo(x-w*.35,y+H*.012);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#d9ae37';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-w*.53,y);ctx.lineTo(x-w*.61,y-H*.04);ctx.moveTo(x+w*.53,y);ctx.lineTo(x+w*.61,y-H*.04);ctx.stroke();
+      // a golden chofah finial spiking up from the roof peak.
+      ctx.fillStyle='#e0c04a';ctx.beginPath();ctx.moveTo(x,y-H*.075);ctx.lineTo(x-3,y-H*.075-H*.035);ctx.lineTo(x+3,y-H*.075-H*.035);ctx.closePath();ctx.fill();
+    };
     temple(W*.18,H*.63,W*.18,'#d6a631');temple(W*.48,H*.58,W*.23,'#a9473e');temple(W*.78,H*.64,W*.19,'#d6a631');
     const px=W*.49;ctx.fillStyle='#d8c8a5';ctx.beginPath();ctx.moveTo(px,H*.18);ctx.lineTo(px-W*.085,H*.58);ctx.lineTo(px+W*.085,H*.58);ctx.closePath();ctx.fill();ctx.strokeStyle='#4f8d82';ctx.lineWidth=3;for(let r=0;r<10;r++){const y=H*(.23+r*.035);ctx.beginPath();ctx.moveTo(px-W*(.01+r*.006),y);ctx.lineTo(px+W*(.01+r*.006),y);ctx.stroke();}
     for(let i=0;i<4;i++){const x=W*(.10+i*.23),y=H*.75;ctx.fillStyle='#c79a3d';ctx.beginPath();ctx.arc(x,y-H*.075,8,0,Math.PI*2);ctx.fill();ctx.fillRect(x-8,y-H*.052,16,H*.035);}
-    for(let i=0;i<3;i++){const x=W*(.07+i*.30),y=H*(.86-(i%2)*.025);ctx.fillStyle='#3d302a';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+58,y);ctx.lineTo(x+46,y+7);ctx.lineTo(x+10,y+7);ctx.closePath();ctx.fill();}
+
+    // the street itself, so the tuk-tuks and cart read as being on the
+    // road rather than floating on the river band behind them.
+    ctx.fillStyle='#5a5048';ctx.fillRect(0,H*.855,W,H*.145);
+
+    // tangled overhead wires strung between the buildings, low over the street.
+    ctx.strokeStyle='rgba(40,30,20,.5)';ctx.lineWidth=1.5;
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(0,H*(.80+i*.02));ctx.quadraticCurveTo(W*.5,H*(.76+i*.02),W,H*(.81+i*.02));ctx.stroke();}
+    // paper lanterns strung along the street.
+    const lanternCols=['#e0533f','#e0b23f','#4f9c6c'];
+    for(let i=0;i<8;i++){const x=W*(.08+i*.115),y=H*(.795+Math.sin(i)*.01);ctx.fillStyle=lanternCols[i%3];ctx.beginPath();ctx.ellipse(x,y,4,5,0,0,Math.PI*2);ctx.fill();}
+
+    // tuk-tuks weaving through the little street.
+    function tuktuk(x,y){
+      ctx.fillStyle='#e0533f';ctx.beginPath();ctx.arc(x,y-10,9,Math.PI,0);ctx.fill();ctx.fillRect(x-9,y-10,18,10);
+      ctx.fillStyle='#2b2b2b';ctx.beginPath();ctx.arc(x-6,y,3,0,Math.PI*2);ctx.arc(x+6,y,3,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#f4e6c8';ctx.fillRect(x-6,y-9,5,6);
+    }
+    tuktuk(W*.20,H*.90);tuktuk(W*.66,H*.92);
+
+    // a street food cart with an umbrella, tucked between the tuk-tuks.
+    const fx=W*.42,fy=H*.90;
+    ctx.fillStyle='#c94f4f';ctx.fillRect(fx-14,fy-6,28,8);
+    ctx.fillStyle='#2b2b2b';ctx.beginPath();ctx.arc(fx-9,fy+3,3,0,Math.PI*2);ctx.arc(fx+9,fy+3,3,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#6b5138';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(fx,fy-6);ctx.lineTo(fx,fy-22);ctx.stroke();
+    ctx.fillStyle='#e0b23f';ctx.beginPath();ctx.arc(fx,fy-22,12,Math.PI,0);ctx.fill();
   }
 
   function drawIstanbulCity(){
@@ -2982,27 +3016,61 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawLHC(){
-    gradient('#8fc7e0','#dcefc0');
-    // green countryside on the surface.
-    ctx.fillStyle='#5c9a5f';ctx.fillRect(0,H*.30,W,H*.30);
-    // the ring's path traced across the landscape, since it's invisible
-    // underground — the clearest way to show its real scale from above.
-    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.setLineDash([6,6]);ctx.lineWidth=3;
-    ctx.beginPath();ctx.ellipse(W*.5,H*.42,W*.46,H*.10,0,0,Math.PI*2);ctx.stroke();
-    ctx.setLineDash([]);
-    // the CERN dome / globe building on the surface.
-    ctx.fillStyle='#c9cdd0';ctx.beginPath();ctx.arc(W*.22,H*.36,W*.055,Math.PI,0);ctx.fill();ctx.fillRect(W*.165,H*.36,W*.11,H*.02);
-    // small trees for scale on the surface.
-    ctx.fillStyle='#3f7a4a';for(const x of [W*.65,W*.72,W*.80]){ctx.beginPath();ctx.arc(x,H*.35,8,0,Math.PI*2);ctx.fill();}
-    // cutaway underground revealing the collider tunnel and magnet ring.
-    ctx.fillStyle='#6b543c';ctx.fillRect(0,H*.60,W,H*.40);
-    ctx.strokeStyle='rgba(0,0,0,.15)';ctx.lineWidth=1;for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(0,H*(.62+i*.06));ctx.lineTo(W,H*(.62+i*.06));ctx.stroke();}
-    ctx.fillStyle='#2b2f36';ctx.beginPath();ctx.ellipse(W*.5,H*.82,W*.44,H*.13,0,0,Math.PI*2);ctx.fill();
-    // the superconducting magnet ring and glowing particle beam inside.
-    ctx.strokeStyle='#4d7ea8';ctx.lineWidth=W*.03;ctx.beginPath();ctx.ellipse(W*.5,H*.82,W*.40,H*.115,0,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle='rgba(130,220,255,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(W*.5,H*.82,W*.40,H*.115,0,0,Math.PI*2);ctx.stroke();
-    // tiny scientists at a control point beside the ring.
-    ctx.fillStyle='#eee';for(const x of [W*.30,W*.34]){ctx.beginPath();ctx.arc(x,H*.94,3,0,Math.PI*2);ctx.fill();ctx.fillRect(x-1.5,H*.943,3,H*.025);}
+    // The Hadron Collider, rebuilt to show the sheer complexity of the
+    // real machine: a straight-on view down the detector's core, radiating
+    // cryostat arms, girding steel trusses and a tiny engineer for scale —
+    // keyed off a reference photo of the ATLAS/CMS cavern under construction.
+    gradient('#1b2436','#0a0e18');
+    ctx.fillStyle='#151c2b';ctx.fillRect(0,0,W,H);
+    const cx=W*.5,cy=H*.40;
+
+    // blue steel scaffolding trusses crisscrossing the cavern.
+    ctx.strokeStyle='#3f6fa8';ctx.lineWidth=3;
+    for(const [x1,y1,x2,y2] of [
+      [0,H*.04,W*.40,cy],[W,H*.04,W*.60,cy],[0,H*.58,W*.40,cy],[W,H*.58,W*.60,cy],
+      [0,H*.02,W,H*.09],[0,H*.63,W,H*.58]
+    ]){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+    ctx.strokeStyle='#2c517e';ctx.lineWidth=5;
+    for(const x of [W*.06,W*.16,W*.84,W*.94]){ctx.beginPath();ctx.moveTo(x,H*.02);ctx.lineTo(x,H*.90);ctx.stroke();}
+
+    // four huge cryostat arms radiating diagonally toward the corners —
+    // silvery cylinders banded with orange rings, echoing the real
+    // detector's radiating toroid sections.
+    function arm(angle,len){
+      ctx.save();ctx.translate(cx,cy);ctx.rotate(angle);
+      const w=H*.16;
+      ctx.fillStyle='#9aa3ac';ctx.fillRect(W*.14,-w/2,len,w);
+      ctx.fillStyle='#7d858e';ctx.fillRect(W*.14,-w/2,len,w*.22);
+      ctx.fillStyle='#e0672f';
+      for(let i=0;i<4;i++)ctx.fillRect(W*.14+len*(.08+i*.24),-w/2,len*.07,w);
+      ctx.restore();
+    }
+    arm(-2.35,W*.62);arm(-.78,W*.62);arm(.78,W*.62);arm(2.35,W*.62);
+
+    // the central detector endcap: concentric rings, alternating dark
+    // steel, gold cabling and pale detector layers, face-on.
+    const ringCols=['#0c0f15','#454c58','#c9a227','#5b6472','#8c94a0','#0c0f15','#c9a227'];
+    for(let i=0;i<ringCols.length;i++){
+      const f=(ringCols.length-i)/ringCols.length;
+      ctx.fillStyle=ringCols[i];ctx.beginPath();ctx.arc(cx,cy,W*.22*f,0,Math.PI*2);ctx.fill();
+    }
+    ctx.strokeStyle='rgba(0,0,0,.35)';ctx.lineWidth=1.5;
+    for(let i=0;i<20;i++){const a=i/20*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*W*.22,cy+Math.sin(a)*W*.22);ctx.stroke();}
+    ctx.fillStyle='#05070b';ctx.beginPath();ctx.arc(cx,cy,W*.045,0,Math.PI*2);ctx.fill();
+
+    // a green safety catwalk with a handrail at floor level.
+    ctx.fillStyle='#2f3a2c';ctx.fillRect(0,H*.80,W,H*.06);
+    ctx.strokeStyle='#7fae3f';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,H*.79);ctx.lineTo(W,H*.79);ctx.stroke();
+
+    // the orange floor platform, with a tiny engineer standing on it for
+    // scale, exactly as in the reference photograph.
+    ctx.fillStyle='#c9631f';ctx.fillRect(W*.30,H*.86,W*.40,H*.06);
+    ctx.fillStyle='#4a3826';ctx.fillRect(W*.485,H*.885,W*.03,H*.035);
+    ctx.fillStyle='#e8d7b0';ctx.beginPath();ctx.arc(W*.5,H*.874,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#f0c94e';ctx.beginPath();ctx.arc(W*.5,H*.866,4.5,0,Math.PI*2);ctx.fill();
+
+    // a hazard-striped rail along the very bottom edge.
+    ctx.strokeStyle='#e0a92f';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,H*.96);ctx.lineTo(W,H*.96);ctx.stroke();
   }
 
   function drawITER(){
@@ -3163,15 +3231,51 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawBuenosAiresNew(){
-    gradient('#162642','#4b5575');ctx.fillStyle='#756d63';ctx.fillRect(0,H*.78,W,H*.22);
-    // Grand old-town cathedral, dusk.
-    ctx.fillStyle='#c6ae88';ctx.fillRect(W*.17,H*.43,W*.66,H*.32);
-    for(let i=0;i<10;i++)ctx.fillRect(W*(.20+i*.06),H*.49,W*.018,H*.25);
-    ctx.beginPath();ctx.moveTo(W*.14,H*.43);ctx.lineTo(W*.50,H*.28);ctx.lineTo(W*.86,H*.43);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#f0c766';for(let r=0;r<4;r++)for(let q=0;q<7;q++)ctx.fillRect(W*(.22+q*.085),H*(.48+r*.055),W*.025,H*.025);
-    // Argentine blue-white plaza flags + figures.
-    for(const x of [W*.10,W*.90]){ctx.fillStyle='#77b7d7';ctx.fillRect(x,H*.36,W*.075,H*.018);ctx.fillStyle='#f5f1df';ctx.fillRect(x,H*.378,W*.075,H*.018);ctx.fillStyle='#77b7d7';ctx.fillRect(x,H*.396,W*.075,H*.018);}
-    ctx.fillStyle='#efc85e';for(let i=0;i<10;i++){ctx.beginPath();ctx.arc(W*(.04+i*.10),H*.76,2.5,0,Math.PI*2);ctx.fill();}
+    // Buenos Aires, rebuilt for charm rather than grandeur: colorful
+    // La Boca Caminito houses, the Obelisco, a blooming jacaranda, a
+    // corner cafe, string lights and a tango couple on the street.
+    gradient('#ffd9a0','#f3b7c9');ctx.fillStyle='#8a95a0';ctx.fillRect(0,H*.80,W,H*.20);
+
+    // the Obelisco standing in the mid-ground.
+    const ox=W*.50;
+    ctx.fillStyle='#e8e2d0';ctx.beginPath();ctx.moveTo(ox-W*.03,H*.80);ctx.lineTo(ox-W*.015,H*.32);ctx.lineTo(ox,H*.27);ctx.lineTo(ox+W*.015,H*.32);ctx.lineTo(ox+W*.03,H*.80);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#d8d0ba';ctx.beginPath();ctx.moveTo(ox-W*.03,H*.80);ctx.lineTo(ox,H*.80);ctx.lineTo(ox-W*.015,H*.32);ctx.closePath();ctx.fill();
+
+    // colorful La Boca Caminito houses lining the street on both sides.
+    const cols=['#3f7fbf','#e0533f','#e0b23f','#4f9c6c','#c95fa0'];
+    function house(x,y0,w,h,col,trim){
+      ctx.fillStyle=col;ctx.fillRect(x,y0-h,w,h);
+      ctx.strokeStyle=trim;ctx.lineWidth=2;ctx.strokeRect(x+w*.15,y0-h*.55,w*.22,h*.30);ctx.strokeRect(x+w*.63,y0-h*.55,w*.22,h*.30);
+      ctx.fillStyle=trim;ctx.fillRect(x+w*.35,y0-h*.30,w*.30,h*.30);
+    }
+    house(W*.04,H*.80,W*.16,H*.20,cols[0],'#fff');
+    house(W*.22,H*.80,W*.14,H*.16,cols[1],'#ffe9b0');
+    house(W*.66,H*.80,W*.15,H*.18,cols[2],'#fff');
+    house(W*.83,H*.80,W*.14,H*.15,cols[4],'#fff');
+
+    // a jacaranda tree in purple bloom, a Buenos Aires springtime icon —
+    // one solid canopy with a few darker overlapping blobs for texture,
+    // not a ring of same-size dots (which reads as a donut).
+    ctx.fillStyle='#6b5138';ctx.fillRect(W*.36,H*.62,W*.02,H*.18);
+    ctx.fillStyle='#a884c9';ctx.beginPath();ctx.ellipse(W*.37,H*.615,W*.07,H*.055,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#9670b8';for(let i=0;i<6;i++){const a=i/6*Math.PI*2;ctx.beginPath();ctx.ellipse(W*.37+Math.cos(a)*W*.035,H*.615+Math.sin(a)*H*.025,W*.028,H*.022,0,0,Math.PI*2);ctx.fill();}
+
+    // a corner cafe: a round table with a sun umbrella, clear of the obelisk.
+    const cfx=W*.75,cfy=H*.895;
+    ctx.strokeStyle='#6b5138';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cfx,cfy);ctx.lineTo(cfx,cfy-16);ctx.stroke();
+    ctx.fillStyle='#c94f4f';ctx.beginPath();ctx.arc(cfx,cfy-16,10,Math.PI,0);ctx.fill();
+    ctx.fillStyle='#3a3a3a';ctx.beginPath();ctx.ellipse(cfx,cfy,8,3,0,0,Math.PI*2);ctx.fill();
+
+    // a tango dancer couple, sized up so the pose actually reads.
+    ctx.fillStyle='#2b2b2b';
+    ctx.beginPath();ctx.ellipse(W*.57,H*.895,7,16,0.35,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(W*.63,H*.895,7,16,-0.35,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(W*.57,H*.865,5,0,Math.PI*2);ctx.arc(W*.63,H*.865,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#c94f4f';ctx.beginPath();ctx.ellipse(W*.60,H*.90,3,7,0,0,Math.PI*2);ctx.fill();
+
+    // string lights swagged across the street.
+    ctx.strokeStyle='rgba(0,0,0,.2)';ctx.beginPath();ctx.moveTo(0,H*.66);ctx.quadraticCurveTo(W*.5,H*.72,W,H*.66);ctx.stroke();
+    ctx.fillStyle='#f0c94e';for(let i=0;i<8;i++){const tt=i/7,x=W*tt,y=H*(.66+(4*tt*(1-tt))*.06);ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();}
   }
 
   function drawShenzhenNew(){
@@ -4054,24 +4158,51 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.fillStyle='#4b8050';for(let i=0;i<5;i++){const x=W*(.06+i*.17);ctx.beginPath();ctx.arc(x,H*.955,12,0,Math.PI*2);ctx.fill();ctx.fillStyle='#e2bf36';ctx.beginPath();ctx.arc(x,H*.955,2.6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#4b8050';}
   }
   function drawLakeComoV70(){
-    gradient('#8fc3e0','#f6e6c2');ctx.fillStyle='#3f8aa3';ctx.fillRect(0,H*.62,W,H*.38);
-    // layered misty peaks for atmospheric depth, prettier than a flat backdrop.
-    ctx.fillStyle='rgba(120,140,150,.35)';for(let i=0;i<4;i++){const x=W*(.00+i*.30);ctx.beginPath();ctx.moveTo(x,H*.62);ctx.lineTo(x+W*.15,H*.34);ctx.lineTo(x+W*.32,H*.62);ctx.closePath();ctx.fill();}
-    ctx.fillStyle='#5f7864';for(let i=0;i<4;i++){const x=W*(.02+i*.27);ctx.beginPath();ctx.moveTo(x,H*.62);ctx.lineTo(x+W*.13,H*(.42+(i%2)*.05));ctx.lineTo(x+W*.28,H*.62);ctx.closePath();ctx.fill();}
-    // a grand lakeside villa with a terraced garden, the scene's focal point.
+    // Lake Como, rebuilt as a little town wrapped entirely around the
+    // water: a grand villa terrace, pastel houses and restaurants lining
+    // both shores, cafe umbrellas on the promenade, and boats on the lake.
+    gradient('#8fc3e0','#f6e6c2');ctx.fillStyle='#3f8aa3';ctx.fillRect(0,H*.60,W,H*.40);
+    // layered misty mountains cradling the lake.
+    ctx.fillStyle='rgba(120,140,150,.35)';for(let i=0;i<4;i++){const x=W*(.00+i*.30);ctx.beginPath();ctx.moveTo(x,H*.60);ctx.lineTo(x+W*.15,H*.32);ctx.lineTo(x+W*.32,H*.60);ctx.closePath();ctx.fill();}
+    ctx.fillStyle='#5f7864';for(let i=0;i<4;i++){const x=W*(.02+i*.27);ctx.beginPath();ctx.moveTo(x,H*.60);ctx.lineTo(x+W*.13,H*(.40+(i%2)*.05));ctx.lineTo(x+W*.28,H*.60);ctx.closePath();ctx.fill();}
+    // a small pale village wrapping the far shore, for depth.
+    const farCols=['#d9c7a0','#cbb890','#e0cfa8'];
+    for(let i=0;i<12;i++){const x=W*(i*.09);ctx.fillStyle=farCols[i%3];ctx.fillRect(x,H*.575,W*.09,H*.03);}
+
+    // grand lakeside villa with a terraced garden, the scene's focal point.
     const vx=W*.46;
-    ctx.fillStyle='#3f6a4a';ctx.beginPath();ctx.moveTo(vx-W*.14,H*.62);ctx.lineTo(vx-W*.10,H*.575);ctx.lineTo(vx+W*.20,H*.575);ctx.lineTo(vx+W*.24,H*.62);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#eee2c8';ctx.fillRect(vx-W*.09,H*.545,W*.24,H*.075);
-    ctx.fillStyle='#a3453a';ctx.beginPath();ctx.moveTo(vx-W*.10,H*.545);ctx.lineTo(vx+W*.03,H*.505);ctx.lineTo(vx+W*.16,H*.545);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#8fb5c5';for(let i=0;i<4;i++)ctx.fillRect(vx-W*.06+i*W*.05,H*.565,W*.02,H*.03);
-    // pastel lakeside villas along the shore.
-    const comoCols=['#d8b482','#d37a5c','#e2c28d','#c98a6a','#e6d0a0'];
-    for(let i=0;i<5;i++){const x=W*(.06+i*.19),y=H*.62;ctx.fillStyle=comoCols[i];ctx.fillRect(x,y,W*.11,H*.06);ctx.fillStyle='#9d4e3e';ctx.beginPath();ctx.moveTo(x-W*.006,y);ctx.lineTo(x+W*.055,y-H*.035);ctx.lineTo(x+W*.116,y);ctx.closePath();ctx.fill();}
-    // cypress trees between the villas.
-    ctx.fillStyle='#2f5138';for(let i=0;i<4;i++){const x=W*(.20+i*.19),y=H*.62;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5,y-H*.055);ctx.lineTo(x+5,y-H*.055);ctx.closePath();ctx.fill();}
-    // water reflections and a small ferry crossing the lake.
-    ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=2;for(let i=0;i<8;i++){ctx.beginPath();ctx.moveTo(W*(.05+i*.12),H*.70);ctx.lineTo(W*(.05+i*.12),H*.94);ctx.stroke();}
-    ctx.fillStyle='#efefe9';ctx.beginPath();ctx.moveTo(W*.60,H*.80);ctx.lineTo(W*.74,H*.80);ctx.lineTo(W*.70,H*.85);ctx.lineTo(W*.64,H*.85);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#3f6a4a';ctx.beginPath();ctx.moveTo(vx-W*.16,H*.60);ctx.lineTo(vx-W*.11,H*.55);ctx.lineTo(vx+W*.23,H*.55);ctx.lineTo(vx+W*.28,H*.60);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#eee2c8';ctx.fillRect(vx-W*.10,H*.515,W*.28,H*.08);
+    ctx.fillStyle='#a3453a';ctx.beginPath();ctx.moveTo(vx-W*.11,H*.515);ctx.lineTo(vx+W*.04,H*.47);ctx.lineTo(vx+W*.19,H*.515);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#8fb5c5';for(let i=0;i<4;i++)ctx.fillRect(vx-W*.06+i*W*.058,H*.535,W*.022,H*.035);
+    ctx.fillStyle='#d8cdb0';ctx.fillRect(vx-W*.16,H*.595,W*.44,H*.012);
+    ctx.strokeStyle='#c4b795';ctx.lineWidth=2;for(let i=0;i<10;i++){const x=vx-W*.15+i*W*.042;ctx.beginPath();ctx.moveTo(x,H*.595);ctx.lineTo(x,H*.575);ctx.stroke();}
+
+    // cute pastel houses and restaurants wrapping the near shore.
+    const comoCols=['#d8b482','#d37a5c','#e2c28d','#c98a6a','#e6d0a0','#d1a888'];
+    for(let i=0;i<5;i++){
+      const x=W*(.05+i*.185),y0=H*.60,h=H*.06,w=W*.10;
+      ctx.fillStyle=comoCols[i%comoCols.length];ctx.fillRect(x,y0-h,w,h);
+      ctx.fillStyle='#9d4e3e';ctx.beginPath();ctx.moveTo(x-w*.06,y0-h);ctx.lineTo(x+w*.5,y0-h-H*.032);ctx.lineTo(x+w*1.06,y0-h);ctx.closePath();ctx.fill();
+      if(i%2===0){ctx.fillStyle='#c94f4f';ctx.fillRect(x+w*.15,y0-h*.32,w*.7,h*.18);}
+    }
+    // cypress trees between the houses.
+    ctx.fillStyle='#2f5138';for(let i=0;i<4;i++){const x=W*(.20+i*.19),y=H*.60;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-5,y-H*.055);ctx.lineTo(x+5,y-H*.055);ctx.closePath();ctx.fill();}
+
+    // lakeside promenade with cafe tables and umbrellas.
+    ctx.fillStyle='#cbb98f';ctx.fillRect(0,H*.60,W,H*.03);
+    const umbrellaCols=['#c94f4f','#4f8fc9','#e0b23f'];
+    for(let i=0;i<6;i++){
+      const x=W*(.06+i*.16),y=H*.605;
+      ctx.fillStyle='#6b5138';ctx.fillRect(x-1,y-8,2,8);
+      ctx.fillStyle=umbrellaCols[i%3];ctx.beginPath();ctx.arc(x,y-10,7,Math.PI,0);ctx.fill();
+    }
+
+    // water reflections, a ferry crossing, and a couple of rowboats.
+    ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=2;for(let i=0;i<8;i++){ctx.beginPath();ctx.moveTo(W*(.05+i*.12),H*.68);ctx.lineTo(W*(.05+i*.12),H*.94);ctx.stroke();}
+    ctx.fillStyle='#efefe9';ctx.beginPath();ctx.moveTo(W*.60,H*.78);ctx.lineTo(W*.74,H*.78);ctx.lineTo(W*.70,H*.83);ctx.lineTo(W*.64,H*.83);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#8a6a4a';for(const bx of [W*.30,W*.88]){ctx.beginPath();ctx.moveTo(bx-8,H*.90);ctx.lineTo(bx+8,H*.90);ctx.lineTo(bx+5,H*.895);ctx.lineTo(bx-5,H*.895);ctx.closePath();ctx.fill();}
+
     // a pair of swans gliding near the shore.
     ctx.fillStyle='#f5f3ea';for(const sx of [W*.14,W*.20]){ctx.beginPath();ctx.ellipse(sx,H*.90,7,4,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#f5f3ea';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx+5,H*.885);ctx.quadraticCurveTo(sx+9,H*.87,sx+7,H*.865);ctx.stroke();}
   }
@@ -4944,7 +5075,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     else if(c==='NASA DEEP SPACE STATION 43')drawDeepSpaceStation();
     else if(c==='INTERNATIONAL SPACE STATION')drawISS();
     else if(c==='SATURN V ROCKET')drawSaturnV();
-    else if(c==='THE LARGE HADRON COLLIDER')drawLHC();
+    else if(c==='HADRON COLLIDER')drawLHC();
     else if(c==='ITER NUCLEAR FUSION REACTOR')drawITER();
     else if(c==='FAST RADIO TELESCOPE')drawFAST();
     else if(c==='THREE GORGES DAM')drawThreeGorgesDam();
