@@ -170,13 +170,13 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     {name:'QUEENSTOWN',flag:'nz',palette:['#7ca8c8', '#eef7ff'],landmarks:['lake', 'remarkables'],weather:['sun', 'snow']},
     {name:'VENICE',flag:'it',palette:['#7fb9c8', '#f2dfc7'],landmarks:['gondola', 'sanmarco'],weather:['sun', 'rain']},
     {name:'BRUSSELS',flag:'be',palette:['#7db4d0', '#f0e2cc'],landmarks:['atomium', 'grandplace'],weather:['rain', 'sun']},
-    {name:'JAIPUR PINK CITY',country:'India',flag:'🇮🇳'},
+    {name:'JAIPUR',country:'India',flag:'🇮🇳'},
     {name:'CHICAGO',flag:'us',palette:['#c1c9dc', '#ead8b7'],landmarks:['skyscraper', 'bridge'],weather:["sun", "rain"] },
     {name:'RIO DE JANEIRO',flag:'br',palette:['#71d09c', '#e4f9d2'],landmarks:['jesus', 'sugarloaf', 'palm'],weather:['sun', 'rain']},
     {name:'LAS VEGAS',flag:'us',palette:['#c1c9dc', '#f4e2c6'],landmarks:['skyscraper', 'wheel'],weather:["sun", "rain"] },
     {name:'SEOUL',flag:'kr',palette:['#8fbed3', '#f6d8c5'],landmarks:['palace', 'namsan'],weather:['sun', 'rain']},
     {name:'THE WAVE - ARIZONA',country:'United States',flag:'🇺🇸'},
-    {name:'BANFF & JASPER CANADIAN ROCKIES',country:'Canada',flag:'🇨🇦'},
+    {name:'BANFF',country:'Canada',flag:'🇨🇦'},
     {name:'SHANGHAI',country:'China',flag:'🇨🇳'},
     {name:'MARIANA TRENCH',country:'Pacific Ocean',flag:'🌊'},
     {name:'LAKE COMO',country:'Italy',flag:'🇮🇹'},
@@ -604,6 +604,38 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ]).has(c?.name);
   }
 
+  // Spawns and drifts the hot-air balloons/parachutes seen in the sky.
+  // Called from update(dt) during actual gameplay, and also driven gently
+  // from the render loop while idling on the menu/game-over screens, so the
+  // sky always has something genuinely moving through it rather than a
+  // single balloon painted in a fixed spot.
+  function updateSkyGuests(dt, sp) {
+    skyGuestTimer -= dt;
+    if (skyGuestTimer <= 0 && skyGuests.length < 2) {
+      const type = Math.random() < 0.58 ? 'balloon' : 'parachute';
+      const r = type === 'balloon' ? Math.max(24,Math.min(34,W*.055)) : Math.max(19,Math.min(27,W*.043));
+      // Spawn well away from Becky's current position and never in the low
+      // start lane. Parachutes are especially constrained because their body
+      // hangs below the canopy.
+      const minY = type === 'parachute' ? H*.18 : H*.16;
+      const maxY = type === 'parachute' ? H*.47 : H*.56;
+      let y = minY + Math.random()*(maxY-minY);
+      const batY = bat.y;
+      if (Math.abs(y-batY) < H*.20) {
+        y = batY < H*.40 ? Math.min(maxY,batY+H*.24) : Math.max(minY,batY-H*.24);
+      }
+      skyGuests.push({type,x:W+r+35,y,r,bob:Math.random()*6.28,variant:Math.floor(Math.random()*4),age:0});
+      skyGuestTimer = 5.5 + Math.random()*6.5;
+    }
+    for(let i=skyGuests.length-1;i>=0;i--){
+      const g=skyGuests[i];
+      g.x -= sp*dt*.72;
+      g.bob += dt*1.8;
+      g.age = (g.age||0) + dt;
+      if(g.x+g.r*2<-80) skyGuests.splice(i,1);
+    }
+  }
+
   function update(dt) {
     t += dt;
     // Milestone difficulty curve:
@@ -731,37 +763,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 
     // Occasional airborne obstacles. These move more slowly than landmarks
     // and use compact circular hit areas matching their visible shapes.
-    skyGuestTimer -= dt;
-    if (skyGuestTimer <= 0 && skyGuests.length < 2) {
-      const type = Math.random() < 0.58 ? 'balloon' : 'parachute';
-      const r = type === 'balloon' ? Math.max(24,Math.min(34,W*.055)) : Math.max(19,Math.min(27,W*.043));
-      // Spawn well away from Becky's current position and never in the low
-      // start lane. Parachutes are especially constrained because their body
-      // hangs below the canopy.
-      const minY = type === 'parachute' ? H*.18 : H*.16;
-      const maxY = type === 'parachute' ? H*.47 : H*.56;
-      let y = minY + Math.random()*(maxY-minY);
-      const batY = bat.y;
-      if (Math.abs(y-batY) < H*.20) {
-        y = batY < H*.40 ? Math.min(maxY,batY+H*.24) : Math.max(minY,batY-H*.24);
-      }
-      skyGuests.push({type,x:W+r+35,y,r,bob:Math.random()*6.28,variant:Math.floor(Math.random()*4),age:0});
-      skyGuestTimer = 5.5 + Math.random()*6.5;
-    }
-    for(let i=skyGuests.length-1;i>=0;i--){
-      const g=skyGuests[i];
-      g.x -= sp*dt*.72;
-      g.bob += dt*1.8;
-      g.age = (g.age||0) + dt;
-      const gy=g.y+Math.sin(g.bob)*5;
-      // Match collision to the visible object. For parachutes, collide near
-      // the canopy/person cluster rather than an oversized invisible circle.
-      const hitY = g.type==='parachute' ? gy + g.r*.35 : gy;
-      const dx=bat.x*W-g.x,dy=bat.y-hitY;
-      // Balloons and parachutes are decorative only.
-      void dx; void dy;
-      if(g.x+g.r*2<-80) skyGuests.splice(i,1);
-    }
+    updateSkyGuests(dt, sp);
 
     // Boats are visual ambience at the bottom only and never collide with Becky.
     boatTimer -= dt;
@@ -3374,10 +3376,19 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 
   function drawTaipeiV60Add(){
     gradient('#6d94b3','#263955');ctx.fillStyle='#526b76';ctx.fillRect(0,H*.76,W,H*.24);
-    // Taipei 101 as the unmistakable focal point.
-    const tx=W*.52;ctx.fillStyle='#559087';
-    for(let l=0;l<8;l++){const y=H*(.67-l*.066),ww=W*(.205-l*.009);ctx.fillRect(tx-ww*.5,y,ww,H*.053);ctx.fillStyle='#acd1c8';ctx.fillRect(tx-ww*.37,y+H*.012,ww*.74,H*.012);ctx.fillStyle='#559087';}
-    ctx.fillRect(tx-W*.018,H*.105,W*.036,H*.09);ctx.fillStyle='#d7aa3c';ctx.fillRect(tx-2,H*.045,4,H*.065);
+    // Taipei 101 as the unmistakable focal point: eight stacked, outward-
+    // flaring tiers echoing the tower's real segmented "ruyi" bracket look,
+    // rather than a plain column of uniform bars.
+    const tx=W*.52;
+    for(let l=0;l<8;l++){
+      const y=H*(.67-l*.066),ww=W*(.205-l*.009),flare=W*.016;
+      ctx.fillStyle='#4a8478';
+      ctx.beginPath();
+      ctx.moveTo(tx-ww*.5-flare,y+H*.053);ctx.lineTo(tx-ww*.5,y);ctx.lineTo(tx+ww*.5,y);ctx.lineTo(tx+ww*.5+flare,y+H*.053);
+      ctx.closePath();ctx.fill();
+      ctx.fillStyle='#acd1c8';ctx.fillRect(tx-ww*.37,y+H*.014,ww*.74,H*.012);
+    }
+    ctx.fillStyle='#4a8478';ctx.fillRect(tx-W*.018,H*.105,W*.036,H*.09);ctx.fillStyle='#d7aa3c';ctx.fillRect(tx-2,H*.045,4,H*.065);
     // Taipei street lights and small temple roofs.
     for(let i=0;i<7;i++){const x=W*(.015+i*.145),hh=H*(.075+(i%3)*.028);ctx.fillStyle='#657a83';ctx.fillRect(x,H*.74-hh,W*.09,hh);ctx.fillStyle='#f0c85c';for(let r=0;r<3;r++)ctx.fillRect(x+W*.02,H*.70-hh+r*13,W*.018,5);}
     ctx.fillStyle='#a9443d';ctx.fillRect(W*.06,H*.65,W*.20,H*.085);ctx.fillStyle='#343b3b';ctx.beginPath();ctx.moveTo(W*.03,H*.65);ctx.lineTo(W*.16,H*.57);ctx.lineTo(W*.29,H*.65);ctx.closePath();ctx.fill();
@@ -4856,7 +4867,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     else if(c==='DUBROVNIK'||c==='DUBROVNIK OLD TOWN')drawDubrovnikV71();
     else if(c==='AMSTERDAM CANALS')drawAmsterdamCanalsV71();
     else if(c==='SINGAPORE MARINA BAY')drawSingaporeMarinaV71();
-    else if(c==='JAIPUR PINK CITY')drawJaipurPinkV71();
+    else if(c==='JAIPUR'||c==='JAIPUR PINK CITY')drawJaipurPinkV71();
     else if(c==='GREAT BARRIER REEF')drawGreatBarrierReefV70();
     else if(c==='IGUAZU FALLS')drawIguazuV70();
     else if(c==='SALAR DE UYUNI')drawUyuniV70();
@@ -5060,10 +5071,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.restore();
     }
 
-    // Clouds/balloon are part of the destination art; precipitation is drawn
-    // live by drawBackground() so it can never become a stagnant cached image.
+    // Clouds are part of the destination art; precipitation is drawn live by
+    // drawBackground() so it can never become a stagnant cached image. Hot
+    // air balloons are handled separately by the animated skyGuests system
+    // so they actually drift across the scene instead of sitting in one spot.
     drawClouds();
-    drawBalloon();
   }
   const citySceneCache=new Map();
   const CITY_CACHE_LIMIT=4;
@@ -5401,8 +5413,6 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.fill();
     }
   }
-  function drawBalloon(){const x=W*.79+Math.sin(t*.22)*15,y=H*.18+Math.sin(t*.5)*8;ctx.fillStyle='#ef788c';ctx.beginPath();ctx.ellipse(x,y,20,28,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffd66e';ctx.beginPath();ctx.ellipse(x,y,6,28,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#6b5b50';ctx.beginPath();ctx.moveTo(x-9,y+25);ctx.lineTo(x-4,y+39);ctx.moveTo(x+9,y+25);ctx.lineTo(x+4,y+39);ctx.stroke();ctx.fillStyle='#8d6750';ctx.fillRect(x-6,y+39,12,7);}
-
   function drawFlag(flag,x,y,w,h){
     ctx.save();ctx.translate(x,y);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
     if(flag==='fr'){ctx.fillStyle='#1e5aa8';ctx.fillRect(0,0,w/3,h);ctx.fillStyle='#ef3340';ctx.fillRect(w*2/3,0,w/3,h);}
@@ -5744,6 +5754,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       while(simAccumulator>=SIM_STEP && steps<12){
         if(state==='play') update(SIM_STEP);
         else if(state==='crash') updateCrash(SIM_STEP);
+        else updateSkyGuests(SIM_STEP, 70);
         simAccumulator-=SIM_STEP;
         steps++;
       }
