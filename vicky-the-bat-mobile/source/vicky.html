@@ -4650,54 +4650,69 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawRomeDetailed(){
-    // Rome, rebuilt a fifth time, this time from the Piranesi engraving:
-    // a true bird's-eye view straight down into the Colosseum's bowl —
-    // concentric seating tiers descending to the arena floor, radial
-    // aisles dividing them into wedges, and an unevenly ruined outer rim.
-    // Ground-level side elevations kept producing awkward "tall wall vs
-    // short wall" silhouettes; looking straight down sidesteps that
-    // entirely and matches techniques already proven elsewhere in this
-    // game (concentric-ring craters/dishes).
-    gradient('#e8b878','#f6dba0');
-    ctx.fillStyle='#6f8a5c';ctx.fillRect(0,0,W,H);
-    const cx=W*.5,cy=H*.52,rx=W*.46,ry=H*.34;
+    // Rome, rebuilt a sixth time: a rooftop skyline view over the historic
+    // centre at dusk, keyed off a reference photo of the Vittoriano
+    // monument rising above a sea of Baroque domes and terracotta roofs —
+    // not a single Colosseum facade or bowl. Ground-level and aerial
+    // Colosseum studies kept reading as one flat building; a skyline of
+    // many varied silhouettes against a warm hazy sky avoids that entirely.
+    gradient('#e8c9a0','#bcd7e8');
+    ctx.fillStyle='rgba(255,255,255,.5)';
+    for(let i=0;i<10;i++){ctx.beginPath();ctx.arc(W*((i*53)%100)/100,H*.10+((i*17)%20),18,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle='rgba(150,150,130,.35)';ctx.fillRect(0,H*.38,W,H*.06);
 
-    // the outer rim and descending tiers, as concentric ellipses.
-    ctx.fillStyle='#9c7d58';ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.fill();
-    const tierCols=['#8a6b4a','#a4855e','#8a6b4a','#b89467'];
-    for(let t=0;t<4;t++){const f=1-(t+1)*.18;ctx.fillStyle=tierCols[t];ctx.beginPath();ctx.ellipse(cx,cy,rx*f,ry*f,0,0,Math.PI*2);ctx.fill();}
+    // a dense band of small terracotta-roofed houses along the skyline.
+    const roofCols=['#b9694a','#c9805a','#a85b3f','#cf8f66'];
+    for(let i=0;i<14;i++){
+      const x=W*(i*.075),h=H*(.10+((i*37)%5)*.025),y=H*.72-h;
+      ctx.fillStyle=['#e8d5b0','#dcc79e','#e3cca5'][i%3];ctx.fillRect(x,y,W*.075,h);
+      ctx.fillStyle=roofCols[i%4];ctx.beginPath();ctx.moveTo(x-W*.005,y);ctx.lineTo(x+W*.0375,y-H*.035);ctx.lineTo(x+W*.08,y);ctx.closePath();ctx.fill();
+    }
+    const fg=ctx.createLinearGradient(0,H*.72,0,H*.88);fg.addColorStop(0,'#8a7660');fg.addColorStop(1,'#4a4030');
+    ctx.fillStyle=fg;ctx.fillRect(0,H*.72,W,H*.16);
+    ctx.fillStyle='#4a4030';ctx.fillRect(0,H*.88,W,H*.12);
+    ctx.strokeStyle='rgba(0,0,0,.14)';ctx.lineWidth=1;
+    for(let i=1;i<12;i++){ctx.beginPath();ctx.moveTo(W*(i/12),H*.72);ctx.lineTo(W*(i/12),H);ctx.stroke();}
 
-    // radial aisles dividing the seating into wedges, as in the engraving.
-    ctx.strokeStyle='rgba(0,0,0,.18)';ctx.lineWidth=1.5;
-    for(let i=0;i<16;i++){
-      const a=i/16*Math.PI*2;
-      ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*rx*.30,cy+Math.sin(a)*ry*.30);ctx.lineTo(cx+Math.cos(a)*rx*.96,cy+Math.sin(a)*ry*.96);ctx.stroke();
+    // the Vittoriano: a white marble monument stepping up like a wedding
+    // cake to a top colonnade, with bronze quadriga statues at each end.
+    const vx=W*.20,vb=H*.50;
+    ctx.fillStyle='#ddd7c8';ctx.fillRect(vx-W*.19,vb-H*.04,W*.38,H*.04);
+    ctx.fillStyle='#e5dfd0';ctx.fillRect(vx-W*.16,vb-H*.09,W*.32,H*.05);
+    ctx.fillStyle='#eee8da';ctx.fillRect(vx-W*.13,vb-H*.15,W*.26,H*.06);
+    ctx.fillStyle='#f5f1e6';ctx.fillRect(vx-W*.15,vb-H*.19,W*.30,H*.045);
+    ctx.strokeStyle='rgba(120,110,95,.55)';ctx.lineWidth=2;
+    for(let i=0;i<9;i++){const cxp=vx-W*.13+i*W*.0325;ctx.beginPath();ctx.moveTo(cxp,vb-H*.185);ctx.lineTo(cxp,vb-H*.15);ctx.stroke();}
+    ctx.fillStyle='#4a4a42';
+    for(const dx of [-.145,.145]){
+      ctx.beginPath();ctx.ellipse(vx+W*dx,vb-H*.205,W*.026,H*.016,0,0,Math.PI*2);ctx.fill();
+      ctx.fillRect(vx+W*dx-W*.018,vb-H*.20,W*.036,H*.012);
     }
 
-    // the pale arena floor at the centre, with a small central monument.
-    ctx.fillStyle='#efe4c8';ctx.beginPath();ctx.ellipse(cx,cy,rx*.28,ry*.28,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#7a6a52';ctx.fillRect(cx-2,cy-18,4,18);
-
-    // a ring of small dark arch openings around the outer wall's top edge.
-    for(let i=0;i<24;i++){
-      const a=i/24*Math.PI*2;
-      const x=cx+Math.cos(a)*rx*.94,y=cy+Math.sin(a)*ry*.94;
-      ctx.fillStyle='rgba(60,45,30,.55)';ctx.beginPath();ctx.ellipse(x,y,W*.012,H*.010,a,0,Math.PI*2);ctx.fill();
+    // several ribbed Baroque church domes with small lantern cupolas.
+    function dome(dx,dy,dr,col){
+      ctx.fillStyle=col;ctx.beginPath();ctx.arc(dx,dy,dr,Math.PI,0);ctx.fill();ctx.fillRect(dx-dr*.55,dy,dr*1.1,dr*.5);
+      ctx.strokeStyle='rgba(0,0,0,.18)';ctx.lineWidth=1.5;
+      for(const off of [-.5,-.2,.2,.5]){ctx.beginPath();ctx.moveTo(dx,dy-dr);ctx.quadraticCurveTo(dx+dr*off,dy-dr*.5,dx+dr*off*1.4,dy);ctx.stroke();}
+      ctx.fillStyle=col;ctx.fillRect(dx-dr*.06,dy-dr*1.28,dr*.12,dr*.3);ctx.beginPath();ctx.arc(dx,dy-dr*1.30,dr*.10,0,Math.PI*2);ctx.fill();
     }
-    // surviving higher wall remnants poking up unevenly around one arc —
-    // real ruins never wear down perfectly evenly.
-    for(const a of [3.5,3.8,4.1,4.4,0.2,0.5]){
-      const x=cx+Math.cos(a)*rx,y=cy+Math.sin(a)*ry;
-      ctx.fillStyle='#8a6b4a';ctx.beginPath();ctx.ellipse(x,y-8,W*.018,H*.028,a,0,Math.PI*2);ctx.fill();
-    }
+    dome(W*.55,H*.58,W*.055,'#8f8f88');
+    dome(W*.78,H*.50,W*.09,'#9a988c');
+    dome(W*.90,H*.56,W*.045,'#8f8f88');
 
-    // tiny figures scattered across the arena floor, for scale.
-    ctx.fillStyle='#3a352c';for(let i=0;i<10;i++){const a=(i/10)*Math.PI*2+.3,r=.06+(i%3)*.06;const x=cx+Math.cos(a)*rx*r,y=cy+Math.sin(a)*ry*r;ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fill();}
+    // a bell/clock tower — a squat campanile, not a spire.
+    const tx=W*.65,tb=H*.62,tTop=H*.42;
+    ctx.fillStyle='#e3cca5';ctx.fillRect(tx-W*.028,tTop,W*.056,tb-tTop);
+    ctx.fillStyle='#d3bd90';ctx.fillRect(tx-W*.036,tb-H*.05,W*.072,H*.05);
+    ctx.fillStyle='#3f4a4a';ctx.beginPath();ctx.moveTo(tx-W*.036,tTop);ctx.lineTo(tx,tTop-H*.05);ctx.lineTo(tx+W*.036,tTop);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#efe6d0';ctx.beginPath();ctx.arc(tx,tTop+H*.045,W*.016,0,Math.PI*2);ctx.fill();
 
-    // scattered fallen stone blocks and a couple of trees on the grounds.
-    ctx.fillStyle='#8a8070';for(let i=0;i<4;i++){ctx.fillRect(W*(.05+i*.03),H*(.88+(i%2)*.03),10,7);}
-    ctx.fillStyle='#2b4630';ctx.beginPath();ctx.ellipse(W*.05,H*.18,W*.03,H*.08,0,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.ellipse(W*.95,H*.20,W*.03,H*.07,0,0,Math.PI*2);ctx.fill();
+    // a tiny, hazy nod to the Colosseum in the far distance.
+    ctx.fillStyle='rgba(150,130,100,.55)';
+    ctx.beginPath();ctx.ellipse(W*.06,H*.62,W*.05,H*.05,0,Math.PI,0);ctx.lineTo(W*.11,H*.66);ctx.lineTo(W*.01,H*.66);ctx.closePath();ctx.fill();
+
+    // a couple of cypress trees framing the scene.
+    ctx.fillStyle='#2b4630';for(const x of [W*.36,W*.96]){ctx.beginPath();ctx.ellipse(x,H*.60,W*.018,H*.10,0,0,Math.PI*2);ctx.fill();}
   }
 
   function drawBarcelonaDetailed(){
