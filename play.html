@@ -6198,7 +6198,12 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
 
   async function loadContinuePrice() {
     const NP = window.Capacitor?.Plugins?.NativePurchases;
-    if (!NP || typeof NP.getProducts !== 'function') return;
+    if (!NP || typeof NP.getProducts !== 'function') {
+      // Web checkout has no native product catalog to query — the price is
+      // fixed by the Stripe Payment Link, so just hardcode it here.
+      continuePurchaseEl.textContent = 'BUY 100 HEARTS · $1.99';
+      return;
+    }
     continuePurchaseEl.disabled = true;
     try {
       const res = await NP.getProducts({productIdentifiers:['com.beckybat.game.hearts100']});
