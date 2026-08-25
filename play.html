@@ -6117,7 +6117,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       if (state !== 'over') return;
       if (bankedHearts >= 100) { await resumeFromCrash('hearts'); return; }
       snapshotCheckpoint();
-      location.href = STRIPE_PAYMENT_LINK;
+      // Redirect the real top-level page, not whatever frame we're running
+      // in — the homepage embeds this game in an iframe for its "play in
+      // browser" preview, and Stripe's checkout refuses to render inside
+      // an iframe at all, so a plain location.href here silently fails there.
+      (window.top || window).location.href = STRIPE_PAYMENT_LINK;
       return;
     }
     if (state !== 'over') return;
