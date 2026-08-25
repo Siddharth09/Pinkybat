@@ -5981,7 +5981,13 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       if (raw) {
         const pending = JSON.parse(raw);
         if (pending && pending.transactionId) {
-          creditPurchaseOnce({transactionId: pending.transactionId, productIdentifier: pending.productIdentifier});
+          // The checkpoint was saved before the purchase was opened, so it
+          // still reflects the run the player paid to continue — even
+          // though the app relaunched fresh (state reset to 'menu') between
+          // the purchase completing and finishPaidContinue() ever running.
+          const checkpoint = readCheckpoint();
+          const credited = creditPurchaseOnce({transactionId: pending.transactionId, productIdentifier: pending.productIdentifier});
+          if (credited && checkpoint) resumeFromCrash('hearts', checkpoint, true);
         }
       }
     } catch (_) {}
