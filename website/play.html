@@ -6012,8 +6012,13 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     return true;
   }
 
-  async function resumeFromCrash(source, checkpointOverride=null) {
-    if (state !== 'over' || source !== 'hearts' || bankedHearts < 100) return false;
+  async function resumeFromCrash(source, checkpointOverride=null, forceResume=false) {
+    // forceResume skips the "must currently be on the game-over screen" gate.
+    // Needed for the Stripe web checkout: paying there is a full page
+    // navigation away and back, so by the time the redirect lands, state has
+    // already reset to 'menu' — there is no live 'over' screen to gate on,
+    // even though the player really did just pay to continue their run.
+    if ((!forceResume && state !== 'over') || source !== 'hearts' || bankedHearts < 100) return false;
     const checkpoint = checkpointOverride || readCheckpoint() || snapshotCheckpoint();
     if (!checkpoint) return false;
 
@@ -6059,6 +6064,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     bat.vy = 0;
     bat.flapPhase = 0;
     gameover.classList.add('hidden');
+    intro.classList.add('hidden');
     continueBoxEl.classList.add('hidden');
     purchaseBusyEl.textContent = '';
     document.getElementById('heartScore').textContent='♥ ' + bankedHearts;
@@ -6077,27 +6083,41 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     return true;
   }
 
-  function openGetAppPrompt() {
-    const wrap = document.createElement('div');
-    wrap.id = 'getAppMenu';
-    wrap.style.cssText = 'position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#0009';
-    wrap.innerHTML = `
-      <div style="background:#152036;border-radius:22px;padding:26px 22px;width:min(320px,84vw);text-align:center;box-shadow:0 20px 50px #000a">
-        <div style="font-size:34px;margin-bottom:6px">❤️</div>
-        <div style="font-weight:1000;font-size:17px;letter-spacing:.3px;margin-bottom:8px;color:#fff">GET THE APP TO BUY HEARTS</div>
-        <div style="font-size:13px;color:#fff9;line-height:1.5;margin-bottom:18px">Apple In-App Purchase only works in the real Becky the Bat app. Download it free to buy hearts and keep flying.</div>
-        <a href="https://apps.apple.com/app/id6803877783" target="_blank" rel="noopener" style="display:block;background:#ff6fa8;color:#fff;text-decoration:none;border-radius:999px;padding:13px;font-weight:1000;margin-bottom:8px">Download on the App Store</a>
-        <button id="getAppCloseBtn" style="display:block;width:100%;background:transparent;color:#fff9;border-radius:999px;padding:10px;font-weight:800;border:0;font-size:13px">Close</button>
-      </div>`;
-    document.body.appendChild(wrap);
-    wrap.addEventListener('click', (e) => { if (e.target === wrap) wrap.remove(); });
-    document.getElementById('getAppCloseBtn').onclick = () => wrap.remove();
+  // Stripe handles web purchases; Apple's native IAP (above) only exists
+  // inside the packaged app. Stripe Payment Links need no backend, but that
+  // also means the return trip can't be cryptographically verified the way
+  // the App Store one is — a determined user could reconstruct the success
+  // URL without paying. Accepted trade-off: it's just in-game currency, not
+  // real money leaving the player's side, and it keeps a static site simple.
+  const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/28E3cv9wH8uPfPK9TI5EY00';
+
+  // Runs once at startup. If Stripe just redirected back here after a
+  // successful payment, credit the hearts and jump straight back into the
+  // run the player paid to continue — the same checkpoint/dedup machinery
+  // the native purchase-recovery path already uses, since by the time this
+  // runs it's a fresh page load (state is 'menu', not 'over') either way.
+  function handleStripeReturn() {
+    const params = new URLSearchParams(location.search);
+    if (params.get('stripe_success') !== '1') return;
+    const sessionId = (params.get('session_id') || '').trim();
+    // Strip the query string immediately so refreshing or hitting back can
+    // never reprocess this URL.
+    history.replaceState({}, '', location.pathname);
+    if (!sessionId) return;
+    const checkpoint = readCheckpoint();
+    const credited = creditPurchaseOnce({transactionId: sessionId, productIdentifier: 'com.beckybat.game.hearts100'});
+    if (!credited) return;
+    if (checkpoint) resumeFromCrash('hearts', checkpoint, true);
+    else continueHeartsEl.disabled = bankedHearts < 100;
   }
 
   async function buy100Hearts() {
     const NP = window.Capacitor?.Plugins?.NativePurchases;
     if (!NP || typeof NP.purchaseProduct !== 'function') {
-      openGetAppPrompt();
+      if (state !== 'over') return;
+      if (bankedHearts >= 100) { await resumeFromCrash('hearts'); return; }
+      snapshotCheckpoint();
+      location.href = STRIPE_PAYMENT_LINK;
       return;
     }
     if (state !== 'over') return;
@@ -6214,6 +6234,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   wirePurchaseListener();
   recoverPendingTransaction();
   recoverNativeTransactions();
+  handleStripeReturn();
   function closeShareMenu() {
     const el = document.getElementById('shareMenu');
     if (el) el.remove();
