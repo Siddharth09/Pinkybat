@@ -6205,7 +6205,7 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     if (!NP || typeof NP.getProducts !== 'function') {
       // Web checkout has no native product catalog to query — the price is
       // fixed by the Stripe Payment Link, so just hardcode it here.
-      continuePurchaseEl.textContent = 'BUY 100 HEARTS · $1.99';
+      continuePurchaseEl.textContent = 'BUY 100 HEARTS · US$1.99';
       return;
     }
     continuePurchaseEl.disabled = true;
