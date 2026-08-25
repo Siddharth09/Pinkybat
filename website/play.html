@@ -6210,8 +6210,12 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     const NP = window.Capacitor?.Plugins?.NativePurchases;
     if (!NP || typeof NP.getProducts !== 'function') {
       // Web checkout has no native product catalog to query — the price is
-      // fixed by the Stripe Payment Link, so just hardcode it here.
+      // fixed by the Stripe Payment Link, so just hardcode it here. The
+      // static markup's "Apple securely handles payment" is native-only
+      // copy — web purchases go through Stripe, and refunds there have to
+      // go through us directly rather than Apple, so link support here.
       continuePurchaseEl.textContent = 'BUY 100 HEARTS · US$1.99';
+      purchaseMetaEl.innerHTML = 'One-time purchase · <strong>Stripe securely handles payment</strong><br>Need help or a refund? <a href="mailto:support@astryks.com?subject=100%20Hearts%20refund%20request" style="color:#fff">support@astryks.com</a>';
       return;
     }
     continuePurchaseEl.disabled = true;
