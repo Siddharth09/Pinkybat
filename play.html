@@ -2659,46 +2659,91 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   function drawBrugesCity(){
-    // Bruges: the Belfry rising over a canal lined with crow-stepped
-    // gabled townhouses, an arched stone bridge and gliding swans, for
-    // the city's Gothic medieval charm.
-    gradient('#8fb8d4','#f0dcc0');
-    ctx.fillStyle='#7a8a68';ctx.fillRect(0,H*.78,W,H*.22);
-    ctx.fillStyle='#4a7a8a';ctx.fillRect(0,H*.84,W,H*.16);
+    // Bruges: a golden Gothic dusk over the canal — the Belfry rising in
+    // full medieval detail over crow-stepped gabled townhouses with
+    // rippled painterly reflections, an arched stone bridge and gliding
+    // swans, for the city's storybook charm.
+    gradient('#a9cfe0','#f3d9a8');
+    const glow=ctx.createRadialGradient(W*.5,H*.30,W*.02,W*.5,H*.30,W*.34);
+    glow.addColorStop(0,'rgba(255,224,170,.55)');glow.addColorStop(1,'rgba(255,224,170,0)');
+    ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
 
-    // crow-stepped gabled townhouses lining the canal.
-    const cols=['#a8563f','#c17d4e','#8a6a4a','#b8925a','#9c4f42'];
+    // cobbled quay and canal water.
+    ctx.fillStyle='#8c8172';ctx.fillRect(0,H*.78,W,H*.06);
+    for(let i=0;i<24;i++){ctx.fillStyle=i%2?'#7d7365':'#948a7a';ctx.fillRect(W*(i*.043),H*(.785+(i%3)*.006),W*.04,H*.012);}
+    const water=ctx.createLinearGradient(0,H*.84,0,H);
+    water.addColorStop(0,'#3f6f80');water.addColorStop(1,'#294f5e');
+    ctx.fillStyle=water;ctx.fillRect(0,H*.84,W,H*.16);
+
+    // crow-stepped gabled townhouses lining the canal — soft candy-pastel
+    // pinks, creams and terracottas with cream stone trim on every step
+    // and tiny green shutters, echoing the Markt square's storybook rows.
+    const cols=['#e8a0a6','#f0dba3','#d97b56','#e8c17a','#dd8f8a','#c9a06a'];
+    const steps=[4,3,5,4,3,4];
     for(let i=0;i<6;i++){
-      const x=W*(.01+i*.17),base=H*.78,h=H*(.20+(i%3)*.03),w=W*.15;
-      ctx.fillStyle=cols[i%5];ctx.fillRect(x,base-h,w,h);
-      ctx.fillStyle='#5c4638';
-      for(let s=0;s<4;s++){const sw=w*(1-s/4),sh=H*.02;ctx.fillRect(x+(w-sw)/2,base-h-sh*(s+1),sw,sh);}
-      ctx.fillStyle='#e8d7b0';for(let r=0;r<3;r++)ctx.fillRect(x+w*.3,base-h+H*(.05+r*.06),w*.4,H*.04);
+      const x=W*(.005+i*.168),base=H*.79,h=H*(.19+(i%3)*.035),w=W*.15,st=steps[i],col=cols[i%cols.length];
+      ctx.fillStyle=col;ctx.fillRect(x,base-h,w,h);
+      ctx.strokeStyle='#f5ecd8';ctx.lineWidth=2;
+      for(let s=0;s<st;s++){const sw=w*(1-s/st),sh=H*.02,sx=x+(w-sw)/2,sy=base-h-sh*(s+1);ctx.fillStyle=col;ctx.fillRect(sx,sy,sw,sh);ctx.strokeRect(sx,sy,sw,sh);}
+      ctx.fillStyle='#f7d98a';for(let r=0;r<3;r++)ctx.fillRect(x+w*.28,base-h+H*(.05+r*.062),w*.44,H*.036);
+      ctx.fillStyle='#4d7a5a';for(let r=0;r<3;r++){ctx.fillRect(x+w*.19,base-h+H*(.05+r*.062),w*.07,H*.036);ctx.fillRect(x+w*.74,base-h+H*(.05+r*.062),w*.07,H*.036);}
+      ctx.fillStyle='#3a2e24';ctx.fillRect(x+w*.72,base-h-H*.05,W*.012,H*.05);
+      ctx.fillStyle='#5c8a52';ctx.fillRect(x+w*.24,base-h+H*.045,w*.16,H*.014);ctx.fillRect(x+w*.6,base-h+H*.045,w*.16,H*.014);
+      if(i%2===0){ctx.fillStyle='#4a3527';ctx.beginPath();ctx.arc(x+w*.5,base-H*.05,W*.018,Math.PI,0);ctx.fill();ctx.fillRect(x+w*.5-W*.018,base-H*.05,W*.036,H*.05);}
     }
 
-    // the Belfry of Bruges, the unmistakable focal point.
+    // the Belfry of Bruges, rebuilt grander: a wide brick base with twin
+    // arched windows, a narrower stone mid-tier with a proper clock face,
+    // four corner pinnacle turrets, an octagonal crown and a tall
+    // gilt-banded spire topped with a weathervane cross.
     const bx=W*.5;
-    ctx.fillStyle='#c9a06a';ctx.fillRect(bx-W*.10,H*.28,W*.20,H*.50);
-    for(let i=0;i<5;i++)ctx.fillRect(bx-W*.09+i*W*.045,H*.26,W*.025,H*.02);
-    ctx.fillStyle='#b8925a';ctx.beginPath();ctx.moveTo(bx-W*.07,H*.28);ctx.lineTo(bx-W*.07,H*.14);ctx.lineTo(bx+W*.07,H*.14);ctx.lineTo(bx+W*.07,H*.28);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#efe4c8';ctx.beginPath();ctx.arc(bx,H*.20,W*.025,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#6b5540';
-    for(const dx of [-.065,.065]){ctx.beginPath();ctx.moveTo(bx+W*dx-4,H*.14);ctx.lineTo(bx+W*dx,H*.10);ctx.lineTo(bx+W*dx+4,H*.14);ctx.closePath();ctx.fill();}
-    ctx.beginPath();ctx.moveTo(bx-W*.03,H*.14);ctx.lineTo(bx,H*.04);ctx.lineTo(bx+W*.03,H*.14);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#b5654a';ctx.fillRect(bx-W*.105,H*.34,W*.21,H*.46);
+    ctx.strokeStyle='rgba(70,45,30,.28)';ctx.lineWidth=1;
+    for(let r=0;r<6;r++){ctx.beginPath();ctx.moveTo(bx-W*.105,H*(.36+r*.065));ctx.lineTo(bx+W*.105,H*(.36+r*.065));ctx.stroke();}
+    ctx.fillStyle='#4a3226';
+    for(let r=0;r<2;r++){const wy=H*(.47+r*.15);for(const dx of [-.045,.045]){ctx.beginPath();ctx.arc(bx+W*dx,wy,W*.013,Math.PI,0);ctx.fill();ctx.fillRect(bx+W*dx-W*.013,wy,W*.026,H*.06);}}
+    ctx.fillStyle='#d8c49a';ctx.fillRect(bx-W*.085,H*.20,W*.17,H*.14);
+    ctx.strokeStyle='#8a6a44';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(bx-W*.085,H*.20);ctx.lineTo(bx+W*.085,H*.20);ctx.moveTo(bx-W*.085,H*.34);ctx.lineTo(bx+W*.085,H*.34);ctx.stroke();
+    ctx.fillStyle='#efe4c8';ctx.beginPath();ctx.arc(bx,H*.27,W*.034,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#4a3a2c';ctx.lineWidth=1.5;
+    for(let k=0;k<12;k++){const a=(Math.PI*2/12)*k,r1=W*.034,r2=W*.027;ctx.beginPath();ctx.moveTo(bx+Math.cos(a)*r1,H*.27+Math.sin(a)*r1);ctx.lineTo(bx+Math.cos(a)*r2,H*.27+Math.sin(a)*r2);ctx.stroke();}
+    ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(bx,H*.27);ctx.lineTo(bx,H*.256);ctx.moveTo(bx,H*.27);ctx.lineTo(bx+W*.018,H*.27);ctx.stroke();
+    ctx.fillStyle='#c9a06a';
+    ctx.beginPath();ctx.moveTo(bx-W*.085,H*.20);ctx.lineTo(bx-W*.065,H*.155);ctx.lineTo(bx-W*.04,H*.13);ctx.lineTo(bx+W*.04,H*.13);ctx.lineTo(bx+W*.065,H*.155);ctx.lineTo(bx+W*.085,H*.20);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#8a6a44';
+    for(const dx of [-.095,-.05,.05,.095]){ctx.beginPath();ctx.moveTo(bx+W*dx-3,H*.205);ctx.lineTo(bx+W*dx,H*.10);ctx.lineTo(bx+W*dx+3,H*.205);ctx.closePath();ctx.fill();ctx.fillStyle='#e8c96a';ctx.beginPath();ctx.arc(bx+W*dx,H*.097,2.5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#8a6a44';}
+    ctx.fillStyle='#5c4a3a';ctx.beginPath();ctx.moveTo(bx-W*.038,H*.13);ctx.lineTo(bx,H*.025);ctx.lineTo(bx+W*.038,H*.13);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(230,210,170,.4)';ctx.lineWidth=1;
+    for(let r=0;r<3;r++){const yy=H*(.045+r*.028),ww=W*.038*((H*.13-yy)/(H*.13-H*.025));ctx.beginPath();ctx.moveTo(bx-ww,yy);ctx.lineTo(bx+ww,yy);ctx.stroke();}
+    ctx.strokeStyle='#e8c96a';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(bx,H*.025);ctx.lineTo(bx,H*.005);ctx.moveTo(bx-W*.012,H*.012);ctx.lineTo(bx+W*.012,H*.012);ctx.stroke();
+    ctx.fillStyle='#e8c96a';ctx.beginPath();ctx.arc(bx,H*.025,3,0,Math.PI*2);ctx.fill();
 
-    // an arched stone bridge over the canal.
-    ctx.strokeStyle='#a89478';ctx.lineWidth=8;ctx.beginPath();ctx.arc(W*.78,H*.84,W*.10,Math.PI,0);ctx.stroke();
+    // a pair of birds circling the tower.
+    ctx.strokeStyle='rgba(60,50,40,.6)';ctx.lineWidth=2;
+    for(const [dx,dy] of [[-.16,.11],[.13,.08]]){ctx.beginPath();ctx.moveTo(bx+W*dx-6,H*dy);ctx.quadraticCurveTo(bx+W*dx,H*dy-5,bx+W*dx+6,H*dy);ctx.stroke();}
 
-    // swans gliding on the canal.
-    ctx.fillStyle='#f5f3ea';
+    // an arched stone bridge with visible voussoirs.
+    ctx.strokeStyle='#a89478';ctx.lineWidth=9;ctx.beginPath();ctx.arc(W*.78,H*.84,W*.10,Math.PI,0);ctx.stroke();
+    ctx.strokeStyle='#8a7860';ctx.lineWidth=1;
+    for(let i=0;i<=8;i++){const a=Math.PI+(Math.PI/8)*i;ctx.beginPath();ctx.moveTo(W*.78+Math.cos(a)*W*.095,H*.84+Math.sin(a)*W*.095);ctx.lineTo(W*.78+Math.cos(a)*W*.105,H*.84+Math.sin(a)*W*.105);ctx.stroke();}
+
+    // rippled painterly reflections of the gabled houses in the canal.
+    ctx.save();ctx.globalAlpha=.28;
+    for(let i=0;i<6;i++){const x=W*(.005+i*.168),h=H*(.19+(i%3)*.035)*.6,w=W*.15;ctx.fillStyle=cols[i%cols.length];ctx.fillRect(x,H*.84,w,h);}
+    ctx.restore();
+    ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=2;
+    for(let i=0;i<8;i++){ctx.beginPath();ctx.moveTo(W*(.03+i*.13),H*.86);ctx.lineTo(W*(.02+i*.13)+6,H*.99);ctx.stroke();}
+
+    // swans gliding on the canal — a body, an S-curved neck and a head,
+    // rather than a bare stem that reads as a music note at this scale.
     for(const sx of [W*.20,W*.28]){
-      ctx.beginPath();ctx.ellipse(sx,H*.90,8,5,0,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='#f5f3ea';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx+6,H*.895);ctx.quadraticCurveTo(sx+10,H*.875,sx+8,H*.87);ctx.stroke();
+      ctx.fillStyle='#f5f3ea';ctx.beginPath();ctx.ellipse(sx,H*.905,11,6,0,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#f5f3ea';ctx.lineWidth=3;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(sx+7,H*.90);ctx.quadraticCurveTo(sx+15,H*.875,sx+9,H*.856);ctx.quadraticCurveTo(sx+6,H*.845,sx+10,H*.839);ctx.stroke();
+      ctx.fillStyle='#e8973f';ctx.beginPath();ctx.moveTo(sx+10,H*.839);ctx.lineTo(sx+14,H*.837);ctx.lineTo(sx+10,H*.834);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#f5f3ea';ctx.beginPath();ctx.arc(sx+10,H*.839,2.5,0,Math.PI*2);ctx.fill();
     }
-
-    // canal reflections.
-    ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=2;
-    for(let i=0;i<8;i++){ctx.beginPath();ctx.moveTo(W*(.03+i*.13),H*.86);ctx.lineTo(W*(.03+i*.13),H*.99);ctx.stroke();}
   }
 
 
