@@ -497,6 +497,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     continueBoxEl.classList.remove('hidden');
     state = 'over';
     gameover.classList.remove('hidden');
+    // Re-fetch the price every time this panel opens rather than trusting
+    // whatever was cached at page load — cheap, and guards against any
+    // stale/cached StoreKit product info (most visible in TestFlight sandbox
+    // testing) ever showing on the button.
+    loadContinuePrice();
   }
 
   function flap() {
