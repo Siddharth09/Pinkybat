@@ -5963,6 +5963,8 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       runTime: Number.isFinite(lastCrashRunTime) ? lastCrashRunTime : t,
       cityTime: Number.isFinite(lastCrashCityTime) ? lastCrashCityTime : cityTime,
       runCityCount: Number.isFinite(lastCrashRunCityCount) ? Math.floor(lastCrashRunCityCount) : Math.floor(runCityCount),
+      heartCount: Number.isFinite(heartCount) ? Math.floor(heartCount) : 0,
+      nextHeartCelebration: Number.isFinite(nextHeartCelebration) ? Math.floor(nextHeartCelebration) : 20,
       savedAt: Date.now()
     };
     try { localStorage.setItem(CHECKPOINT_KEY, JSON.stringify(checkpoint)); } catch (_) {}
@@ -6104,6 +6106,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     runCityCount = resumeCityCount;
     cityIndex = resumeCityCount;
     cityTime = resumeTime - resumeCityCount * 9;
+    // Older checkpoints saved before this field existed simply omit it —
+    // falling back to the current in-memory value (rather than 0) means an
+    // in-session continue (no page reload in between) still just works.
+    if (Number.isFinite(checkpoint.heartCount)) heartCount = Math.floor(checkpoint.heartCount);
+    if (Number.isFinite(checkpoint.nextHeartCelebration)) nextHeartCelebration = Math.floor(checkpoint.nextHeartCelebration);
 
     state = 'play';
     holding = false;
