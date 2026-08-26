@@ -6361,7 +6361,8 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     if (shareBtn.disabled) return;
     const score = finalEl.textContent;
     const shareUrl = 'https://beckythebat.com/';
-    const msg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me? ${shareUrl}`;
+    const baseMsg = `I flew ${score}m and burst ${heartCount} hearts in Becky the Bat! 🦇🌍 Last city: ${currentCity().name}. Can you beat me?`;
+    const msg = `${baseMsg} ${shareUrl}`;
     shareBtn.disabled = true;
     let shared = false;
     let cancelled = false;
@@ -6376,8 +6377,17 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
         // takes several seconds. A short timeout here was firing while the
         // real share sheet was still open, popping our fallback menu on top
         // of it — this is what "share doesn't work" on real devices was.
+        //
+        // Pass url as its own field rather than folding it into text: apps on
+        // the receiving end (Messages, WhatsApp, Twitter/X) combine the two
+        // themselves, and it lets beckythebat.com's Open Graph tags supply the
+        // Becky icon as the link preview image. Facebook's share extension
+        // specifically still won't show our caption text either way — that's
+        // an anti-spam restriction on their end, not something an app calling
+        // the Web Share API can override — but the link preview (title,
+        // description, Becky icon) now comes through correctly there too.
         shared = await Promise.race([
-          navigator.share({title:'Becky the Bat', text:msg}).then(() => true),
+          navigator.share({title:'Becky the Bat', text:baseMsg, url:shareUrl}).then(() => true),
           new Promise(resolve => setTimeout(() => resolve(false), 8000))
         ]);
       } catch (err) {
