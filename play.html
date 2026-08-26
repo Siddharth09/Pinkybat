@@ -5222,11 +5222,11 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       ctx.restore();
     }
 
-    // Clouds are part of the destination art; precipitation is drawn live by
-    // drawBackground() so it can never become a stagnant cached image. Hot
-    // air balloons are handled separately by the animated skyGuests system
-    // so they actually drift across the scene instead of sitting in one spot.
-    drawClouds();
+    // Clouds are drawn live in draw() instead of here — this function's
+    // result gets baked into a per-city cached bitmap (see citySceneCache
+    // below), so drifting them via worldScroll from inside it would only
+    // ever capture one frozen frame of motion. Hot air balloons are handled
+    // separately by the animated skyGuests system for the same reason.
   }
   const citySceneCache=new Map();
   const CITY_CACHE_LIMIT=4;
@@ -5857,6 +5857,12 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
     ctx.save();
     if (state === 'crash' && screenShake > 0) ctx.translate((Math.random()-.5)*W*screenShake,(Math.random()-.5)*H*screenShake);
     drawBackground();
+    // Drawn live, every frame, rather than as part of the cached city
+    // bitmap — otherwise their worldScroll-based drift only ever gets
+    // evaluated once (whenever that city's snapshot was built) and then
+    // sits frozen in place for the rest of the visit. Skipped entirely for
+    // destinations with no atmosphere (the Moon, Andromeda Galaxy).
+    if (currentCity().country !== 'Space') drawClouds();
     drawLiveWeather();
     drawBoats();
     obstacles.forEach(drawObstacle);
