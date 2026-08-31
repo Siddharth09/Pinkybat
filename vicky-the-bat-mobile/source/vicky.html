@@ -6181,8 +6181,20 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
   }
 
   async function buy100Hearts() {
+    // isNative distinguishes "genuinely a web browser" from "packaged app,
+    // but the purchases plugin happened not to be available" — the two were
+    // conflated before by just checking for NP, so if the native plugin ever
+    // failed to register for any reason, the app would fall into the *web*
+    // branch below and try to navigate to the external Stripe checkout URL.
+    // The app's own WKWebView blocks/bounces that kind of external
+    // navigation, which reloads the page from scratch — this is what
+    // "buying restarts the game" was: not a real restart, a botched
+    // navigation attempt masquerading as one. The native app must never
+    // take the web-redirect path, full stop, regardless of why NP is
+    // unavailable.
+    const isNative = !!(window.Capacitor?.isNativePlatform?.());
     const NP = window.Capacitor?.Plugins?.NativePurchases;
-    if (!NP || typeof NP.purchaseProduct !== 'function') {
+    if (!isNative) {
       if (state !== 'over') return;
       if (bankedHearts >= 100) { await resumeFromCrash('hearts'); return; }
       snapshotCheckpoint();
@@ -6191,6 +6203,13 @@ button{border:0;border-radius:999px;padding:14px 34px;margin:5px;background:#ff6
       // browser" preview, and Stripe's checkout refuses to render inside
       // an iframe at all, so a plain location.href here silently fails there.
       (window.top || window).location.href = STRIPE_PAYMENT_LINK;
+      return;
+    }
+    if (!NP || typeof NP.purchaseProduct !== 'function') {
+      if (state !== 'over') return;
+      console.warn('Becky: NativePurchases plugin unavailable inside native app');
+      purchaseBusyEl.textContent = 'PURCHASES UNAVAILABLE — TRY AGAIN SHORTLY';
+      setTimeout(() => { if (purchaseBusyEl) purchaseBusyEl.textContent = ''; }, 2500);
       return;
     }
     if (state !== 'over') return;
